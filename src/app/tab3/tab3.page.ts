@@ -7,7 +7,17 @@ import { Component } from '@angular/core';
   standalone: false,
 })
 export class Tab3Page {
-
+  team = [
+    {
+      name: 'Makkam Santosh Kumar',
+      role: 'Founder',
+      photo: 'assets/img/team/sarah.jpg',
+    },
+    // {
+    //   name: 'John Doe',
+    //   role: 'Lead Developer',
+    //   photo: 'assets/img/team/john.jpg',
+    // },
+  ];
   constructor() {}
-
 }

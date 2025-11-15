@@ -1,17 +1,69 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 3
-    </ion-title>
+<!-- <ion-header class="ion-no-border">
+  <ion-toolbar class="ion-no-border" color="light">
+    <ion-title>OTT Money Saver</ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<!-- about.page.html -->
+<!-- <ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>About Us</ion-title>
+  </ion-toolbar>
+</ion-header> -->
 
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+<ion-content fullscreen class="ion-padding">
+  <!-- Company name & tagline -->
+  <div class="ion-text-center ion-padding-vertical">
+    <h1>OTT Money Saver</h1>
+    <p class="tagline">Budget-Friendly OTT Hub!!!</p>
+  </div>
+
+  <!-- Mission -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="bulb-outline" color="warning"></ion-icon>
+        Our Mission & vision
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      We provide premimum OTT subuscriptions at the most affordable prices-safe,
+      genuine & hassle-free! Save more, enjoy more-Why pay more when you can get
+      it for less?
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Team members (static) -->
+  <h2 class="ion-padding-top">Meet the Team</h2>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" *ngFor="let member of team">
+        <ion-card class="team-card">
+          <!-- <img [src]="member.photo" [alt]="member.name" /> -->
+          <!-- <ion-icon size="large" name="person-outline"></ion-icon> -->
+          <ion-card-header>
+            <ion-card-title> {{ member.name }} </ion-card-title>
+            <ion-card-subtitle>{{ member.role }}</ion-card-subtitle>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Contact / Social -->
+  <div class="ion-text-center ion-padding-top">
+    <p>Follow us on social media</p>
+    <ion-button fill="clear"  >
+      <ion-icon slot="icon-only" name="logo-twitter"></ion-icon>
+    </ion-button>
+    <ion-button fill="clear" >
+      <ion-icon slot="icon-only" name="logo-instagram"></ion-icon>
+    </ion-button>
+    <ion-button fill="clear">
+      <ion-icon slot="icon-only" name="mail-outline"></ion-icon>
+    </ion-button>
+  </div>
 </ion-content>

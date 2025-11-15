@@ -1,0 +1,62 @@
+
+
+.background-container {
+  --background: none;
+  background-image: url('/assets/ottimgs/ottmoneysaver.jpg'); /* Update path to your JPG */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+.small-logo {
+  width: 180px;        /* change this value */
+  height: 180px;       /* change this value */
+  object-fit: contain;   // keep proportions
+  display: block;
+  margin: 0 auto;
+}
+
+.login-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.95); /* Optional: slight transparency */
+  padding: 30px 20px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.logo-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.logo-icon {
+  font-size: 48px;
+  color: #3880ff;
+}
+
+.logo-text {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 10px 0 0;
+  color: #222;
+}
+
+.logo-text span {
+  color: #3880ff;
+}
+
+.login-button {
+  margin-top: 20px;
+  --border-radius: 12px;
+  height: 48px;
+  font-weight: bold;
+}

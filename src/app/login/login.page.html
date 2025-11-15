@@ -1,0 +1,40 @@
+<ion-content [fullscreen]="true" scroll-y="false" class="ion-no-padding">
+  <div class="login-card">
+    <ion-item lines="none">
+      <ion-icon slot="start" name="mail-outline"></ion-icon>
+      <ion-input
+        [(ngModel)]="credentials.email"
+        name="email"
+        type="email"
+        label="Email"
+        labelPlacement="floating"
+        helperText="Enter a email"
+        errorText="Invalid email"
+        required
+      ></ion-input>
+    </ion-item>
+
+    <ion-item lines="none">
+      <!-- <ion-label position="floating">Email</ion-label> -->
+      <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
+      <ion-input
+        [(ngModel)]="credentials.password"
+        name="password"
+        type="password"
+        label="Password"
+        labelPlacement="floating"
+        helperText="Enter a password"
+        errorText="Invalid password"
+        required
+      ></ion-input>
+    </ion-item>
+
+    <ion-button
+      expand="block"
+      class="login-button"
+      [disabled]="credentials.email==null || credentials.password ==null"
+      (click)="onLogin()"
+      >Login</ion-button
+    >
+  </div>
+</ion-content>
