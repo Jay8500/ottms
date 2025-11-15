@@ -10,70 +10,95 @@
 </ion-header>
 
 <ion-content class="ion-padding" color="light">
+  @if (isLoading) {
+  <!-- same skeleton block as above -->
+  @for (i of [0,1,2]; track i) {
+  <!-- repeat as many skeletons as you want -->
   <ion-card button="true">
-    <img alt="Silhouette of mountains" src="assets/ottimgs/netlfix.jpg" />
+    <ion-skeleton-text
+      [animated]="true"
+      style="height: 200px"
+    ></ion-skeleton-text>
     <ion-card-header>
-      <ion-card-title>NETFLIX Premium 4k</ion-card-title>
-      <ion-card-subtitle>1 month</ion-card-subtitle>
+      <ion-card-title>
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 70%"
+        ></ion-skeleton-text>
+      </ion-card-title>
+      <ion-card-subtitle>
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 50%"
+        ></ion-skeleton-text>
+      </ion-card-subtitle>
     </ion-card-header>
-    <ion-card-content>Get Premium account now for 139 Rupees.</ion-card-content>
-    <ion-button fill="clear">Enquiry</ion-button>
+    <ion-card-content>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 100%"
+      ></ion-skeleton-text>
+    </ion-card-content>
+    <ion-button fill="clear" disabled>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 80px"
+      ></ion-skeleton-text>
+    </ion-button>
   </ion-card>
+  } } @else {
+  <!-- ==== Cards when data exists ==== -->
+  @for (attInfo of ottAdvInfo; track attInfo.id) {
   <ion-card button="true">
-    <img alt="Silhouette of mountains" src="assets/ottimgs/prime.avif" />
+    <img alt="Silhouette of mountains" [src]="attInfo.img" width="100%" />
+
     <ion-card-header>
-      <ion-card-title>Amazon Prime Video</ion-card-title>
-      <ion-card-subtitle>1 month</ion-card-subtitle>
+      <ion-card-title>{{ attInfo.title }}</ion-card-title>
+      <ion-card-subtitle>{{ attInfo.subTitle }}</ion-card-subtitle>
     </ion-card-header>
-    <ion-card-content>Get Premium account now for 139 Rupees.</ion-card-content>
-    <ion-button fill="clear">Enquiry</ion-button>
+
+    <ion-card-content>{{ attInfo.content }}</ion-card-content>
+
+    <ion-button fill="clear" (click)="onEnquiryClick(attInfo)">
+      Enquiry
+    </ion-button>
   </ion-card>
+  }
+
+  <!-- ==== Skeleton when the array is empty or still loading ==== -->
+  @empty { @for (i of [0,1,2]; track i) {
+  <!-- repeat as many skeletons as you want -->
   <ion-card button="true">
-    <img alt="Silhouette of mountains" src="assets/ottimgs/zee5.png" />
+    <ion-skeleton-text
+      [animated]="true"
+      style="height: 200px"
+    ></ion-skeleton-text>
     <ion-card-header>
-      <ion-card-title>Zee 5</ion-card-title>
-      <ion-card-subtitle>1 month</ion-card-subtitle>
+      <ion-card-title>
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 70%"
+        ></ion-skeleton-text>
+      </ion-card-title>
+      <ion-card-subtitle>
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 50%"
+        ></ion-skeleton-text>
+      </ion-card-subtitle>
     </ion-card-header>
-    <ion-card-content>Get Premium account now for 139 Rupees.</ion-card-content>
-    <ion-button fill="clear">Enquiry</ion-button>
+    <ion-card-content>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 100%"
+      ></ion-skeleton-text>
+    </ion-card-content>
+    <ion-button fill="clear" disabled>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 80px"
+      ></ion-skeleton-text>
+    </ion-button>
   </ion-card>
-  <ion-card button="true">
-    <img
-      alt="Silhouette of mountains"
-      src="assets/ottimgs/yt.jpg"
-      width="100%"
-    />
-    <ion-card-header>
-      <ion-card-title>Youtube</ion-card-title>
-      <ion-card-subtitle>1 month</ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content>Get Premium account now for 139 Rupees.</ion-card-content>
-    <ion-button fill="clear">Enquiry</ion-button>
-  </ion-card>
-  <ion-card button="true">
-    <img
-      alt="Silhouette of mountains"
-      src="assets/ottimgs/hotstar.png"
-      width="100%"
-    />
-    <ion-card-header>
-      <ion-card-title>Hot Star</ion-card-title>
-      <ion-card-subtitle>1 month</ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content>Get Premium account now for 139 Rupees.</ion-card-content>
-    <ion-button fill="clear">Enquiry</ion-button>
-  </ion-card>
-  <ion-card button="true">
-    <img
-      alt="Silhouette of mountains"
-      src="assets/ottimgs/aha.jpg"
-      width="100%"
-    />
-    <ion-card-header>
-      <ion-card-title>Aha</ion-card-title>
-      <ion-card-subtitle>1 month</ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content>Get Premium account now for 139 Rupees.</ion-card-content>
-    <ion-button fill="clear">Enquiry</ion-button>
-  </ion-card>
+  } } }
 </ion-content>
