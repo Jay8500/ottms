@@ -1,0 +1,7 @@
+{
+  "name": "oms",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
