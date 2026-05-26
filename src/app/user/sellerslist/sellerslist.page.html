@@ -1,0 +1,55 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ms-toolbar">
+    <ion-buttons slot="start"><ion-back-button></ion-back-button></ion-buttons>
+    <ion-title>Available Sellers</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="sellers-content">
+  <!-- Filter Chips -->
+  <div class="filter-row">
+    <ion-chip
+      *ngFor="let f of filters"
+      [class.active]="activeFilter === f.key"
+      (click)="setFilter(f.key)"
+      class="filter-chip"
+    >
+      <ion-icon *ngIf="f.icon" [name]="f.icon"></ion-icon>
+      {{ f.label }}
+    </ion-chip>
+  </div>
+
+  <div class="sellers-list">
+    <div
+      class="seller-card"
+      *ngFor="let seller of filteredSellers"
+      (click)="selectSeller(seller)"
+    >
+      <div class="seller-top">
+        <div class="seller-avatar">{{ seller.name[0] }}</div>
+        <div class="seller-info">
+          <h3 class="seller-name">{{ seller.name }} <span class="seller-id">({{ seller.uniqueNum }})</span></h3>
+          <div class="stars-row">
+            <span class="star filled" *ngFor="let s of getStars(seller.rating, 'filled')">★</span>
+            <span class="star empty"  *ngFor="let s of getStars(seller.rating, 'empty')">★</span>
+            <span class="review-count">({{ seller.reviewCount }})</span>
+          </div>
+        </div>
+        <div class="seller-price">
+          <span class="price-val">₹{{ seller.price }}</span>
+          <span class="price-sub">{{ seller.screensLeft }} left</span>
+        </div>
+      </div>
+
+      <div class="seller-badges">
+        <span class="badge-online" [class.offline]="!seller.isOnline">
+          {{ seller.isOnline ? 'Online' : 'Offline' }}
+        </span>
+        <span class="badge-verified" *ngIf="seller.isVerified">
+          <ion-icon name="shield-checkmark-outline"></ion-icon> Verified
+        </span>
+        <span class="batch-chip" *ngFor="let b of seller.batches">{{ b }}</span>
+      </div>
+    </div>
+  </div>
+</ion-content>

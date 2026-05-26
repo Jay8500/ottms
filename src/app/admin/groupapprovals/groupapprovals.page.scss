@@ -1,0 +1,49 @@
+@import '../../../global.scss';
+.admin-toolbar { --background: #1a1a2e; --color: #fff; }
+.ga-content { --background: #{$gray-50}; }
+
+.filter-row { padding: $space-md $space-lg;
+  .admin-segment {
+    --background: #{$gray-200}; border-radius: $radius-md;
+    ion-segment-button { --color: #{$gray-600}; --color-checked: #{$primary}; --indicator-color: #fff; font-size: $font-xs; font-weight: 500; }
+    ion-badge { margin-left: 4px; font-size: 10px; }
+  }
+}
+
+.groups-list { padding: 0 $space-lg $space-xl; }
+
+.group-card {
+  background: #fff; border-radius: $radius-md; padding: $space-md $space-lg;
+  margin-bottom: $space-md; border: 0.5px solid $gray-200; box-shadow: $shadow-sm;
+}
+
+.group-top {
+  display: flex; gap: $space-md; align-items: flex-start; margin-bottom: $space-sm;
+  .group-logo { width: 44px; height: 44px; border-radius: $radius-sm; @include flex-center; color: #fff; font-weight: 700; font-size: $font-base; flex-shrink: 0; }
+  .group-info { flex: 1;
+    h3 { font-size: $font-sm; font-weight: 600; color: $gray-900; margin: 0; }
+    p  { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; }
+  }
+  .status-pill {
+    font-size: $font-xs; padding: 3px 8px; border-radius: $radius-pill; font-weight: 500; white-space: nowrap; flex-shrink: 0;
+    &.pending  { @include badge($warning-light, $warning); }
+    &.approved { @include badge($success-light, $success); }
+    &.rejected { @include badge($danger-light, $danger); }
+  }
+}
+
+.proof-row {
+  display: flex; align-items: center; gap: $space-sm; font-size: $font-xs; color: $primary;
+  margin-bottom: $space-sm; cursor: pointer;
+  ion-icon { font-size: 16px; }
+}
+
+.action-row { display: flex; gap: $space-sm;
+  .approve-btn { --background: #{$success}; --color: #fff; --border-radius: #{$radius-md}; flex: 1; height: 40px; }
+  .reject-btn  { --border-radius: #{$radius-md}; flex: 1; height: 40px; }
+}
+
+.empty-state { @include flex-center; flex-direction: column; gap: $space-md; padding: 60px 0;
+  ion-icon { font-size: 52px; color: $gray-400; }
+  p { font-size: $font-sm; color: $gray-400; margin: 0; }
+}

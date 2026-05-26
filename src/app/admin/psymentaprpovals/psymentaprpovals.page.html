@@ -1,0 +1,57 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="admin-toolbar">
+    <ion-title>Payment Approvals</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="pa-content">
+
+  <div class="summary-banner">
+    <ion-icon name="time-outline"></ion-icon>
+    <div>
+      <p class="summary-title">Pending Approvals</p>
+      <p class="summary-count">{{ pendingPayments.length }} payments awaiting review</p>
+    </div>
+  </div>
+
+  <div class="filter-row">
+    <ion-segment [(ngModel)]="activeFilter" (ionChange)="filterPayments()" class="admin-segment">
+      <ion-segment-button value="pending">Pending</ion-segment-button>
+      <ion-segment-button value="approved">Approved</ion-segment-button>
+      <ion-segment-button value="rejected">Rejected</ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div class="payments-list">
+    <div class="payment-card" *ngFor="let p of filteredPayments">
+      <div class="pay-top">
+        <div>
+          <h3>{{ p.userName }} — ₹{{ p.amount }}</h3>
+          <p>{{ p.ottName }} · {{ p.validity }} · {{ p.date }}</p>
+        </div>
+        <span class="status-pill" [ngClass]="p.status">{{ p.statusLabel }}</span>
+      </div>
+
+      <div class="screenshot-row" (click)="viewScreenshot(p)">
+        <ion-icon name="image-outline"></ion-icon>
+        <span>View Payment Screenshot</span>
+        <ion-icon name="open-outline"></ion-icon>
+      </div>
+
+      <div class="action-row" *ngIf="p.status === 'pending'">
+        <ion-button expand="block" class="approve-btn" (click)="approve(p)">
+          <ion-icon name="checkmark-outline" slot="start"></ion-icon> Approve & Credit Wallet
+        </ion-button>
+        <ion-button expand="block" fill="outline" color="danger" class="reject-btn" (click)="reject(p)">
+          <ion-icon name="close-outline" slot="start"></ion-icon> Reject
+        </ion-button>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="filteredPayments.length === 0">
+      <ion-icon name="checkmark-done-circle-outline"></ion-icon>
+      <p>All payments reviewed!</p>
+    </div>
+  </div>
+
+</ion-content>

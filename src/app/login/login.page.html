@@ -1,0 +1,73 @@
+<ion-content class="login-content" [fullscreen]="true">
+  <div class="login-wrapper">
+    
+    <!-- Hero Header Area -->
+    <div class="login-hero">
+      <div class="brand-icon">
+        <ion-icon name="tv-outline"></ion-icon>
+      </div>
+      <h1 class="brand-name">OTT Money Saver</h1>
+      <p class="brand-tagline">OTT Platforms &amp; Much More</p>
+    </div>
+
+    <!-- White Form Area -->
+    <div class="login-card">
+      <h2 class="card-title">Welcome Back</h2>
+      <p class="card-sub">Sign in to continue</p>
+
+      <!-- Mobile Input -->
+      <ion-item class="ms-input-item" lines="none">
+        <ion-icon name="call-outline" slot="start"></ion-icon>
+        <ion-input
+          type="tel"
+          placeholder="Mobile Number"
+          [(ngModel)]="mobile"
+          maxlength="10"
+          inputmode="numeric"
+        ></ion-input>
+      </ion-item>
+
+      <!-- Password Input -->
+      <ion-item class="ms-input-item" lines="none">
+        <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+        <ion-input
+          [type]="showPassword ? 'text' : 'password'"
+          placeholder="Password"
+          [(ngModel)]="password"
+        ></ion-input>
+        <ion-icon
+          slot="end"
+          [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+          (click)="showPassword = !showPassword"
+          class="eye-icon"
+        ></ion-icon>
+      </ion-item>
+
+      <!-- Forgot Password -->
+      <p class="forgot-link" (click)="forgotPassword()">Forgot Password?</p>
+
+      <!-- Action Buttons -->
+      <ion-button
+        expand="block"
+        class="login-btn"
+        [disabled]="loading"
+        (click)="login()"
+      >
+        <ion-spinner *ngIf="loading" name="crescent" slot="start"></ion-spinner>
+        {{ loading ? 'Signing in...' : 'Sign In' }}
+      </ion-button>
+
+      <div class="divider">
+        <span>or</span>
+      </div>
+
+      <ion-button expand="block" fill="outline" class="register-btn" (click)="goRegister()">
+        Create New Account
+      </ion-button>
+      
+      <!-- Version text placed naturally inside/bottom of white card context -->
+      <p class="version-text">v1.0.0</p>
+    </div>
+    
+  </div>
+</ion-content>

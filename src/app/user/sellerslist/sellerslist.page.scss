@@ -1,0 +1,105 @@
+@import '../../../global.scss';
+
+.ms-toolbar { --background: #{$primary}; --color: #fff; }
+.sellers-content { --background: #{$gray-50}; }
+
+.filter-row {
+  display: flex;
+  gap: $space-xs;
+  overflow-x: auto;
+  padding: $space-md $space-lg;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+
+  .filter-chip {
+    --background: #fff;
+    --color: #{$gray-600};
+    border: 0.5px solid $gray-400;
+    border-radius: $radius-pill;
+    font-size: $font-xs;
+    flex-shrink: 0;
+
+    &.active {
+      --background: #{$primary};
+      --color: #fff;
+      border-color: $primary;
+    }
+  }
+}
+
+.sellers-list { padding: 0 $space-lg $space-xl; }
+
+.seller-card {
+  background: #fff;
+  border-radius: $radius-md;
+  padding: $space-md $space-lg;
+  margin-bottom: $space-sm;
+  box-shadow: $shadow-sm;
+  border: 0.5px solid $gray-200;
+  cursor: pointer;
+  transition: transform 0.12s;
+
+  &:active { transform: scale(0.98); }
+}
+
+.seller-top {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-md;
+  margin-bottom: $space-sm;
+
+  .seller-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: $primary-light;
+    @include flex-center;
+    font-size: $font-lg;
+    font-weight: 700;
+    color: $primary;
+    flex-shrink: 0;
+  }
+
+  .seller-info {
+    flex: 1;
+    .seller-name { font-size: $font-base; font-weight: 600; color: $gray-900; margin: 0; }
+    .seller-id   { font-size: $font-xs; color: $gray-600; font-weight: 400; }
+  }
+
+  .seller-price {
+    text-align: right;
+    .price-val { display: block; font-size: $font-lg; font-weight: 700; color: $gray-900; }
+    .price-sub { font-size: $font-xs; color: $gray-600; }
+  }
+}
+
+.stars-row {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  margin-top: 3px;
+
+  .star { font-size: 14px; &.filled { color: #fbbc04; } &.empty { color: $gray-400; } }
+  .review-count { font-size: $font-xs; color: $gray-600; margin-left: 4px; }
+}
+
+.seller-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-xs;
+
+  .badge-online {
+    @include badge($success-light, $success);
+    &.offline { @include badge(#ffebee, #c62828); }
+  }
+
+  .badge-verified {
+    @include badge($primary-light, $primary);
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    ion-icon { font-size: 12px; }
+  }
+
+  .batch-chip { @include badge(#f3e5f5, #6a1b9a); }
+}

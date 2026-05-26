@@ -1,0 +1,54 @@
+@import '../../../global.scss';
+.admin-toolbar { --background: #1a1a2e; --color: #fff; }
+.pa-content { --background: #{$gray-50}; }
+
+.summary-banner {
+  display: flex; align-items: center; gap: $space-md;
+  background: $warning-light; padding: $space-md $space-lg; margin: $space-md;
+  border-radius: $radius-md; border-left: 3px solid $warning;
+  ion-icon { font-size: 28px; color: $warning; flex-shrink: 0; }
+  .summary-title { font-size: $font-sm; font-weight: 600; color: $warning; margin: 0; }
+  .summary-count { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; }
+}
+
+.filter-row { padding: 0 $space-lg $space-md;
+  .admin-segment {
+    --background: #{$gray-200}; border-radius: $radius-md;
+    ion-segment-button { --color: #{$gray-600}; --color-checked: #{$primary}; --indicator-color: #fff; font-size: $font-xs; }
+  }
+}
+
+.payments-list { padding: 0 $space-lg $space-xl; }
+
+.payment-card {
+  background: #fff; border-radius: $radius-md; padding: $space-md $space-lg;
+  margin-bottom: $space-md; border: 0.5px solid $gray-200; box-shadow: $shadow-sm;
+
+  .pay-top { @include flex-between; margin-bottom: $space-sm;
+    h3 { font-size: $font-sm; font-weight: 600; color: $gray-900; margin: 0; }
+    p  { font-size: $font-xs; color: $gray-600; margin: 3px 0 0; }
+    .status-pill {
+      font-size: $font-xs; padding: 3px 8px; border-radius: $radius-pill; font-weight: 500; flex-shrink: 0;
+      &.pending  { @include badge($warning-light, $warning); }
+      &.approved { @include badge($success-light, $success); }
+      &.rejected { @include badge($danger-light, $danger); }
+    }
+  }
+
+  .screenshot-row {
+    display: flex; align-items: center; gap: $space-sm; font-size: $font-xs; color: $primary;
+    margin-bottom: $space-sm; cursor: pointer; padding: $space-xs 0;
+    ion-icon { font-size: 16px; }
+    span { flex: 1; }
+  }
+
+  .action-row { display: flex; gap: $space-sm;
+    .approve-btn { --background: #{$success}; --color: #fff; --border-radius: #{$radius-md}; flex: 1; height: 40px; font-size: $font-xs; }
+    .reject-btn  { --border-radius: #{$radius-md}; flex: 1; height: 40px; font-size: $font-xs; }
+  }
+}
+
+.empty-state { @include flex-center; flex-direction: column; gap: $space-md; padding: 60px 0;
+  ion-icon { font-size: 52px; color: $gray-400; }
+  p { font-size: $font-sm; color: $gray-400; margin: 0; }
+}

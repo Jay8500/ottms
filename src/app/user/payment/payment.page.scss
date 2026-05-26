@@ -1,0 +1,93 @@
+@import '../../../global.scss';
+
+.ms-toolbar { --background: #{$primary}; --color: #fff; }
+.payment-content { --background: #{$gray-50}; }
+
+.ms-card {
+  @include card;
+  margin: 0 $space-lg $space-sm;
+}
+
+.section-label { @include section-label; }
+
+.order-summary {
+  margin-top: $space-lg;
+
+  .card-label { font-size: $font-xs; color: $gray-600; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 $space-sm; }
+
+  .summary-row {
+    @include flex-between;
+    padding: $space-xs 0;
+    font-size: $font-sm;
+    color: $gray-600;
+    border-bottom: 0.5px solid $gray-100;
+
+    strong { color: $gray-900; }
+    &:last-child { border-bottom: none; }
+  }
+
+  .total-row {
+    margin-top: $space-xs;
+    .total-price { font-size: $font-xl; color: $primary; }
+  }
+}
+
+.qr-card {
+  text-align: center;
+  .qr-box {
+    @include flex-center;
+    margin-bottom: $space-sm;
+    .qr-placeholder {
+      width: 140px;
+      height: 140px;
+      border: 1.5px dashed $gray-200;
+      border-radius: $radius-md;
+      @include flex-center;
+      flex-direction: column;
+      gap: $space-sm;
+      ion-icon { font-size: 48px; color: $gray-400; }
+      p { font-size: $font-xs; color: $gray-600; margin: 0; }
+    }
+  }
+  .qr-hint { font-size: $font-xs; color: $gray-600; margin: 0; }
+}
+
+.upi-card {
+  .upi-row {
+    @include flex-between;
+    .upi-id { font-size: $font-base; font-weight: 600; color: $gray-900; }
+    ion-button { --color: #{$primary}; }
+  }
+  .upi-hint { font-size: $font-xs; color: $gray-600; margin: $space-xs 0 0; }
+}
+
+.upload-card {
+  @include flex-center;
+  flex-direction: column;
+  gap: $space-sm;
+  border: 1.5px dashed $gray-200;
+  cursor: pointer;
+  min-height: 90px;
+  transition: border-color 0.15s;
+
+  &:active { border-color: $primary; }
+
+  .upload-icon { font-size: 32px; color: $primary; }
+  .upload-text {
+    font-size: $font-sm;
+    color: $primary;
+    margin: 0;
+    &.success {
+      color: $success;
+      display: flex;
+      align-items: center;
+      gap: $space-xs;
+      ion-icon { font-size: 16px; }
+    }
+  }
+}
+
+.bottom-action {
+  padding: $space-lg;
+  .pay-btn { @include primary-btn; height: 50px; }
+}

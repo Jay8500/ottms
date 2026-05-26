@@ -1,0 +1,52 @@
+@import '../../../global.scss';
+
+.admin-toolbar { --background: #1a1a2e; --color: #fff; }
+.admin-home-content { --background: #{$gray-50}; }
+.section-label { @include section-label; }
+
+.stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: $space-sm; padding: $space-lg $space-lg $space-sm;
+}
+
+.stat-card {
+  background: #fff; border-radius: $radius-md; padding: $space-lg;
+  text-align: center; box-shadow: $shadow-sm; border: 0.5px solid $gray-200;
+  ion-icon { font-size: 28px; margin-bottom: 4px; }
+  .stat-val { font-size: $font-2xl; font-weight: 700; color: $gray-900; margin: 0; }
+  .stat-lbl { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; }
+}
+
+.quick-actions {
+  display: flex; gap: $space-sm; overflow-x: auto; padding: 0 $space-lg $space-sm;
+  scrollbar-width: none; &::-webkit-scrollbar { display: none; }
+
+  .qa-btn {
+    @include flex-center; flex-direction: column; gap: $space-xs;
+    background: #fff; border-radius: $radius-md; padding: $space-md;
+    border: 0.5px solid $gray-200; flex-shrink: 0; min-width: 80px;
+    cursor: pointer; transition: transform 0.12s;
+    &:active { transform: scale(0.95); }
+    ion-icon { font-size: 22px; color: $primary; }
+    span { font-size: $font-xs; color: $gray-200; text-align: center; white-space: nowrap; }
+  }
+}
+
+.nav-cards { padding: 0 $space-lg $space-xl; display: flex; flex-direction: column; gap: $space-sm; }
+
+.nav-card {
+  display: flex; align-items: center; gap: $space-md;
+  background: #fff; border-radius: $radius-md; padding: $space-md $space-lg;
+  border: 0.5px solid $gray-200; box-shadow: $shadow-sm; cursor: pointer;
+
+  .nav-icon {
+    width: 46px; height: 46px; border-radius: $radius-sm; @include flex-center; flex-shrink: 0;
+    ion-icon { font-size: 22px; }
+  }
+  .nav-info { flex: 1;
+    h3 { font-size: $font-sm; font-weight: 600; color: $gray-900; margin: 0; }
+    p  { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; }
+  }
+  .nav-arrow { color: $gray-400; }
+  ion-badge { margin-right: $space-sm; }
+}

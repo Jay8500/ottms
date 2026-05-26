@@ -1,0 +1,85 @@
+@import '../../../global.scss';
+
+.ms-toolbar { --background: #{$primary}; --color: #fff; }
+.validity-content { --background: #{$gray-50}; }
+
+.app-banner {
+  display: flex;
+  align-items: center;
+  gap: $space-lg;
+  background: #fff;
+  padding: $space-lg;
+  margin-bottom: $space-sm;
+  box-shadow: $shadow-sm;
+
+  .app-logo {
+    width: 56px;
+    height: 56px;
+    border-radius: $radius-md;
+    @include flex-center;
+    color: #fff;
+    font-size: $font-xl;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .app-name   { font-size: $font-lg; font-weight: 600; color: $gray-900; margin: 0; }
+  .app-action { font-size: $font-xs; color: $primary; margin: 2px 0 0; font-weight: 500; }
+}
+
+.section-label { @include section-label; }
+
+.validity-list {
+  padding: 0 $space-lg $space-lg;
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+}
+
+.validity-card {
+  @include flex-between;
+  background: #fff;
+  border-radius: $radius-md;
+  padding: $space-md $space-lg;
+  border: 1.5px solid $gray-200;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &.selected {
+    border-color: $primary;
+    background: $primary-light;
+  }
+
+  .v-left {
+    display: flex;
+    align-items: center;
+    gap: $space-md;
+
+    .v-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: $radius-sm;
+      background: $primary-light;
+      @include flex-center;
+      ion-icon { font-size: 20px; color: $primary; }
+    }
+
+    .v-title { font-size: $font-base; font-weight: 600; color: $gray-900; margin: 0; }
+    .v-save  { font-size: $font-xs; color: $success; margin: 2px 0 0; }
+  }
+
+  .v-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: $space-xs;
+
+    .v-price { font-size: $font-lg; font-weight: 700; color: $gray-900; }
+    ion-icon  { font-size: 22px; color: $gray-400; &.checked { color: $primary; } }
+  }
+}
+
+.bottom-action {
+  padding: $space-md $space-lg;
+  .proceed-btn { @include primary-btn; height: 50px; }
+}

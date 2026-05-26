@@ -1,0 +1,36 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="admin-toolbar">
+    <ion-title>Wallet Admin</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="aw-content">
+
+  <div class="stats-row">
+    <div class="mini-stat"><p class="ms-val">843</p><p class="ms-lbl">Total Purchased</p></div>
+    <div class="mini-stat"><p class="ms-val">621</p><p class="ms-lbl">Total Sold</p></div>
+    <div class="mini-stat"><p class="ms-val">₹4.2L</p><p class="ms-lbl">Locked Wallets</p></div>
+  </div>
+
+  <div class="search-wrap">
+    <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterWallets()" placeholder="Search user / ID..." class="admin-searchbar"></ion-searchbar>
+  </div>
+
+  <div class="wallets-list">
+    <div class="wallet-card" *ngFor="let w of filteredWallets">
+      <div class="wc-top">
+        <div class="wc-avatar">{{ w.name[0] }}</div>
+        <div class="wc-info">
+          <h3>{{ w.name }} ({{ w.uid }})</h3>
+          <p>Total: ₹{{ w.total }} · Locked: ₹{{ w.locked }} · Unlocked: ₹{{ w.unlocked }}</p>
+          <p>Role: <strong>{{ w.role }}</strong></p>
+        </div>
+        <ion-button fill="outline" size="small" (click)="editWallet(w)">Edit</ion-button>
+      </div>
+      <div class="wc-screens">
+        <span class="screen-chip" *ngFor="let s of w.screens">{{ s }}</span>
+      </div>
+    </div>
+  </div>
+
+</ion-content>

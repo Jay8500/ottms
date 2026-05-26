@@ -1,0 +1,52 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ms-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/user/account-type"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Select Validity</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="validity-content">
+  <div class="app-banner">
+    <div class="app-logo" [style.background]="ottColor">{{ ottInitial }}</div>
+    <div>
+      <h2 class="app-name">{{ ottName }}</h2>
+      <p class="app-action">{{ action === 'purchase' ? 'Purchase a Screen' : 'Share Your Screen' }}</p>
+    </div>
+  </div>
+
+  <div class="section-label">Choose Plan Duration</div>
+
+  <div class="validity-list">
+    <div
+      class="validity-card"
+      *ngFor="let v of validities"
+      [class.selected]="selectedId === v.id"
+      (click)="selectValidity(v)"
+    >
+      <div class="v-left">
+        <div class="v-icon">
+          <ion-icon name="calendar-outline"></ion-icon>
+        </div>
+        <div>
+          <h3 class="v-title">{{ v.label }}</h3>
+          <p class="v-save">Save upto ₹{{ v.saveUpto }}</p>
+        </div>
+      </div>
+      <div class="v-right">
+        <span class="v-price">₹{{ v.amount }}</span>
+        <ion-icon
+          [name]="selectedId === v.id ? 'checkmark-circle' : 'ellipse-outline'"
+          [class.checked]="selectedId === v.id"
+        ></ion-icon>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-action">
+    <ion-button expand="block" class="proceed-btn" [disabled]="!selectedId" (click)="proceed()">
+      View Available Sellers
+    </ion-button>
+  </div>
+</ion-content>

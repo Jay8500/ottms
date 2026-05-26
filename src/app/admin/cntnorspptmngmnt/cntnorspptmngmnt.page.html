@@ -1,0 +1,78 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="admin-toolbar">
+    <ion-title>Content &amp; Support</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="content-mgmt">
+
+  <!-- Support Contacts -->
+  <div class="section-label">Support Contact Details</div>
+  <div class="form-section ms-card">
+    <div class="form-row">
+      <ion-icon name="chatbubbles-outline" class="form-icon"></ion-icon>
+      <div class="form-field">
+        <ion-label class="form-label">In-App Support Email</ion-label>
+        <ion-input [(ngModel)]="contacts.email" placeholder="support@moneysaver.in" class="ms-input"></ion-input>
+      </div>
+    </div>
+    <div class="form-row">
+      <ion-icon name="logo-whatsapp" class="form-icon wa"></ion-icon>
+      <div class="form-field">
+        <ion-label class="form-label">WhatsApp Number</ion-label>
+        <ion-input [(ngModel)]="contacts.whatsapp" placeholder="+91 98765 00000" class="ms-input"></ion-input>
+      </div>
+    </div>
+    <div class="form-row">
+      <ion-icon name="call-outline" class="form-icon"></ion-icon>
+      <div class="form-field">
+        <ion-label class="form-label">Call Support Number</ion-label>
+        <ion-input [(ngModel)]="contacts.phone" placeholder="+91 98765 11111" class="ms-input"></ion-input>
+      </div>
+    </div>
+    <ion-button expand="block" class="save-btn" (click)="saveContacts()">Save Contact Details</ion-button>
+  </div>
+
+  <!-- FAQ Management -->
+  <div class="section-label">
+    FAQ Management
+    <ion-button fill="clear" size="small" (click)="addFaq()" class="inline-add">
+      <ion-icon name="add-circle-outline" slot="start"></ion-icon> Add
+    </ion-button>
+  </div>
+
+  <div class="faq-admin-list">
+    <div class="faq-admin-item" *ngFor="let faq of faqs">
+      <div class="faq-text">
+        <h4>{{ faq.question }}</h4>
+        <p>{{ faq.answer }}</p>
+      </div>
+      <div class="faq-item-actions">
+        <ion-button fill="clear" size="small" (click)="editFaq(faq)">
+          <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" size="small" color="danger" (click)="deleteFaq(faq)">
+          <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Suggested Texts -->
+  <div class="section-label">
+    Suggested Chat Texts
+    <ion-button fill="clear" size="small" (click)="addSuggested()" class="inline-add">
+      <ion-icon name="add-circle-outline" slot="start"></ion-icon> Add
+    </ion-button>
+  </div>
+
+  <div class="suggested-admin-list">
+    <div class="suggested-admin-item" *ngFor="let s of suggestedTexts">
+      <span>{{ s.text }}</span>
+      <ion-button fill="clear" size="small" color="danger" (click)="deleteSuggested(s)">
+        <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+
+</ion-content>

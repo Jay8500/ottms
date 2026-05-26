@@ -1,0 +1,66 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ms-toolbar">
+    <ion-buttons slot="start"><ion-back-button></ion-back-button></ion-buttons>
+    <ion-title>Payment</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="payment-content">
+
+  <div class="order-summary ms-card">
+    <p class="card-label">Order Summary</p>
+    <div class="summary-row">
+      <span>Platform</span><strong>Netflix</strong>
+    </div>
+    <div class="summary-row">
+      <span>Validity</span><strong>1 Month</strong>
+    </div>
+    <div class="summary-row">
+      <span>Seller</span><strong>Rahul (104)</strong>
+    </div>
+    <div class="summary-row total-row">
+      <span>Total Amount</span><strong class="total-price">₹149</strong>
+    </div>
+  </div>
+
+  <div class="section-label">Pay via QR Code</div>
+  <div class="qr-card ms-card">
+    <div class="qr-box">
+      <!-- Replace src with dynamic QR from API -->
+      <div class="qr-placeholder">
+        <ion-icon name="qr-code-outline"></ion-icon>
+        <p>QR Code</p>
+      </div>
+    </div>
+    <p class="qr-hint">Scan with any UPI app</p>
+  </div>
+
+  <div class="section-label">Or Pay via UPI ID</div>
+  <div class="upi-card ms-card">
+    <div class="upi-row">
+      <span class="upi-id">moneysaver@upi</span>
+      <ion-button fill="clear" size="small" (click)="copyUpi()">
+        <ion-icon name="copy-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </div>
+    <p class="upi-hint">Amount: <strong>₹149</strong></p>
+  </div>
+
+  <div class="section-label">Upload Payment Screenshot</div>
+  <div class="upload-card ms-card" (click)="uploadScreenshot()">
+    <ion-icon name="cloud-upload-outline" class="upload-icon"></ion-icon>
+    <p class="upload-text" *ngIf="!screenshotFile">Tap to upload screenshot</p>
+    <p class="upload-text success" *ngIf="screenshotFile">
+      <ion-icon name="checkmark-circle-outline"></ion-icon>
+      {{ screenshotFile.name }}
+    </p>
+    <input type="file" #fileInput accept="image/*" (change)="onFileSelected($event)" hidden />
+  </div>
+
+  <div class="bottom-action">
+    <ion-button expand="block" class="pay-btn" [disabled]="!screenshotFile" (click)="submitPayment()">
+      Submit Payment
+    </ion-button>
+  </div>
+
+</ion-content>

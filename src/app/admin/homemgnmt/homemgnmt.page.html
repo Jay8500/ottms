@@ -1,0 +1,48 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="admin-toolbar">
+    <ion-title>Admin Dashboard</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="admin-home-content">
+
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    <div class="stat-card" *ngFor="let s of stats">
+      <ion-icon [name]="s.icon" [style.color]="s.color"></ion-icon>
+      <p class="stat-val">{{ s.value }}</p>
+      <p class="stat-lbl">{{ s.label }}</p>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="section-label">Manage Home Page</div>
+  <div class="quick-actions">
+    <div class="qa-btn" *ngFor="let a of actions" (click)="a.action()">
+      <ion-icon [name]="a.icon"></ion-icon>
+      <span>{{ a.label }}</span>
+    </div>
+  </div>
+
+  <!-- Navigation Cards -->
+  <div class="section-label">Admin Sections</div>
+  <div class="nav-cards">
+    <div class="nav-card" *ngFor="let n of navItems" (click)="navigate(n.route)">
+      <div class="nav-icon" [style.background]="n.bg">
+        <ion-icon [name]="n.icon" [style.color]="n.color"></ion-icon>
+      </div>
+      <div class="nav-info">
+        <h3>{{ n.label }}</h3>
+        <p>{{ n.desc }}</p>
+      </div>
+      <ion-badge *ngIf="n.badge" color="danger">{{ n.badge }}</ion-badge>
+      <ion-icon name="chevron-forward-outline" class="nav-arrow"></ion-icon>
+    </div>
+  </div>
+
+</ion-content>

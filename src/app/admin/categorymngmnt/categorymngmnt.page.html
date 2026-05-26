@@ -1,0 +1,39 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="admin-toolbar">
+    <ion-title>Category Management</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="addCategory()">
+        <ion-icon name="add-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ac-content">
+
+  <div class="info-card">
+    <ion-icon name="information-circle-outline"></ion-icon>
+    <p>Changes here update the category list visible to all users instantly.</p>
+  </div>
+
+  <div class="categories-list">
+    <div class="cat-item" *ngFor="let cat of categories">
+      <div class="cat-icon-bg" [style.background]="cat.bgColor">
+        <span>{{ cat.emoji }}</span>
+      </div>
+      <div class="cat-info">
+        <h3>{{ cat.name }}</h3>
+        <p>{{ cat.appCount }} apps · Color: <span [style.color]="cat.color">{{ cat.color }}</span></p>
+      </div>
+      <div class="cat-actions">
+        <ion-button fill="clear" size="small" (click)="editCategory(cat)">
+          <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" size="small" color="danger" (click)="deleteCategory(cat)">
+          <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+</ion-content>

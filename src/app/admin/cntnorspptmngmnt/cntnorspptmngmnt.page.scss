@@ -1,0 +1,48 @@
+@import '../../../global.scss';
+.admin-toolbar { --background: #1a1a2e; --color: #fff; }
+.content-mgmt { --background: #{$gray-50}; }
+
+.section-label {
+  @include section-label;
+  display: flex; align-items: center; justify-content: space-between; padding-right: $space-md;
+  .inline-add { --color: #{$primary}; font-size: $font-xs; margin: 0; height: 28px; }
+}
+
+.ms-card { @include card; margin: 0 $space-lg $space-md; }
+
+.form-section { .save-btn { @include primary-btn; margin-top: $space-md; } }
+
+.form-row {
+  display: flex; align-items: flex-start; gap: $space-md; margin-bottom: $space-md;
+  .form-icon { font-size: 22px; color: $primary; margin-top: 22px; flex-shrink: 0; &.wa { color: #25d366; } }
+  .form-field { flex: 1;
+    .form-label { font-size: $font-xs; color: $gray-600; font-weight: 500; display: block; margin-bottom: 4px; }
+    .ms-input {
+      --background: #{$gray-50}; --padding-start: #{$space-sm}; --padding-end: #{$space-sm};
+      border: 0.5px solid $gray-200; border-radius: $radius-md; font-size: $font-sm;
+    }
+  }
+}
+
+.faq-admin-list { padding: 0 $space-lg $space-sm; display: flex; flex-direction: column; gap: $space-sm; }
+
+.faq-admin-item {
+  display: flex; align-items: flex-start; gap: $space-sm;
+  background: #fff; border-radius: $radius-md; padding: $space-md;
+  border: 0.5px solid $gray-200; box-shadow: $shadow-sm;
+  .faq-text { flex: 1;
+    h4 { font-size: $font-sm; font-weight: 600; color: $gray-900; margin: 0 0 4px; }
+    p  { font-size: $font-xs; color: $gray-600; margin: 0; line-height: 1.5; }
+  }
+  .faq-item-actions { display: flex; flex-direction: column; gap: 2px; ion-button { --padding-start: 4px; --padding-end: 4px; margin: 0; } }
+}
+
+.suggested-admin-list { padding: 0 $space-lg $space-xl; display: flex; flex-direction: column; gap: $space-xs; }
+
+.suggested-admin-item {
+  display: flex; align-items: center; justify-content: space-between;
+  background: #fff; border-radius: $radius-md; padding: $space-sm $space-md;
+  border: 0.5px solid $gray-200;
+  span { font-size: $font-sm; color: $gray-800; }
+  ion-button { --color: #{$danger}; margin: 0; }
+}

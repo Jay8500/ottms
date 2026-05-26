@@ -1,0 +1,38 @@
+@import '../../../global.scss';
+.admin-toolbar { --background: #1a1a2e; --color: #fff; }
+.aw-content { --background: #{$gray-50}; }
+
+.stats-row {
+  display: flex; gap: $space-sm; padding: $space-lg $space-lg $space-sm;
+  .mini-stat {
+    flex: 1; background: #fff; border-radius: $radius-md; padding: $space-md;
+    text-align: center; border: 0.5px solid $gray-200;
+    .ms-val { font-size: $font-xl; font-weight: 700; color: $gray-900; margin: 0; }
+    .ms-lbl { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; }
+  }
+}
+
+.search-wrap { padding: 0 $space-lg $space-sm;
+  .admin-searchbar { --background: #fff; --border-radius: #{$radius-md}; --box-shadow: #{$shadow-sm}; padding: 0; }
+}
+
+.wallets-list { padding: 0 $space-lg $space-xl; }
+
+.wallet-card {
+  background: #fff; border-radius: $radius-md; padding: $space-md $space-lg;
+  margin-bottom: $space-sm; border: 0.5px solid $gray-200; box-shadow: $shadow-sm;
+
+  .wc-top {
+    display: flex; align-items: flex-start; gap: $space-md; margin-bottom: $space-sm;
+    .wc-avatar { width: 40px; height: 40px; border-radius: 50%; background: #1a1a2e; @include flex-center; color: #fff; font-weight: 700; flex-shrink: 0; }
+    .wc-info { flex: 1;
+      h3 { font-size: $font-sm; font-weight: 600; color: $gray-900; margin: 0; }
+      p  { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; }
+    }
+    ion-button { --border-radius: #{$radius-md}; --color: #{$primary}; --border-color: #{$primary}; flex-shrink: 0; }
+  }
+
+  .wc-screens { display: flex; flex-wrap: wrap; gap: $space-xs;
+    .screen-chip { @include badge($primary-light, $primary); }
+  }
+}
