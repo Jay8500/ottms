@@ -1,0 +1,50 @@
+@import '../../../global.scss';
+
+.seller-toolbar { --background: #{$seller-color}; --color: #fff; }
+.cg-content { --background: #{$gray-50}; }
+
+.info-banner {
+  display: flex; align-items: flex-start; gap: $space-sm;
+  background: $warning-light; border-left: 3px solid $warning;
+  padding: $space-md $space-lg; margin: $space-md;
+  border-radius: 0 $radius-md $radius-md 0; font-size: $font-xs; color: $warning;
+  ion-icon { flex-shrink: 0; font-size: 18px; }
+  p { margin: 0; }
+  strong { font-weight: 600; }
+}
+
+.form-section { padding: 0 $space-lg; }
+
+.form-group { margin-bottom: $space-md;
+  .form-label { font-size: $font-xs; color: $gray-600; font-weight: 500; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px; }
+}
+
+.ms-select {
+  --background: #fff; --padding-start: #{$space-md};
+  border: 0.5px solid $gray-200; border-radius: $radius-md;
+  box-shadow: $shadow-sm; width: 100%; font-size: $font-sm;
+}
+
+.ms-input-item {
+  --background: #fff; --border-radius: #{$radius-md};
+  --padding-start: #{$space-md}; --inner-padding-end: #{$space-md};
+  border: 0.5px solid $gray-200; border-radius: $radius-md; overflow: hidden;
+  ion-input { --placeholder-color: #{$gray-400}; --color: #{$gray-900}; font-size: $font-sm; height: 48px; }
+}
+
+.upload-box {
+  display: flex; flex-direction: column; align-items: center; gap: $space-sm;
+  border: 1.5px dashed $gray-300; border-radius: $radius-md;
+  padding: $space-lg; cursor: pointer; background: #fff; min-height: 90px;
+  ion-icon { font-size: 28px; color: $seller-color; &.uploaded { color: $success; } }
+  p { font-size: $font-xs; color: $gray-600; margin: 0; text-align: center; }
+}
+
+.bottom-action {
+  padding: $space-lg;
+  .submit-btn {
+    --background: #{$seller-color}; --color: #fff;
+    --border-radius: #{$radius-md}; --box-shadow: none;
+    height: 50px; font-weight: 500;
+  }
+}

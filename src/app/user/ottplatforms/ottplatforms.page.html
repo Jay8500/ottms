@@ -1,13 +1,44 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>ottplatforms</ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ms-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/user/category"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ categoryName }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">ottplatforms</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ott-content">
+  <ion-searchbar
+    [(ngModel)]="searchTerm"
+    (ionInput)="filter()"
+    placeholder="Search platforms..."
+    class="ms-searchbar"
+  ></ion-searchbar>
+
+  <p class="result-count">{{ filtered.length }} platforms available</p>
+
+  <div class="ott-list">
+    <div class="ott-card" *ngFor="let app of filtered" (click)="selectApp(app)">
+      <div class="ott-logo" [style.background]="app.color">{{ app.initial }}</div>
+      <div class="ott-info">
+        <h3>{{ app.name }}</h3>
+        <p>{{ app.plan }}</p>
+        <div class="ott-meta">
+          <span class="sellers">{{ app.sellers }} sellers</span>
+          <span class="dot">·</span>
+          <span class="price">from ₹{{ app.startingPrice }}/mo</span>
+        </div>
+      </div>
+      <div class="ott-right">
+        <span class="avail-badge" *ngIf="app.available > 0">{{ app.available }} left</span>
+        <span class="sold-badge" *ngIf="app.available === 0">Sold out</span>
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="filtered.length === 0">
+      <ion-icon name="search-outline"></ion-icon>
+      <p>No platforms found</p>
+    </div>
+  </div>
 </ion-content>

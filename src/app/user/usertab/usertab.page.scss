@@ -1,0 +1,10 @@
+.ms-tabbar {
+  --background: #ffffff;
+  border-top: 0.5px solid #eeeeee;
+  height: 56px;
+
+  ion-tab-button {
+    --color: #757575;
+    --color-selected: #1a73e8;
+  }
+}

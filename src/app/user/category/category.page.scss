@@ -1,6 +1,6 @@
 @import '../../../global.scss';
 
-.ms-toolbar { --background: #{$primary}; --color: #fff; }
+.ms-toolbar { @include app-toolbar; }
 .cat-content { --background: #{$gray-50}; }
 
 .search-wrap {
@@ -15,9 +15,7 @@
   }
 }
 
-.section-label {
-  @include section-label;
-}
+.section-label { @include section-label; }
 
 .cat-grid {
   padding: 0 $space-lg $space-xl;
@@ -32,11 +30,10 @@
   border-radius: $radius-md;
   padding: $space-md $space-lg;
   box-shadow: $shadow-sm;
-  border: 0.5px solid $gray-200;
+  border: 1px solid $gray-200;
   cursor: pointer;
-  transition: transform 0.15s;
 
-  &:active { transform: scale(0.98); }
+  &:active { opacity: 0.88; }
 
   .cat-icon-wrap {
     width: 48px;
@@ -44,7 +41,7 @@
     border-radius: $radius-sm;
     @include flex-center;
     flex-shrink: 0;
-    .cat-emoji { font-size: 24px; }
+    .cat-emoji { font-size: 26px; }
   }
 
   .cat-info {
@@ -54,5 +51,5 @@
     .cat-count { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; }
   }
 
-  .cat-arrow { color: $gray-400; font-size: 18px; }
+  .cat-arrow { color: $primary; font-size: 18px; }
 }

@@ -1,0 +1,16 @@
+@import '../../../global.scss';
+
+.admin-tabbar {
+  --background: #1a1a2e;
+  border-top: none;
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.25);
+
+  ion-tab-button {
+    --color: rgba(255,255,255,0.45);
+    --color-selected: #{$accent};
+    pointer-events: all !important;
+
+    ion-icon  { font-size: 22px; }
+    ion-label { font-size: 10px; font-weight: 600; margin-top: 2px; }
+  }
+}

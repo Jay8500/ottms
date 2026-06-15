@@ -1,74 +1,83 @@
 // ─── OTT Money Saver — Global Design Tokens ───────────────────────────────
-/* Core CSS required for Ionic components to work properly */
 @import "@ionic/angular/css/core.css";
-
-/* Basic CSS for apps built with Ionic */
 @import "@ionic/angular/css/normalize.css";
 @import "@ionic/angular/css/structure.css";
 @import "@ionic/angular/css/typography.css";
 @import "@ionic/angular/css/display.css";
-
-/* Optional CSS utils that can be commented out */
 @import "@ionic/angular/css/padding.css";
 @import "@ionic/angular/css/float-elements.css";
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
-// Brand Colors
-$primary:       #1a73e8;
-$primary-light: #e8f0fe;
-$primary-dark:  #1558b0;
 
-$success:       #2e7d32;
-$success-light: #e8f5e9;
+// ─── Brand Colors (from client PPT) ───────────────────────────────────────────
+// Primary: Deep blue — used for headers, buttons, primary actions
+$primary:         #1565C0;
+$primary-light:   #E3F2FD;
+$primary-dark:    #0D47A1;
 
-$warning:       #e65100;
-$warning-light: #fff8e1;
+// Accent: Golden yellow — used for brand name, highlights, badges
+$accent:          #F9D54B;
+$accent-dark:     #F0B429;
+$accent-light:    #FFF8E1;
 
-$danger:        #c62828;
-$danger-light:  #ffebee;
+$success:         #2E7D32;
+$success-light:   #E8F5E9;
+$warning:         #E65100;
+$warning-light:   #FFF3E0;
+$danger:          #C62828;
+$danger-light:    #FFEBEE;
 
-$seller-color:  #6a1b9a;
-$seller-light:  #f3e5f5;
+$seller-color:    #6A1B9A;
+$seller-light:    #F3E5F5;
 
-// Neutral
-$gray-50:  #fafafa;
-$gray-100: #f5f5f5;
-$gray-200: #eeeeee;
-$gray-400: #bdbdbd;
-$gray-600: #757575;
-$gray-800: #424242;
-$gray-900: #212121;
+// ─── Neutral ──────────────────────────────────────────────────────────────────
+$gray-50:   #FAFAFA;
+$gray-100:  #F5F5F5;
+$gray-200:  #EEEEEE;
+$gray-300:  #E0E0E0;
+$gray-400:  #BDBDBD;
+$gray-600:  #757575;
+$gray-700:  #616161;
+$gray-800:  #424242;
+$gray-900:  #212121;
 
-// Typography
-$font-base:  14px;
-$font-sm:    12px;
-$font-xs:    11px;
-$font-lg:    16px;
-$font-xl:    20px;
-$font-2xl:   24px;
-$font-3xl:   28px;
+// ─── Typography ───────────────────────────────────────────────────────────────
+$font-base: 14px;
+$font-sm:   12px;
+$font-xs:   11px;
+$font-lg:   16px;
+$font-xl:   20px;
+$font-2xl:  24px;
+$font-3xl:  28px;
 
-// Spacing
-$space-xs:  4px;
-$space-sm:  8px;
-$space-md:  12px;
-$space-lg:  16px;
-$space-xl:  24px;
+// ─── Spacing ──────────────────────────────────────────────────────────────────
+$space-xs: 4px;
+$space-sm: 8px;
+$space-md: 12px;
+$space-lg: 16px;
+$space-xl: 24px;
 
-// Radius
-$radius-sm:  6px;
-$radius-md:  10px;
-$radius-lg:  16px;
+// ─── Radius ───────────────────────────────────────────────────────────────────
+$radius-sm:   6px;
+$radius-md:   10px;
+$radius-lg:   16px;
 $radius-pill: 999px;
 
-// Shadows
+// ─── Shadows ──────────────────────────────────────────────────────────────────
 $shadow-sm: 0 1px 4px rgba(0,0,0,0.08);
 $shadow-md: 0 2px 12px rgba(0,0,0,0.10);
 $shadow-lg: 0 4px 24px rgba(0,0,0,0.12);
 
-// ─── Mixins ─────────────────────────────────────────────────────────────────
+// ─── OTT Brand Colors ─────────────────────────────────────────────────────────
+$ott-netflix: #E50914;
+$ott-prime:   #00A8E0;
+$ott-hotstar: #1565C0;
+$ott-sony:    #E91E63;
+$ott-spotify: #1DB954;
+$ott-zee5:    #8E24AA;
 
+// ─── Mixins ───────────────────────────────────────────────────────────────────
 @mixin flex-center {
   display: flex;
   align-items: center;
@@ -82,7 +91,7 @@ $shadow-lg: 0 4px 24px rgba(0,0,0,0.12);
 }
 
 @mixin card {
-  background: var(--ion-card-background, #fff);
+  background: #fff;
   border-radius: $radius-md;
   border: 0.5px solid $gray-200;
   padding: $space-md $space-lg;
@@ -114,7 +123,7 @@ $shadow-lg: 0 4px 24px rgba(0,0,0,0.12);
   --color: #fff;
   --border-radius: #{$radius-md};
   --box-shadow: none;
-  font-weight: 500;
+  font-weight: 600;
   font-size: $font-base;
 }
 
@@ -122,26 +131,69 @@ $shadow-lg: 0 4px 24px rgba(0,0,0,0.12);
   --background: transparent;
   --color: #{$primary};
   --border-color: #{$primary};
-  --border-width: 1px;
+  --border-width: 1.5px;
   --border-style: solid;
   --border-radius: #{$radius-md};
   --box-shadow: none;
-  font-weight: 500;
+  font-weight: 600;
   font-size: $font-base;
 }
 
-// ─── OTT Brand Colors ────────────────────────────────────────────────────────
-$ott-netflix:  #e50914;
-$ott-prime:    #00a8e0;
-$ott-hotstar:  #1565c0;
-$ott-sony:     #e91e63;
-$ott-spotify:  #1db954;
-$ott-zee5:     #8e24aa;
+// ─── APP HEADER MIXIN ─────────────────────────────────────────────────────────
+@mixin app-toolbar {
+  --background: #{$primary-dark};
+  --color: #fff;
+  --min-height: 56px;
+}
 
-/* ─── SCROLL FIX FOR OVERALL APPLICATION ROOT ─────────────────── */
-html, body {
-  height: 100% !important;
-  min-height: 100% !important;
-  margin: 0;
-  padding: 0;
+// ─── IONIC INTERNALS ──────────────────────────────────────────────────────────
+ion-content {
+  --overflow: auto;
+  --keyboard-offset: 0 !important;
+}
+
+// ─── TAB BAR (User) ───────────────────────────────────────────────────────────
+ion-tab-bar {
+  --background: #ffffff;
+  --border: 0.5px solid #{$gray-200};
+
+  ion-tab-button {
+    --color: #{$gray-400};
+    --color-selected: #{$primary};
+  }
+
+  ion-label {
+    font-size: 10px !important;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  ion-icon {
+    font-size: 22px !important;
+  }
+}
+
+// ─── TOUCH & POINTER FIXES ────────────────────────────────────────────────────
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+a, button, ion-button, ion-tab-button, ion-item,
+div[click], [ng-click], [onclick] {
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+ion-router-outlet {
+  pointer-events: none;
+}
+
+ion-router-outlet > .ion-page {
+  pointer-events: all;
+}
+
+ion-tab-bar,
+ion-tab-button {
+  pointer-events: all !important;
 }

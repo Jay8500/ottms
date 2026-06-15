@@ -1,13 +1,78 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>wallet</ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ms-toolbar">
+    <ion-title>My Wallet</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="withdraw()" [disabled]="unlockedAmount <= 0">
+        <ion-icon name="arrow-up-circle-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">wallet</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="wallet-content">
+  <!-- Balance Hero -->
+  <div class="balance-hero">
+    <p class="bal-label">Total Wallet Balance</p>
+    <h1 class="bal-amount">₹ {{ totalAmount | number:'1.0-0' }}</h1>
+    <div class="bal-chips">
+      <div class="bal-chip locked">
+        <ion-icon name="lock-closed-outline"></ion-icon>
+        <div>
+          <span class="chip-top">Locked</span>
+          <span class="chip-val">₹{{ lockedAmount | number:'1.0-0' }}</span>
+        </div>
+      </div>
+      <div class="bal-chip unlocked">
+        <ion-icon name="lock-open-outline"></ion-icon>
+        <div>
+          <span class="chip-top">Unlocked</span>
+          <span class="chip-val">₹{{ unlockedAmount | number:'1.0-0' }}</span>
+        </div>
+      </div>
+    </div>
+    <ion-button expand="block" class="withdraw-btn" (click)="withdraw()" [disabled]="unlockedAmount <= 0">
+      <ion-icon name="arrow-up-outline" slot="start"></ion-icon>
+      Withdraw Unlocked Amount
+    </ion-button>
+  </div>
+
+  <!-- Filter -->
+  <div class="seg-wrap">
+    <ion-segment [(ngModel)]="activeTab" (ionChange)="applyFilter()" class="ms-seg">
+      <ion-segment-button value="all">All</ion-segment-button>
+      <ion-segment-button value="purchased">Purchased</ion-segment-button>
+      <ion-segment-button value="sold">Sold</ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <!-- Screens -->
+  <div class="screens-list">
+    <div class="screen-card" *ngFor="let s of displayScreens">
+      <div class="sc-left">
+        <div class="sc-logo" [style.background]="s.color">{{ s.initial }}</div>
+        <div class="sc-info">
+          <h3>{{ s.ottName }} · {{ s.validity }}</h3>
+          <p>{{ s.type === 'purchased' ? 'Seller' : 'Buyer' }}: {{ s.peer }}</p>
+          <p class="sc-date">{{ s.date }}</p>
+        </div>
+      </div>
+      <div class="sc-right">
+        <span class="sc-status" [ngClass]="s.status">{{ s.statusLabel }}</span>
+        <div class="sc-btns">
+          <ion-button fill="clear" size="small" *ngIf="s.status==='active'" (click)="openChat(s)">
+            <ion-icon name="chatbubble-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" size="small" *ngIf="s.status==='completed' && !s.rated" (click)="openRating(s)">
+            <ion-icon name="star-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="displayScreens.length === 0">
+      <ion-icon name="wallet-outline"></ion-icon>
+      <p>No {{ activeTab === 'all' ? '' : activeTab }} screens yet</p>
+    </div>
+  </div>
+  <div style="height:80px"></div>
 </ion-content>

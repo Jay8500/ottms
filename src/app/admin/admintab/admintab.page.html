@@ -1,9 +1,32 @@
 <ion-tabs>
   <ion-router-outlet></ion-router-outlet>
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="tab1" href="/admin/homemgnmt">
-      <ion-icon aria-hidden="true" name="triangle"></ion-icon>
+
+  <ion-tab-bar slot="bottom" class="admin-tabbar">
+
+    <ion-tab-button tab="homemgnmt" href="/admin/homemgnmt">
+      <ion-icon name="home-outline"></ion-icon>
       <ion-label>Home</ion-label>
     </ion-tab-button>
+
+    <ion-tab-button tab="usermngmnt" href="/admin/usermngmnt">
+      <ion-icon name="people-outline"></ion-icon>
+      <ion-label>Users</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="groupapprovals" href="/admin/groupapprovals">
+      <ion-icon name="shield-checkmark-outline"></ion-icon>
+      <ion-label>Groups</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="paymentaprpovals" href="/admin/paymentaprpovals">
+      <ion-icon name="card-outline"></ion-icon>
+      <ion-label>Payments</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="walletadmin" href="/admin/walletadmin">
+      <ion-icon name="wallet-outline"></ion-icon>
+      <ion-label>Wallet</ion-label>
+    </ion-tab-button>
+
   </ion-tab-bar>
 </ion-tabs>

@@ -1,0 +1,55 @@
+@import '../../../global.scss';
+
+.ms-toolbar { @include app-toolbar; }
+.ott-content { --background: #{$gray-50}; }
+
+.ms-searchbar {
+  --background: #fff; --border-radius: #{$radius-md};
+  --box-shadow: #{$shadow-sm}; --placeholder-color: #{$gray-400};
+  padding: $space-md $space-md 0;
+}
+
+.result-count {
+  font-size: $font-xs; color: $gray-600; padding: $space-sm $space-lg;
+  margin: 0; text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+.ott-list { padding: 0 $space-lg $space-xl; display: flex; flex-direction: column; gap: $space-sm; }
+
+.ott-card {
+  display: flex; align-items: center; gap: $space-md;
+  background: #fff; border-radius: $radius-md; padding: $space-md $space-lg;
+  border: 1px solid $gray-200; box-shadow: $shadow-sm; cursor: pointer;
+  &:active { opacity: 0.85; }
+
+  .ott-logo {
+    width: 56px; height: 56px; border-radius: $radius-md;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 22px; font-weight: 700; flex-shrink: 0;
+    box-shadow: $shadow-sm;
+  }
+
+  .ott-info {
+    flex: 1; min-width: 0;
+    h3 { font-size: $font-base; font-weight: 700; color: $gray-900; margin: 0 0 2px; }
+    p  { font-size: $font-xs; color: $gray-600; margin: 0 0 4px; }
+    .ott-meta {
+      display: flex; align-items: center; gap: 5px; font-size: $font-xs; color: $gray-600;
+      .dot { color: $gray-400; }
+      .price { color: $primary; font-weight: 600; }
+    }
+  }
+
+  .ott-right {
+    display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0;
+    .avail-badge { font-size: $font-xs; padding: 2px 8px; border-radius: $radius-pill; background: $success-light; color: $success; font-weight: 600; }
+    .sold-badge  { font-size: $font-xs; padding: 2px 8px; border-radius: $radius-pill; background: $danger-light; color: $danger; font-weight: 600; }
+    ion-icon { color: $primary; font-size: 18px; }
+  }
+}
+
+.empty-state {
+  display: flex; flex-direction: column; align-items: center; gap: $space-md; padding: 60px 0;
+  ion-icon { font-size: 48px; color: $gray-300; }
+  p { font-size: $font-sm; color: $gray-400; margin: 0; }
+}

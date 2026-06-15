@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { AlertController, ToastController } from '@ionic/angular';
  import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { addIcons } from 'ionicons';
 import { IonContent, IonHeader, IonTitle, IonToolbar,IonIcon,IonButton,IonLabel } from '@ionic/angular/standalone';
-
+import { closeCircleOutline, addCircleOutline, createOutline, trashOutline, chatbubblesOutline, logoWhatsapp, callOutline } from 'ionicons/icons';
 @Component({
   selector: 'app-cntnorspptmngmnt',
   templateUrl: './cntnorspptmngmnt.page.html',
@@ -30,7 +31,9 @@ export class CntnorspptmngmntPage {
     { id:'s5', text:'Payment done'           },
   ];
  
-  constructor(private alertCtrl: AlertController, private toastCtrl: ToastController) {}
+  constructor(private alertCtrl: AlertController, private toastCtrl: ToastController) {
+    addIcons({ closeCircleOutline, addCircleOutline, createOutline, trashOutline, chatbubblesOutline, logoWhatsapp, callOutline });
+  }
  
   async saveContacts() {
     // TODO: API call

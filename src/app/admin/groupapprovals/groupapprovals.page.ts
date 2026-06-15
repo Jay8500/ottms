@@ -12,7 +12,7 @@ import { IonContent, IonHeader, IonTitle, IonToolbar,IonIcon,IonButton ,IonSegme
   styleUrls: ['./groupapprovals.page.scss'],
   standalone: true,
   imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule,IonIcon,IonButton,IonSegmentButton,
-    IonBadge
+    IonBadge,
   ]
 })
 export class GroupapprovalsPage implements OnInit {

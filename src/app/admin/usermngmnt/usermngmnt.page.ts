@@ -2,14 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar,IonButton,IonIcon,IonButtons,IonSelectOption } from '@ionic/angular/standalone';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular/standalone';
  
 @Component({
   selector: 'app-usermngmnt',
   templateUrl: './usermngmnt.page.html',
   styleUrls: ['./usermngmnt.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule,IonButton,IonIcon,IonButtons,IonSelectOption]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule,IonButton,IonIcon,IonButtons,IonSelectOption,
+  ]
 })
 export class UsermngmntPage implements OnInit {
   searchTerm = ''; roleFilter = 'all';

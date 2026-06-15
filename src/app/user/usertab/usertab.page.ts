@@ -1,36 +1,26 @@
-import { Component, EnvironmentInjector, inject, OnInit } from '@angular/core';
-import { 
-  IonTabs, 
-  IonTabBar, 
-  IonTabButton, 
-  IonIcon, 
-  IonLabel, 
-  IonRouterOutlet // <-- Add this
-} from '@ionic/angular/standalone';
+import { Component } from '@angular/core';
+import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouterOutlet } from '@ionic/angular/standalone';
+import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { triangle, ellipse, square } from 'ionicons/icons';
+import { homeOutline, gridOutline, walletOutline, headsetOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-usertab',
   templateUrl: './usertab.page.html',
   styleUrls: ['./usertab.page.scss'],
   standalone: true,
-   imports: [
-    IonTabs, 
-    IonTabBar, 
-    IonTabButton, 
-    IonIcon, 
-    IonLabel, 
-    IonRouterOutlet // <-- Add this
-  ],
+  imports: [
+    CommonModule,
+    IonTabs,
+    IonTabBar,
+    IonTabButton,
+    IonIcon,
+    IonLabel,
+    IonRouterOutlet
+  ]
 })
-export class UsertabPage implements OnInit {
-  public environmentInjector = inject(EnvironmentInjector);
-
+export class UsertabPage {
   constructor() {
-    addIcons({ triangle, ellipse, square });
+    addIcons({ homeOutline, gridOutline, walletOutline, headsetOutline });
   }
-
-  ngOnInit(): void {}
 }
-

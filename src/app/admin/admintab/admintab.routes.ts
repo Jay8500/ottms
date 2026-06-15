@@ -55,11 +55,6 @@ export const routes: Routes = [
           import('../cntnorspptmngmnt/cntnorspptmngmnt.page').then(
             (m) => m.CntnorspptmngmntPage,
           ),
-      },
-      {
-        path: 'admintab',
-        loadComponent: () =>
-          import('../admintab/admintab.page').then((m) => m.AdmintabPage),
       }
     ],
   }

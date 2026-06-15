@@ -14,6 +14,8 @@ import {
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Keyboard } from '@capacitor/keyboard';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -39,8 +41,12 @@ export class LoginPage {
   constructor(
     private auth: Auth,
     private router: Router,
-    private toastCtrl: ToastController,
+    private toastCtrl: ToastController
   ) {}
+
+  ionViewDidEnter() {
+    Keyboard.setAccessoryBarVisible({ isVisible: false });
+  }
 
   async login() {
     if (!this.mobile || !this.password) {
@@ -52,8 +58,9 @@ export class LoginPage {
     // ── Replace with your real HTTP call ────────────────────────────────────
     // const res = await this.http.post('/api/login', {...}).toPromise();
     // Dummy data for UI development:
-    await new Promise(r => setTimeout(r, 1000));
-    const dummyRole: 'user' | 'admin' = this.mobile === '0000000000' ? 'admin' : 'user';
+    await new Promise((r) => setTimeout(r, 1000));
+    const dummyRole: 'user' | 'admin' =
+      this.mobile === '0000000000' ? 'admin' : 'user';
     this.auth.setUser({
       id: 'usr_001',
       name: 'Bharath',

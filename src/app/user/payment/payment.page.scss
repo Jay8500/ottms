@@ -1,93 +1,80 @@
 @import '../../../global.scss';
 
-.ms-toolbar { --background: #{$primary}; --color: #fff; }
+.ms-toolbar { @include app-toolbar; }
 .payment-content { --background: #{$gray-50}; }
 
-.ms-card {
-  @include card;
-  margin: 0 $space-lg $space-sm;
+.amount-banner {
+  background: linear-gradient(135deg, #{$primary-dark}, #{$primary});
+  color: #fff; padding: $space-xl $space-lg; text-align: center;
+  .amount-label { font-size: $font-xs; color: rgba(255,255,255,0.72); text-transform: uppercase; letter-spacing: 0.6px; margin: 0 0 4px; }
+  .amount-value { font-size: 36px; font-weight: 700; margin: 0; letter-spacing: -1px; }
+  .amount-sub   { font-size: $font-xs; color: rgba(255,255,255,0.7); margin: 6px 0 0; }
 }
 
-.section-label { @include section-label; }
+.section-title {
+  padding: $space-lg $space-lg $space-sm;
+  font-size: $font-sm; font-weight: 700; color: $gray-900;
+}
 
-.order-summary {
-  margin-top: $space-lg;
+.payment-card {
+  @include card;
+  margin: 0 $space-lg $space-md;
 
-  .card-label { font-size: $font-xs; color: $gray-600; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 $space-sm; }
-
-  .summary-row {
-    @include flex-between;
-    padding: $space-xs 0;
-    font-size: $font-sm;
-    color: $gray-600;
-    border-bottom: 0.5px solid $gray-100;
-
-    strong { color: $gray-900; }
-    &:last-child { border-bottom: none; }
+  .upi-row {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: $space-sm;
+    .upi-label { font-size: $font-xs; color: $gray-600; margin: 0; text-transform: uppercase; letter-spacing: 0.4px; }
+    .upi-val   { font-size: $font-base; font-weight: 700; color: $primary; margin: 0; }
   }
 
-  .total-row {
-    margin-top: $space-xs;
-    .total-price { font-size: $font-xl; color: $primary; }
+  .copy-btn {
+    --background: #{$primary-light}; --color: #{$primary};
+    --border-radius: #{$radius-sm}; --box-shadow: none;
+    font-size: $font-xs; font-weight: 600; height: 36px;
+    ion-icon { font-size: 14px; margin-right: 4px; }
   }
 }
 
 .qr-card {
-  text-align: center;
-  .qr-box {
-    @include flex-center;
-    margin-bottom: $space-sm;
-    .qr-placeholder {
-      width: 140px;
-      height: 140px;
-      border: 1.5px dashed $gray-200;
-      border-radius: $radius-md;
-      @include flex-center;
-      flex-direction: column;
-      gap: $space-sm;
-      ion-icon { font-size: 48px; color: $gray-400; }
-      p { font-size: $font-xs; color: $gray-600; margin: 0; }
-    }
+  @include card;
+  margin: 0 $space-lg $space-md;
+  align-items: center; display: flex; flex-direction: column;
+  
+  .qr-placeholder {
+    width: 160px; height: 160px; border-radius: $radius-md;
+    background: $gray-100; @include flex-center;
+    border: 2px dashed $gray-300; margin-bottom: $space-md;
+    ion-icon { font-size: 64px; color: $gray-400; }
   }
-  .qr-hint { font-size: $font-xs; color: $gray-600; margin: 0; }
+  
+  p { font-size: $font-xs; color: $gray-600; margin: 0; text-align: center; }
 }
 
-.upi-card {
-  .upi-row {
-    @include flex-between;
-    .upi-id { font-size: $font-base; font-weight: 600; color: $gray-900; }
-    ion-button { --color: #{$primary}; }
-  }
-  .upi-hint { font-size: $font-xs; color: $gray-600; margin: $space-xs 0 0; }
-}
+.upload-section {
+  padding: 0 $space-lg $space-md;
 
-.upload-card {
-  @include flex-center;
-  flex-direction: column;
-  gap: $space-sm;
-  border: 1.5px dashed $gray-200;
-  cursor: pointer;
-  min-height: 90px;
-  transition: border-color 0.15s;
+  .upload-btn {
+    border: 2px dashed $primary;
+    border-radius: $radius-md;
+    background: $primary-light;
+    padding: $space-xl $space-lg;
+    display: flex; flex-direction: column; align-items: center; gap: $space-sm;
+    cursor: pointer; width: 100%; font-family: inherit;
 
-  &:active { border-color: $primary; }
-
-  .upload-icon { font-size: 32px; color: $primary; }
-  .upload-text {
-    font-size: $font-sm;
-    color: $primary;
-    margin: 0;
-    &.success {
-      color: $success;
-      display: flex;
-      align-items: center;
-      gap: $space-xs;
-      ion-icon { font-size: 16px; }
+    ion-icon { font-size: 36px; color: $primary; }
+    .upload-text  { font-size: $font-sm; font-weight: 600; color: $primary; }
+    .upload-hint  { font-size: $font-xs; color: $gray-600; }
+    
+    &.uploaded {
+      border-color: $success; background: $success-light;
+      ion-icon { color: $success; }
+      .upload-text { color: $success; }
     }
   }
 }
 
-.bottom-action {
-  padding: $space-lg;
-  .pay-btn { @include primary-btn; height: 50px; }
+.submit-btn {
+  --background: #{$primary}; --color: #fff;
+  --border-radius: #{$radius-md}; --box-shadow: none;
+  margin: 0 $space-lg $space-xl; height: 52px;
+  font-weight: 700; font-size: $font-base; display: block;
 }

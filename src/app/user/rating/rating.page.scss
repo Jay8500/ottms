@@ -1,0 +1,60 @@
+@import '../../../global.scss';
+
+.ms-toolbar     { @include app-toolbar; }
+.rating-content { --background: #{$gray-50}; }
+
+.seller-card {
+  display: flex; align-items: center; gap: $space-md;
+  background: #fff; margin: $space-lg; border-radius: $radius-md;
+  padding: $space-md $space-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm;
+  .seller-av {
+    width: 52px; height: 52px; border-radius: 50%; background: $primary-light;
+    display: flex; align-items: center; justify-content: center;
+    font-size: $font-xl; font-weight: 700; color: $primary; flex-shrink: 0;
+  }
+  h3 { font-size: $font-base; font-weight: 700; color: $gray-900; margin: 0; }
+  p  { font-size: $font-xs; color: $gray-600; margin: 3px 0 0; }
+}
+
+.section-label { @include section-label;
+  .optional { font-size: 10px; color: $gray-400; font-style: italic; text-transform: none; letter-spacing: 0; margin-left: 4px; }
+}
+
+.stars-row {
+  display: flex; gap: $space-sm; padding: 0 $space-lg; margin-bottom: 4px;
+  .star-btn {
+    background: none; border: none; font-size: 44px; color: $gray-200;
+    cursor: pointer; line-height: 1; padding: 0; transition: color 0.12s;
+    &.filled { color: $accent-dark; }
+    &:active { transform: scale(0.88); }
+  }
+}
+
+.rating-text { font-size: $font-sm; font-weight: 600; color: $primary; padding: 0 $space-lg; margin: 0 0 $space-sm; min-height: 20px; }
+
+.badges-wrap {
+  display: flex; flex-wrap: wrap; gap: $space-sm; padding: 0 $space-lg;
+  .badge-pill {
+    padding: 7px $space-md; border-radius: $radius-pill;
+    border: 1.5px solid $gray-200; background: #fff; font-size: $font-sm;
+    cursor: pointer; font-family: inherit; transition: all 0.12s;
+    &.active { background: $primary; color: #fff; border-color: $primary; }
+  }
+}
+
+.review-wrap {
+  padding: 0 $space-lg;
+  .review-ta {
+    --background: #fff; --border-radius: #{$radius-md};
+    --padding-start: #{$space-md}; --padding-end: #{$space-md};
+    border: 1.5px solid $gray-200; border-radius: $radius-md;
+    font-size: $font-sm; box-shadow: $shadow-sm;
+  }
+}
+
+.bottom-cta {
+  padding: $space-lg $space-lg $space-xl;
+  .submit-btn { --background: #{$primary}; --color: #fff; --border-radius: #{$radius-md}; --box-shadow: none;
+    height: 52px; font-weight: 700; margin-bottom: $space-sm; }
+  .skip-link { text-align: center; font-size: $font-sm; color: $gray-600; margin: 0; cursor: pointer; }
+}

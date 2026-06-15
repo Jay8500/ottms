@@ -1,13 +1,76 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>createaccnt</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="createaccnt-content">
+  <div class="ca-wrapper">
+    <div class="ca-hero">
+      <div class="ca-logo"><ion-icon name="tv-outline"></ion-icon></div>
+      <h1>OTT Money Saver</h1>
+      <p>Create your account today</p>
+    </div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">createaccnt</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <div class="ca-card">
+      <h2>Create Account</h2>
+      <p class="card-sub">Join thousands of OTT screen savers</p>
+
+      <div class="avatar-upload" (click)="pickAvatar()">
+        <div class="avatar-circle" *ngIf="!avatarPreview">
+          <ion-icon name="camera-outline"></ion-icon>
+        </div>
+        <img *ngIf="avatarPreview" [src]="avatarPreview" class="avatar-img" alt="Profile" />
+        <span class="avatar-hint">Upload profile photo</span>
+        <input type="file" #avatarInput accept="image/*" (change)="onAvatarSelected($event)" hidden />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <ion-item class="ms-input-item" lines="none">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          <ion-input [(ngModel)]="form.name" placeholder="e.g. Bharath Kumar" clearInput></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Mobile Number</label>
+        <ion-item class="ms-input-item" lines="none">
+          <ion-icon name="call-outline" slot="start"></ion-icon>
+          <ion-input [(ngModel)]="form.mobile" type="tel" maxlength="10" inputmode="numeric" placeholder="10-digit mobile" clearInput></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email ID</label>
+        <ion-item class="ms-input-item" lines="none">
+          <ion-icon name="mail-outline" slot="start"></ion-icon>
+          <ion-input [(ngModel)]="form.email" type="email" placeholder="your@email.com" clearInput></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nick Name</label>
+        <ion-item class="ms-input-item" lines="none">
+          <ion-icon name="happy-outline" slot="start"></ion-icon>
+          <ion-input [(ngModel)]="form.nickName" placeholder="e.g. BK" maxlength="20" clearInput></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <ion-item class="ms-input-item" lines="none">
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          <ion-input [(ngModel)]="form.password" [type]="showPwd ? 'text' : 'password'" placeholder="Min 6 characters"></ion-input>
+          <ion-icon slot="end" [name]="showPwd ? 'eye-off-outline' : 'eye-outline'" (click)="showPwd=!showPwd" class="eye-icon"></ion-icon>
+        </ion-item>
+      </div>
+
+      <div class="id-preview" *ngIf="form.name">
+        <ion-icon name="id-card-outline"></ion-icon>
+        <p>Your unique ID: <strong>{{ form.name.split(' ')[0] }} ({{ previewId }})</strong></p>
+      </div>
+
+      <ion-button expand="block" class="submit-btn" [disabled]="loading || !isValid()" (click)="createAccount()">
+        <ion-spinner *ngIf="loading" name="crescent" slot="start"></ion-spinner>
+        {{ loading ? 'Creating...' : 'Verify & Create Account' }}
+      </ion-button>
+
+      <p class="login-link">Already have an account? <span (click)="goLogin()">Sign In</span></p>
+    </div>
+  </div>
 </ion-content>

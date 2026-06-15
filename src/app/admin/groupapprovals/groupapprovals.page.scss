@@ -1,5 +1,6 @@
 @import '../../../global.scss';
 .admin-toolbar { --background: #1a1a2e; --color: #fff; }
+.admin-toolbar ion-title { color: #F9D54B; font-weight: 700; }
 .ga-content { --background: #{$gray-50}; }
 
 .filter-row { padding: $space-md $space-lg;

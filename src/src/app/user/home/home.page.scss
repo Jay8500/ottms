@@ -1,0 +1,216 @@
+@import '../../../global.scss';
+
+ion-content.home-content {
+  --overflow: auto;
+  --padding-bottom: 80px;
+  flex: 1;
+  min-height: 0;
+}
+
+// ─── HEADER ──────────────────────────────────────────────────────────────────
+.ms-toolbar {
+  --background: #{$primary};
+  --color: #fff;
+  --min-height: 56px;
+
+  .header-spread-wrapper {
+    @include flex-between;
+    width: 100%;
+    align-items: center;
+    padding: 0 $space-lg;
+  }
+
+  .brand {
+    font-size: $font-lg;
+    font-weight: 700;
+    color: #ffd54f;
+  }
+
+  ion-button {
+    --color: #fff;
+  }
+}
+
+// ─── HORIZONTAL SCROLL ROWS ──────────────────────────────────────────────────
+.offers-scroll,
+.ott-scroll {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  gap: $space-md;
+  padding: $space-lg;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  touch-action: pan-x;
+  will-change: scroll-position;
+}
+
+.offers-scroll::-webkit-scrollbar,
+.ott-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+// ─── OFFER CARD ──────────────────────────────────────────────────────────────
+.offer-card {
+  flex: 0 0 auto;
+  width: 260px;
+  scroll-snap-align: start;
+  background: linear-gradient(135deg, #1a73e8, #0d47a1);
+  border-radius: $radius-lg;
+  padding: $space-lg;
+  color: #fff;
+  box-shadow: $shadow-md;
+
+  .offer-tag {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: $font-xs;
+    margin-bottom: $space-sm;
+  }
+
+  .offer-title {
+    margin: 0 0 6px;
+    font-size: $font-base;
+    font-weight: 600;
+  }
+
+  .offer-desc {
+    margin: 0;
+    font-size: $font-xs;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.4;
+  }
+
+  .offer-btn {
+    --color: #ffd54f;
+    margin-top: $space-sm;
+  }
+}
+
+// ─── SECTION HEADERS ─────────────────────────────────────────────────────────
+.section-header {
+  @include flex-between;
+  padding: $space-sm $space-lg 0;
+  margin-top: $space-sm;
+
+  .section-label {
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $gray-800;
+    margin: 0;
+  }
+
+  .see-all {
+    font-size: $font-xs;
+    color: $primary;
+    cursor: pointer;
+  }
+}
+
+.section-label-plain {
+  padding: $space-lg $space-lg $space-sm;
+  font-size: $font-sm;
+  font-weight: 600;
+  color: $gray-800;
+}
+
+// ─── OTT CHIPS ───────────────────────────────────────────────────────────────
+.ott-chip {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-xs;
+  cursor: pointer;
+}
+
+.ott-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.ott-name {
+  font-size: $font-xs;
+  color: $gray-800;
+  text-align: center;
+}
+
+// ─── QUICK ACTIONS GRID ──────────────────────────────────────────────────────
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $space-md;
+  padding: 0 $space-lg;
+}
+
+.action-card {
+  background: #fff;
+  border-radius: $radius-md;
+  padding: $space-xl $space-md;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-sm;
+  box-shadow: $shadow-sm;
+  cursor: pointer;
+  border: 0.5px solid $gray-200;
+
+  ion-icon {
+    font-size: 26px;
+    color: $primary;
+  }
+
+  span {
+    font-size: $font-xs;
+    font-weight: 500;
+    color: $gray-800;
+    text-align: center;
+  }
+
+  &.seller-action ion-icon {
+    color: $seller-color;
+  }
+}
+
+// ─── SELLER BANNER ───────────────────────────────────────────────────────────
+.seller-banner {
+  margin: $space-lg;
+  padding: $space-lg;
+  border-radius: $radius-md;
+  background: $seller-light;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 0.5px solid rgba(106, 27, 154, 0.2);
+
+  .seller-banner-title {
+    margin: 0;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $seller-color;
+  }
+
+  .seller-banner-sub {
+    margin: 4px 0 0;
+    font-size: $font-xs;
+    color: $gray-600;
+  }
+}
+
+// ─── BOTTOM PADDING (above tab bar) ──────────────────────────────────────────
+.bottom-spacer {
+  height: 80px;
+}

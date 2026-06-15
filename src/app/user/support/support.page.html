@@ -1,13 +1,44 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>support</ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ms-toolbar">
+    <ion-title>Support</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">support</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="support-content">
+  <div class="support-hero">
+    <div class="hero-icon"><ion-icon name="headset-outline"></ion-icon></div>
+    <h2>How can we help?</h2>
+    <p>Available 9 AM – 9 PM every day</p>
+  </div>
+
+  <p class="section-label">Contact Us</p>
+  <div class="contact-list">
+    <div class="contact-card" (click)="openInApp()">
+      <div class="cc-icon inapp"><ion-icon name="chatbubbles-outline"></ion-icon></div>
+      <div class="cc-body"><h3>In-App Chat</h3><p>Fastest response</p></div>
+      <ion-icon name="chevron-forward-outline" class="cc-arrow"></ion-icon>
+    </div>
+    <div class="contact-card" (click)="openWhatsApp()">
+      <div class="cc-icon wa"><ion-icon name="logo-whatsapp"></ion-icon></div>
+      <div class="cc-body"><h3>WhatsApp Support</h3><p>+91 98765 00000</p></div>
+      <ion-icon name="chevron-forward-outline" class="cc-arrow"></ion-icon>
+    </div>
+    <div class="contact-card" (click)="callSupport()">
+      <div class="cc-icon call"><ion-icon name="call-outline"></ion-icon></div>
+      <div class="cc-body"><h3>Call Support</h3><p>+91 98765 11111</p></div>
+      <ion-icon name="chevron-forward-outline" class="cc-arrow"></ion-icon>
+    </div>
+  </div>
+
+  <p class="section-label">FAQ</p>
+  <div class="faq-list">
+    <div class="faq-item" *ngFor="let f of faqs" (click)="f.open = !f.open">
+      <div class="faq-q">
+        <span>{{ f.q }}</span>
+        <ion-icon [name]="f.open ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+      </div>
+      <div class="faq-a" *ngIf="f.open"><p>{{ f.a }}</p></div>
+    </div>
+  </div>
+  <div style="height:80px"></div>
 </ion-content>

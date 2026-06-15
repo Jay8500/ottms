@@ -1,13 +1,72 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>creategroup</ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="seller-toolbar">
+    <ion-buttons slot="start"><ion-back-button defaultHref="/user/home"></ion-back-button></ion-buttons>
+    <ion-title>Create Seller Group</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">creategroup</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="cg-content">
+  <div class="info-banner">
+    <ion-icon name="information-circle-outline"></ion-icon>
+    <p>Your group must be <strong>approved by admin</strong> before it goes live to buyers.</p>
+  </div>
+
+  <div class="form-section">
+    <div class="form-group">
+      <label class="form-label">Select OTT App</label>
+      <ion-select [(ngModel)]="form.ottId" placeholder="Choose platform" class="ms-select" interface="action-sheet">
+        <ion-select-option *ngFor="let app of ottApps" [value]="app.id">{{ app.name }}</ion-select-option>
+      </ion-select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Select Validity</label>
+      <ion-select [(ngModel)]="form.validity" placeholder="Choose duration" class="ms-select" interface="action-sheet">
+        <ion-select-option value="1m">1 Month</ion-select-option>
+        <ion-select-option value="3m">3 Months</ion-select-option>
+        <ion-select-option value="6m">6 Months</ion-select-option>
+        <ion-select-option value="12m">12 Months</ion-select-option>
+      </ion-select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Select Plan</label>
+      <ion-select [(ngModel)]="form.plan" placeholder="Choose plan" class="ms-select" interface="action-sheet">
+        <ion-select-option value="4k">4K Ultra HD</ion-select-option>
+        <ion-select-option value="hd">Full HD</ion-select-option>
+        <ion-select-option value="mobile">Mobile HD</ion-select-option>
+      </ion-select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Number of Screens</label>
+      <ion-item class="ms-input-item" lines="none">
+        <ion-input type="number" [(ngModel)]="form.screenCount" placeholder="1 to 4" min="1" max="4"></ion-input>
+      </ion-item>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Screen Price (₹)</label>
+      <ion-item class="ms-input-item" lines="none">
+        <ion-input type="number" [(ngModel)]="form.price" placeholder="e.g. 149"></ion-input>
+      </ion-item>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Upload Membership Screenshot</label>
+      <div class="upload-box" (click)="uploadProof()">
+        <ion-icon [name]="proofFile ? 'checkmark-circle-outline' : 'cloud-upload-outline'" [class.uploaded]="proofFile"></ion-icon>
+        <p>{{ proofFile ? proofFile.name : 'Tap to upload validity screenshot' }}</p>
+      </div>
+      <input type="file" #proofInput accept="image/*" (change)="onProofSelected($event)" hidden />
+    </div>
+  </div>
+
+  <div class="bottom-action">
+    <ion-button expand="block" class="submit-btn" [disabled]="!isFormValid()" (click)="submitGroup()">
+      <ion-icon name="send-outline" slot="start"></ion-icon>
+      Send for Admin Approval
+    </ion-button>
+  </div>
+  <div style="height:80px"></div>
 </ion-content>

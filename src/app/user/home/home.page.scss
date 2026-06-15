@@ -1,247 +1,236 @@
 @import '../../../global.scss';
 
-.home-content {
+ion-content.home-content {
+  --overflow: auto;
+  --padding-bottom: 80px;
   --background: #{$gray-50};
-  --padding-bottom: 120px;
+  flex: 1;
+  min-height: 0;
 }
 
-/* HEADER */
-
+// ─── HEADER ──────────────────────────────────────────────────────────────────
 .ms-toolbar {
-  --background: #{$primary};
-  --color: #fff;
-
-  padding-left: $space-lg;
-  padding-right: $space-lg;
+  @include app-toolbar;
 
   .header-spread-wrapper {
     @include flex-between;
     width: 100%;
     align-items: center;
+    padding: 0 $space-lg;
   }
 
   .brand {
     font-size: $font-lg;
     font-weight: 700;
-    color: #ffd54f;
+    color: $accent;
+    letter-spacing: -0.2px;
   }
 
   ion-button {
-    --color: #fff;
+    --color: rgba(255,255,255,0.85);
   }
 }
 
-/* HORIZONTAL SCROLL */
-
+// ─── HORIZONTAL SCROLL ROWS ──────────────────────────────────────────────────
 .offers-scroll,
 .ott-scroll {
   display: flex;
+  flex-direction: row;
   flex-wrap: nowrap;
-
-  overflow-x: auto;
+  overflow-x: scroll;
   overflow-y: hidden;
-
   gap: $space-md;
-
   padding: $space-lg;
-
   -webkit-overflow-scrolling: touch;
-
+  scroll-snap-type: x mandatory;
   scrollbar-width: none;
+  touch-action: pan-x pan-y;
 }
 
 .offers-scroll::-webkit-scrollbar,
-.ott-scroll::-webkit-scrollbar {
-  display: none;
-}
+.ott-scroll::-webkit-scrollbar { display: none; }
 
-/* OFFER CARD */
-
+// ─── OFFER CARD ──────────────────────────────────────────────────────────────
 .offer-card {
   flex: 0 0 auto;
-
-  width: 280px;
-
-  background: linear-gradient(
-    135deg,
-    #1a73e8,
-    #0d47a1
-  );
-
+  width: 260px;
+  scroll-snap-align: start;
+  background: linear-gradient(135deg, #{$primary} 0%, #{$primary-dark} 100%);
   border-radius: $radius-lg;
-
   padding: $space-lg;
-
   color: #fff;
-
   box-shadow: $shadow-md;
+  border-left: 3px solid $accent;
 
   .offer-tag {
     display: inline-block;
-
-    background: rgba(255,255,255,0.2);
-
-    padding: 4px 10px;
-
-    border-radius: 999px;
-
+    background: $accent;
+    color: $primary-dark;
+    padding: 3px 10px;
+    border-radius: $radius-pill;
     font-size: $font-xs;
-
+    font-weight: 600;
     margin-bottom: $space-sm;
   }
 
   .offer-title {
     margin: 0 0 6px;
-
     font-size: $font-base;
-
-    font-weight: 600;
+    font-weight: 700;
   }
 
   .offer-desc {
     margin: 0;
-
     font-size: $font-xs;
-
-    color: rgba(255,255,255,0.85);
-
+    color: rgba(255, 255, 255, 0.82);
     line-height: 1.4;
   }
 
   .offer-btn {
-    --color: #ffd54f;
-
+    --color: #{$accent};
     margin-top: $space-sm;
+    font-weight: 600;
   }
 }
 
-/* SECTION */
-
+// ─── SECTION HEADERS ─────────────────────────────────────────────────────────
 .section-header {
   @include flex-between;
-
-  padding: 0 $space-lg;
+  padding: $space-sm $space-lg 0;
+  margin-top: $space-sm;
 
   .section-label {
     font-size: $font-sm;
-    font-weight: 600;
-    color: $gray-800;
+    font-weight: 700;
+    color: $gray-900;
+    margin: 0;
   }
 
   .see-all {
     font-size: $font-xs;
     color: $primary;
+    font-weight: 600;
+    cursor: pointer;
   }
 }
 
 .section-label-plain {
-  padding: $space-lg;
-
+  padding: $space-lg $space-lg $space-sm;
   font-size: $font-sm;
-  font-weight: 600;
-  color: $gray-800;
+  font-weight: 700;
+  color: $gray-900;
 }
 
-/* OTT */
-
+// ─── OTT CHIPS ───────────────────────────────────────────────────────────────
 .ott-chip {
   flex: 0 0 auto;
-
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  gap: $space-sm;
+  gap: $space-xs;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  width: auto;
 }
 
 .ott-icon {
-  width: 56px;
-  height: 56px;
-
-  border-radius: 16px;
-
+  width: 60px;
+  height: 60px;
+  border-radius: $radius-md;
   display: flex;
   align-items: center;
   justify-content: center;
-
   color: #fff;
-
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
+  box-shadow: $shadow-sm;
 }
 
 .ott-name {
   font-size: $font-xs;
   color: $gray-800;
+  text-align: center;
+  font-weight: 500;
 }
 
-/* ACTIONS */
-
+// ─── QUICK ACTIONS GRID ──────────────────────────────────────────────────────
 .actions-grid {
   display: grid;
-
   grid-template-columns: repeat(2, 1fr);
-
   gap: $space-md;
-
   padding: 0 $space-lg;
 }
 
-.action-card {
+button.action-card {
   background: #fff;
-
   border-radius: $radius-md;
-
   padding: $space-xl $space-md;
-
   display: flex;
   flex-direction: column;
   align-items: center;
-
   gap: $space-sm;
-
   box-shadow: $shadow-sm;
+  cursor: pointer;
+  border: 1px solid $gray-200;
+  width: 100%;
+  font-family: inherit;
+  transition: box-shadow 0.15s;
+
+  &:active {
+    box-shadow: $shadow-md;
+    transform: scale(0.97);
+  }
 
   ion-icon {
-    font-size: 26px;
+    font-size: 28px;
     color: $primary;
   }
 
   span {
     font-size: $font-xs;
-    font-weight: 500;
+    font-weight: 600;
+    color: $gray-800;
+    text-align: center;
+  }
+
+  &.seller-action {
+    background: $seller-light;
+    border-color: rgba(106, 27, 154, 0.2);
+    ion-icon { color: $seller-color; }
+    span { color: $seller-color; }
   }
 }
 
-/* SELLER */
-
+// ─── SELLER BANNER ───────────────────────────────────────────────────────────
 .seller-banner {
   margin: $space-lg;
-
   padding: $space-lg;
-
   border-radius: $radius-md;
-
-  background: $seller-light;
-
+  background: linear-gradient(135deg, #{$seller-light}, #EDE7F6);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border: 1px solid rgba(106, 27, 154, 0.25);
+  box-shadow: $shadow-sm;
 
   .seller-banner-title {
     margin: 0;
-
     font-size: $font-sm;
-    font-weight: 600;
-
+    font-weight: 700;
     color: $seller-color;
   }
 
   .seller-banner-sub {
     margin: 4px 0 0;
-
     font-size: $font-xs;
-
     color: $gray-600;
+    line-height: 1.4;
   }
 }
+
+// ─── BOTTOM PADDING ──────────────────────────────────────────────────────────
+.bottom-spacer { height: 80px; }

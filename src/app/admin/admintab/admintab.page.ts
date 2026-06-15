@@ -1,36 +1,25 @@
-import { Component, EnvironmentInjector, inject, OnInit } from '@angular/core';
-import { 
-  IonTabs, 
-  IonTabBar, 
-  IonTabButton, 
-  IonIcon, 
-  IonLabel, 
-  IonRouterOutlet // <-- Add this
+import { Component, OnInit } from '@angular/core';
+import {
+  IonTabs, IonTabBar, IonTabButton,
+  IonIcon, IonLabel, IonRouterOutlet
 } from '@ionic/angular/standalone';
+import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { triangle, ellipse, square } from 'ionicons/icons';
+import {
+  homeOutline, peopleOutline, shieldCheckmarkOutline,
+  cardOutline, walletOutline
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-admintab',
   templateUrl: './admintab.page.html',
   styleUrls: ['./admintab.page.scss'],
   standalone: true,
-  imports: [
-    IonTabs, 
-    IonTabBar, 
-    IonTabButton, 
-    IonIcon, 
-    IonLabel, 
-    IonRouterOutlet // <-- Add this
-    // IonicModule removed to prevent NG0300 collision
-  ],
+  imports: [CommonModule, IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouterOutlet]
 })
 export class AdmintabPage implements OnInit {
-  public environmentInjector = inject(EnvironmentInjector);
-
   constructor() {
-    addIcons({ triangle, ellipse, square });
+    addIcons({ homeOutline, peopleOutline, shieldCheckmarkOutline, cardOutline, walletOutline });
   }
-
-  ngOnInit(): void {}
+  ngOnInit() {}
 }

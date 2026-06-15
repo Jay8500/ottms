@@ -1,0 +1,90 @@
+@import '../../../global.scss';
+
+.ms-toolbar { @include app-toolbar; }
+
+.chat-title {
+  display: flex; flex-direction: column; align-items: flex-start;
+  .peer-name   { font-size: $font-base; font-weight: 700; color: #fff; }
+  .peer-status { font-size: $font-xs; color: rgba(255,255,255,0.65);
+    &.online { color: $accent; } }
+}
+
+.chat-content { --background: #E8EDF3; }
+
+.info-banner {
+  display: flex; align-items: flex-start; gap: $space-sm;
+  background: $accent-light; border-left: 3px solid $accent-dark;
+  margin: $space-sm; padding: $space-sm $space-md;
+  border-radius: 0 $radius-md $radius-md 0; font-size: $font-xs; color: #7a4000;
+  ion-icon { font-size: 16px; flex-shrink: 0; color: $accent-dark; }
+  p { flex: 1; margin: 0; line-height: 1.5; }
+  .close-btn { cursor: pointer; flex-shrink: 0; }
+}
+
+.lock-banner {
+  display: flex; align-items: center; gap: $space-sm;
+  background: $danger-light; padding: $space-xs $space-lg;
+  font-size: $font-xs; color: $danger; font-weight: 500;
+  ion-icon { font-size: 14px; }
+}
+
+.msg-list {
+  padding: $space-md; padding-bottom: $space-lg;
+  display: flex; flex-direction: column; gap: $space-sm;
+}
+
+.msg-wrap {
+  display: flex;
+  &.mine   { justify-content: flex-end; }
+  &.theirs { justify-content: flex-start; }
+}
+
+.bubble {
+  max-width: 76%; padding: $space-sm $space-md; border-radius: 18px;
+  &.theirs { background: #fff; border-radius: 4px 18px 18px 18px;
+    .bubble-text { color: $gray-900; } .bubble-time { color: $gray-600; } }
+  &.mine   { background: $primary; border-radius: 18px 18px 4px 18px;
+    .bubble-text { color: #fff; } .bubble-time { color: rgba(255,255,255,0.65); } }
+  .bubble-text { font-size: $font-sm; margin: 0 0 3px; line-height: 1.5; }
+  .bubble-time { font-size: 10px; display: block; text-align: right; }
+}
+
+.suggested-strip {
+  background: #fff; border-top: 0.5px solid $gray-200; padding: $space-sm $space-md;
+  .suggested-inner {
+    display: flex; gap: $space-sm; overflow-x: auto; scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
+  .sug-chip {
+    flex-shrink: 0; padding: 6px $space-md; border-radius: 20px;
+    background: $primary-light; color: $primary; font-size: $font-xs;
+    border: 1px solid rgba(21,101,192,0.3); cursor: pointer;
+    white-space: nowrap; font-family: inherit; font-weight: 500;
+  }
+}
+
+.chat-footer {
+  background: #fff; border-top: 0.5px solid $gray-200;
+  padding-bottom: env(safe-area-inset-bottom);
+
+  .input-row { display: flex; align-items: center; padding: 6px $space-sm; gap: 4px; }
+
+  .icon-btn {
+    background: transparent; border: none; padding: $space-sm; cursor: pointer;
+    ion-icon { font-size: 22px; color: $gray-600; }
+  }
+
+  .msg-input {
+    flex: 1; --background: #{$gray-100}; --border-radius: 20px;
+    --padding-start: #{$space-md}; --padding-end: #{$space-md};
+    --color: #{$gray-900}; font-size: $font-sm; min-height: 40px;
+  }
+
+  .send-btn {
+    background: $primary; border: none; width: 40px; height: 40px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    &[disabled] { opacity: 0.4; cursor: default; }
+    ion-icon { font-size: 18px; color: #fff; }
+  }
+}

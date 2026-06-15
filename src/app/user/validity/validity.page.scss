@@ -1,85 +1,66 @@
 @import '../../../global.scss';
 
-.ms-toolbar { --background: #{$primary}; --color: #fff; }
-.validity-content { --background: #{$gray-50}; }
+.ms-toolbar { @include app-toolbar; }
+.val-content { --background: #{$gray-50}; }
 
 .app-banner {
-  display: flex;
-  align-items: center;
-  gap: $space-lg;
-  background: #fff;
-  padding: $space-lg;
-  margin-bottom: $space-sm;
-  box-shadow: $shadow-sm;
-
-  .app-logo {
-    width: 56px;
-    height: 56px;
-    border-radius: $radius-md;
-    @include flex-center;
-    color: #fff;
-    font-size: $font-xl;
-    font-weight: 700;
-    flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center; gap: $space-xs;
+  background: linear-gradient(135deg, #{$primary-dark}, #{$primary});
+  color: #fff; padding: $space-xl $space-lg;
+  
+  .app-icon {
+    width: 64px; height: 64px; border-radius: $radius-md;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; font-weight: 700; color: #fff; margin-bottom: $space-sm;
+    border: 2px solid rgba(255,255,255,0.2);
   }
-
-  .app-name   { font-size: $font-lg; font-weight: 600; color: $gray-900; margin: 0; }
-  .app-action { font-size: $font-xs; color: $primary; margin: 2px 0 0; font-weight: 500; }
+  h2 { font-size: $font-xl; font-weight: 700; margin: 0; }
+  p  { font-size: $font-sm; color: rgba(255,255,255,0.75); margin: 0; }
 }
 
-.section-label { @include section-label; }
-
-.validity-list {
-  padding: 0 $space-lg $space-lg;
-  display: flex;
-  flex-direction: column;
-  gap: $space-sm;
+.section-title {
+  padding: $space-lg $space-lg $space-sm;
+  font-size: $font-sm; font-weight: 700; color: $gray-900;
 }
+
+.validity-list { padding: 0 $space-lg; display: flex; flex-direction: column; gap: $space-sm; }
 
 .validity-card {
-  @include flex-between;
-  background: #fff;
-  border-radius: $radius-md;
-  padding: $space-md $space-lg;
-  border: 1.5px solid $gray-200;
-  cursor: pointer;
-  transition: all 0.15s;
+  background: #fff; border-radius: $radius-md; padding: $space-md $space-lg;
+  border: 1.5px solid $gray-200; box-shadow: $shadow-sm; cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between;
 
   &.selected {
     border-color: $primary;
     background: $primary-light;
+    box-shadow: 0 0 0 2px rgba(21,101,192,0.15);
   }
 
-  .v-left {
-    display: flex;
-    align-items: center;
-    gap: $space-md;
-
-    .v-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: $radius-sm;
-      background: $primary-light;
-      @include flex-center;
-      ion-icon { font-size: 20px; color: $primary; }
+  .val-left {
+    display: flex; align-items: center; gap: $space-md;
+    .val-check {
+      width: 22px; height: 22px; border-radius: 50%; border: 2px solid $gray-300;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      &.active { background: $primary; border-color: $primary; ion-icon { color: #fff; font-size: 14px; } }
     }
-
-    .v-title { font-size: $font-base; font-weight: 600; color: $gray-900; margin: 0; }
-    .v-save  { font-size: $font-xs; color: $success; margin: 2px 0 0; }
+    .val-info {
+      .val-label  { font-size: $font-base; font-weight: 700; color: $gray-900; margin: 0; }
+      .val-save   { font-size: $font-xs; color: $success; font-weight: 500; margin: 2px 0 0; }
+    }
   }
 
-  .v-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: $space-xs;
-
-    .v-price { font-size: $font-lg; font-weight: 700; color: $gray-900; }
-    ion-icon  { font-size: 22px; color: $gray-400; &.checked { color: $primary; } }
+  .val-right {
+    text-align: right;
+    .val-amount  { font-size: $font-lg; font-weight: 700; color: $primary; margin: 0; }
+    .val-per     { font-size: $font-xs; color: $gray-600; margin: 1px 0 0; }
   }
 }
 
-.bottom-action {
-  padding: $space-md $space-lg;
-  .proceed-btn { @include primary-btn; height: 50px; }
+.proceed-wrap {
+  padding: $space-lg $space-lg $space-xl;
+  .proceed-btn {
+    --background: #{$primary}; --color: #fff;
+    --border-radius: #{$radius-md}; --box-shadow: none;
+    height: 52px; font-weight: 700; font-size: $font-base;
+  }
 }

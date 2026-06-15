@@ -1,105 +1,84 @@
 @import '../../../global.scss';
 
-.ms-toolbar { --background: #{$primary}; --color: #fff; }
+.ms-toolbar { @include app-toolbar; }
 .sellers-content { --background: #{$gray-50}; }
 
 .filter-row {
-  display: flex;
-  gap: $space-xs;
-  overflow-x: auto;
-  padding: $space-md $space-lg;
-  scrollbar-width: none;
+  display: flex; gap: $space-xs; overflow-x: auto;
+  padding: $space-md $space-lg; scrollbar-width: none;
   &::-webkit-scrollbar { display: none; }
 
   .filter-chip {
-    --background: #fff;
-    --color: #{$gray-600};
-    border: 0.5px solid $gray-400;
-    border-radius: $radius-pill;
-    font-size: $font-xs;
-    flex-shrink: 0;
-
-    &.active {
-      --background: #{$primary};
-      --color: #fff;
-      border-color: $primary;
-    }
+    --background: #fff; --color: #{$gray-700};
+    border: 1px solid $gray-300; border-radius: $radius-pill;
+    font-size: $font-xs; font-weight: 500; flex-shrink: 0;
+    &.active { --background: #{$primary}; --color: #fff; border-color: $primary; }
   }
 }
 
 .sellers-list { padding: 0 $space-lg $space-xl; }
 
 .seller-card {
-  background: #fff;
-  border-radius: $radius-md;
-  padding: $space-md $space-lg;
-  margin-bottom: $space-sm;
-  box-shadow: $shadow-sm;
-  border: 0.5px solid $gray-200;
-  cursor: pointer;
-  transition: transform 0.12s;
-
-  &:active { transform: scale(0.98); }
+  background: #fff; border-radius: $radius-md; padding: $space-md $space-lg;
+  margin-bottom: $space-sm; box-shadow: $shadow-sm; border: 1px solid $gray-200; cursor: pointer;
+  &:active { transform: scale(0.99); }
 }
 
 .seller-top {
-  display: flex;
-  align-items: flex-start;
-  gap: $space-md;
-  margin-bottom: $space-sm;
+  display: flex; align-items: flex-start; gap: $space-md; margin-bottom: $space-sm;
 
   .seller-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: $primary-light;
-    @include flex-center;
-    font-size: $font-lg;
-    font-weight: 700;
-    color: $primary;
-    flex-shrink: 0;
+    width: 46px; height: 46px; border-radius: 50%;
+    background: $primary-light; @include flex-center;
+    font-size: $font-lg; font-weight: 700; color: $primary; flex-shrink: 0;
+    border: 2px solid $primary-light;
   }
 
   .seller-info {
     flex: 1;
-    .seller-name { font-size: $font-base; font-weight: 600; color: $gray-900; margin: 0; }
-    .seller-id   { font-size: $font-xs; color: $gray-600; font-weight: 400; }
+    .seller-name {
+      font-size: $font-sm; font-weight: 700; color: $gray-900; margin: 0;
+      display: flex; align-items: center; gap: $space-xs;
+      .verified-badge { font-size: 14px; color: $primary; }
+    }
+    .seller-uid { font-size: $font-xs; color: $gray-600; margin: 1px 0 0; }
+    .seller-rating {
+      display: flex; align-items: center; gap: 3px; margin-top: 3px;
+      .stars { color: $accent-dark; font-size: 12px; }
+      .rating-val { font-size: $font-xs; font-weight: 600; color: $gray-700; }
+      .review-cnt { font-size: $font-xs; color: $gray-400; }
+    }
   }
 
-  .seller-price {
-    text-align: right;
-    .price-val { display: block; font-size: $font-lg; font-weight: 700; color: $gray-900; }
-    .price-sub { font-size: $font-xs; color: $gray-600; }
+  .seller-status {
+    display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0;
+    .online-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: $gray-300;
+      &.online { background: $success; box-shadow: 0 0 0 2px $success-light; }
+    }
+    .price { font-size: $font-base; font-weight: 700; color: $primary; }
+    .price-label { font-size: 10px; color: $gray-500; }
   }
-}
-
-.stars-row {
-  display: flex;
-  align-items: center;
-  gap: 1px;
-  margin-top: 3px;
-
-  .star { font-size: 14px; &.filled { color: #fbbc04; } &.empty { color: $gray-400; } }
-  .review-count { font-size: $font-xs; color: $gray-600; margin-left: 4px; }
 }
 
 .seller-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $space-xs;
-
-  .badge-online {
-    @include badge($success-light, $success);
-    &.offline { @include badge(#ffebee, #c62828); }
-  }
-
-  .badge-verified {
+  display: flex; gap: $space-xs; flex-wrap: wrap;
+  .badge-chip {
     @include badge($primary-light, $primary);
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    ion-icon { font-size: 12px; }
+    font-size: 10px;
   }
+}
 
-  .batch-chip { @include badge(#f3e5f5, #6a1b9a); }
+.buy-btn {
+  --background: #{$primary}; --color: #fff;
+  --border-radius: #{$radius-md}; --box-shadow: none;
+  margin-top: $space-sm; height: 40px;
+  font-size: $font-xs; font-weight: 600;
+}
+
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  gap: $space-md; padding: 60px 0;
+  ion-icon { font-size: 52px; color: $gray-300; }
+  p { font-size: $font-sm; color: $gray-400; margin: 0; }
 }

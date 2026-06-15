@@ -1,0 +1,139 @@
+@import "../../../global.scss";
+
+.ms-toolbar {
+  --background: #{$primary};
+  --color: #fff;
+}
+.at-content {
+  --background: #{$gray-50};
+}
+
+.app-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-sm;
+  background: linear-gradient(160deg, #0d47a1, #1a73e8);
+  color: #fff;
+  padding: $space-xl $space-lg calc(#{$space-xl} + 4px);
+
+  .app-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: $radius-lg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  }
+  h2 {
+    font-size: $font-xl;
+    font-weight: 700;
+    margin: 0;
+  }
+  p {
+    font-size: $font-xs;
+    color: #7a4000;
+    margin: 0;
+    line-height: 1.5;
+  }
+}
+
+.action-list {
+  padding: $space-lg $space-lg 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.action-card {
+  display: flex;
+  align-items: center;
+  gap: $space-lg;
+  background: #fff;
+  border-radius: $radius-lg;
+  padding: $space-lg;
+  border: 0.5px solid $gray-200;
+  box-shadow: $shadow-md;
+  cursor: pointer;
+  &:active {
+    opacity: 0.85;
+  }
+  &.seller-card {
+    border-color: rgba(106, 27, 154, 0.25);
+  }
+
+  .ac-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: $radius-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    ion-icon {
+      font-size: 28px;
+    }
+    &.purchase {
+      background: $primary-light;
+      ion-icon {
+        color: $primary;
+      }
+    }
+    &.share {
+      background: $seller-light;
+      ion-icon {
+        color: $seller-color;
+      }
+    }
+  }
+
+  .ac-body {
+    flex: 1;
+    h3 {
+      font-size: $font-base;
+      font-weight: 600;
+      color: $gray-900;
+      margin: 0 0 4px;
+    }
+    p {
+      font-size: $font-xs;
+      color: $gray-600;
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+
+  .ac-arrow {
+    color: $gray-400;
+    font-size: 20px;
+  }
+}
+
+.seller-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-sm;
+  margin: $space-md $space-lg 0;
+  padding: $space-md;
+  background: $warning-light;
+  border-radius: $radius-md;
+  border-left: 3px solid $warning;
+  ion-icon {
+    font-size: 18px;
+    color: $warning;
+    flex-shrink: 0;
+  }
+  p {
+    font-size: $font-xs;
+    color: #7a4000;
+    margin: 0;
+    line-height: 1.5;
+  }
+  strong {
+    font-weight: 600;
+  }
+}

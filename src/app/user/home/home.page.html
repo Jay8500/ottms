@@ -1,222 +1,74 @@
 <ion-header class="ion-no-border">
-
   <ion-toolbar class="ms-toolbar">
-
     <div class="header-spread-wrapper">
-
-      <span class="brand">
-        OTT Money Saver
-      </span>
-
+      <span class="brand"> OTT Money Saver </span>
       <div class="header-avatar-wrapper">
-
         <ion-buttons>
-
-          <ion-button (click)="openNotifications()">
-
-            <ion-icon
-              name="notifications-outline"
-              slot="icon-only"
-            ></ion-icon>
-
-          </ion-button>
-
-        </ion-buttons>
-
+        <ion-button (click)="openNotifications()">
+          <ion-icon name="notifications-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-button (click)="logout()">
+          <ion-icon name="log-out-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-buttons>
       </div>
-
     </div>
-
   </ion-toolbar>
-
 </ion-header>
 
-<ion-content
-  class="home-content"
-  [fullscreen]="true"
->
+<ion-content class="home-content" [scrollY]="true">
 
-  <!-- OFFERS -->
-
-  <div class="offers-outer-wrap">
-
-    <div class="offers-scroll">
-
-      <div
-        class="offer-card"
-        *ngFor="let offer of offers"
-      >
-
-        <div class="offer-tag">
-          New Offer
-        </div>
-
-        <h3 class="offer-title">
-          {{ offer.title }}
-        </h3>
-
-        <p class="offer-desc">
-          {{ offer.description }}
-        </p>
-
-        <ion-button
-          size="small"
-          fill="clear"
-          class="offer-btn"
-          (click)="openOffer(offer)"
-        >
-
-          View Offer
-
-          <ion-icon
-            name="arrow-forward-outline"
-          ></ion-icon>
-
-        </ion-button>
-
-      </div>
-
+  <div class="offers-scroll" (touchstart)="$event.stopPropagation()">
+    <div class="offer-card" *ngFor="let offer of offers">
+      <div class="offer-tag">New Offer</div>
+      <h3 class="offer-title">{{ offer.title }}</h3>
+      <p class="offer-desc">{{ offer.description }}</p>
+      <ion-button size="small" fill="clear" class="offer-btn" (click)="openOffer(offer)">
+        View Offer
+        <ion-icon name="arrow-forward-outline"></ion-icon>
+      </ion-button>
     </div>
-
   </div>
-
-  <!-- OTT -->
 
   <div class="section-header">
-
-    <p class="section-label">
-      OTT Platforms
-    </p>
-
-    <span
-      class="see-all"
-      (click)="goCategory()"
-    >
-      See All
-    </span>
-
+    <p class="section-label">OTT Platforms</p>
+    <span class="see-all" (click)="goCategory()">See All</span>
   </div>
 
-  <div class="ott-outer-wrap">
-
-    <div class="ott-scroll">
-
-      <div
-        class="ott-chip"
-        *ngFor="let app of ottApps"
-        (click)="selectApp(app)"
-      >
-
-        <div
-          class="ott-icon"
-          [style.background]="app.color"
-        >
-          {{ app.initial }}
-        </div>
-
-        <span class="ott-name">
-          {{ app.name }}
-        </span>
-
-      </div>
-
-    </div>
-
+  <div class="ott-scroll" (touchstart)="$event.stopPropagation()">
+    <button class="ott-chip" *ngFor="let app of ottApps" (click)="selectApp(app)">
+      <div class="ott-icon" [style.background]="app.color">{{ app.initial }}</div>
+      <span class="ott-name">{{ app.name }}</span>
+    </button>
   </div>
 
-  <!-- ACTIONS -->
-
-  <div class="section-label-plain">
-    Quick Actions
-  </div>
-
+  <div class="section-label-plain">Quick Actions</div>
   <div class="actions-grid">
-
-    <div
-      class="action-card"
-      (click)="goCategory()"
-    >
-
+    <button class="action-card" (click)="goCategory()">
       <ion-icon name="cart-outline"></ion-icon>
-
-      <span>
-        Shop Plans
-      </span>
-
-    </div>
-
-    <div
-      class="action-card"
-      (click)="goSupport()"
-    >
-
+      <span>Shop Plans</span>
+    </button>
+    <button class="action-card" (click)="goSupport()">
       <ion-icon name="headset-outline"></ion-icon>
-
-      <span>
-        Support
-      </span>
-
-    </div>
-
-    <div
-      class="action-card seller-action"
-      *ngIf="isSeller"
-      (click)="goCreateGroup()"
-    >
-
-      <ion-icon
-        name="add-circle-outline"
-      ></ion-icon>
-
-      <span>
-        Create Group
-      </span>
-
-    </div>
-
-    <div
-      class="action-card"
-      (click)="goWallet()"
-    >
-
+      <span>Support</span>
+    </button>
+    <button class="action-card seller-action" *ngIf="isSeller" (click)="goCreateGroup()">
+      <ion-icon name="add-circle-outline"></ion-icon>
+      <span>Create Group</span>
+    </button>
+    <button class="action-card" (click)="goWallet()">
       <ion-icon name="wallet-outline"></ion-icon>
-
-      <span>
-        My Wallet
-      </span>
-
-    </div>
-
+      <span>My Wallet</span>
+    </button>
   </div>
 
-  <!-- SELLER -->
-
-  <div
-    class="seller-banner"
-    *ngIf="!isSeller"
-  >
-
+  <div class="seller-banner" *ngIf="!isSeller">
     <div>
-
-      <p class="seller-banner-title">
-        Become a Seller
-      </p>
-
-      <p class="seller-banner-sub">
-        Share your OTT screens and earn cashback
-      </p>
-
+      <p class="seller-banner-title">Become a Seller</p>
+      <p class="seller-banner-sub">Share your OTT screens and earn cashback</p>
     </div>
-
-    <ion-toggle
-      [(ngModel)]="sellerToggle"
-      (ionChange)="toggleSeller($event)"
-    ></ion-toggle>
-
+    <ion-toggle [(ngModel)]="sellerToggle" (ionChange)="toggleSeller($event)"></ion-toggle>
   </div>
 
-  <!-- TEST SCROLL -->
-
-  <div style="height: 500px"></div>
-
+  <div style="height: 80px"></div>
 </ion-content>
