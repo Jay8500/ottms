@@ -11,7 +11,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "sub": "ionic build && npx cap sync android && powershell -Command \"$env:ANDROID_HOME='C:\\sdk'; cd android; ./gradlew clean; ./gradlew assembleDebug\" && npm run deploy-apk",
-    "jay": "git add . && git commit -m \"Latest OTT MONEY SAVER APP update\" && git push origin main"
+    "jay": "git add . && git commit -m \"Latest Jay Updated\" && git push origin main"
   },
   "private": true,
   "dependencies": {
