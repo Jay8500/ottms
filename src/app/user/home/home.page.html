@@ -1,74 +1,37 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar class="ms-toolbar">
-    <div class="header-spread-wrapper">
-      <span class="brand"> OTT Money Saver </span>
-      <div class="header-avatar-wrapper">
-        <ion-buttons>
-        <ion-button (click)="openNotifications()">
-          <ion-icon name="notifications-outline" slot="icon-only"></ion-icon>
-        </ion-button>
-        <ion-button (click)="logout()">
-          <ion-icon name="log-out-outline" slot="icon-only"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-      </div>
-    </div>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content class="home-content" [scrollY]="true">
-
-  <div class="offers-scroll" (touchstart)="$event.stopPropagation()">
-    <div class="offer-card" *ngFor="let offer of offers">
-      <div class="offer-tag">New Offer</div>
-      <h3 class="offer-title">{{ offer.title }}</h3>
-      <p class="offer-desc">{{ offer.description }}</p>
-      <ion-button size="small" fill="clear" class="offer-btn" (click)="openOffer(offer)">
-        View Offer
-        <ion-icon name="arrow-forward-outline"></ion-icon>
-      </ion-button>
-    </div>
+  <div class="top-bar">
+    <button class="icon-btn" (click)="openNotifications()"><ion-icon name="settings-outline"></ion-icon></button>
+    <div class="tab-pills"><div class="pill active"></div><div class="pill"></div><div class="pill"></div></div>
+    <button class="icon-btn dark" (click)="logout()"><ion-icon name="options-outline"></ion-icon></button>
   </div>
-
-  <div class="section-header">
-    <p class="section-label">OTT Platforms</p>
-    <span class="see-all" (click)="goCategory()">See All</span>
+  <div class="logo-center">
+    <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
   </div>
-
-  <div class="ott-scroll" (touchstart)="$event.stopPropagation()">
-    <button class="ott-chip" *ngFor="let app of ottApps" (click)="selectApp(app)">
-      <div class="ott-icon" [style.background]="app.color">{{ app.initial }}</div>
-      <span class="ott-name">{{ app.name }}</span>
-    </button>
-  </div>
-
-  <div class="section-label-plain">Quick Actions</div>
-  <div class="actions-grid">
-    <button class="action-card" (click)="goCategory()">
-      <ion-icon name="cart-outline"></ion-icon>
-      <span>Shop Plans</span>
-    </button>
-    <button class="action-card" (click)="goSupport()">
-      <ion-icon name="headset-outline"></ion-icon>
+  <div class="home-actions">
+    <button class="action-btn" (click)="goSupport()">
+      <div class="btn-circle"><ion-icon name="headset-outline"></ion-icon></div>
       <span>Support</span>
     </button>
-    <button class="action-card seller-action" *ngIf="isSeller" (click)="goCreateGroup()">
-      <ion-icon name="add-circle-outline"></ion-icon>
+    <button class="action-btn" (click)="goCategory()">
+      <div class="btn-circle"><ion-icon name="pricetag-outline"></ion-icon></div>
+      <span>New Offer</span>
+    </button>
+    <button class="action-btn" *ngIf="isSeller" (click)="goCreateGroup()">
+      <div class="btn-circle"><ion-icon name="add-circle-outline"></ion-icon></div>
       <span>Create Group</span>
     </button>
-    <button class="action-card" (click)="goWallet()">
-      <ion-icon name="wallet-outline"></ion-icon>
-      <span>My Wallet</span>
+  </div>
+  <div class="ott-grid">
+    <button class="ott-item" *ngFor="let app of ottApps" (click)="selectApp(app)">
+      <div class="ott-logo" [style.background]="app.color"><span>{{ app.initial }}</span></div>
     </button>
   </div>
-
-  <div class="seller-banner" *ngIf="!isSeller">
-    <div>
-      <p class="seller-banner-title">Become a Seller</p>
-      <p class="seller-banner-sub">Share your OTT screens and earn cashback</p>
+  <div class="seller-row" *ngIf="!isSeller">
+    <div class="seller-text">
+      <p class="s-title">Become a Seller</p>
+      <p class="s-sub">Share your OTT screens &amp; earn cashback</p>
     </div>
-    <ion-toggle [(ngModel)]="sellerToggle" (ionChange)="toggleSeller($event)"></ion-toggle>
+    <ion-toggle [(ngModel)]="sellerToggle" (ionChange)="toggleSeller($event)" class="yellow-toggle"></ion-toggle>
   </div>
-
-  <div style="height: 80px"></div>
+  <div style="height:80px"></div>
 </ion-content>

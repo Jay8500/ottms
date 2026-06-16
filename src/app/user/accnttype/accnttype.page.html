@@ -1,45 +1,25 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar class="ms-toolbar">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/user/category"></ion-back-button>
-    </ion-buttons>
-    <ion-title>{{ ottName }}</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="at-content">
-  <div class="app-hero">
-    <div class="app-logo" [style.background]="ottColor">{{ ottInitial }}</div>
-    <h2>{{ ottName }}</h2>
-    <p>Select what you'd like to do</p>
+<ion-content class="at-content" [scrollY]="true">
+  <div class="top-bar">
+    <button class="icon-btn" onclick="history.back()"><ion-icon name="settings-outline"></ion-icon></button>
+    <div class="tab-pills"><div class="pill active"></div><div class="pill"></div><div class="pill"></div></div>
+    <button class="icon-btn dark"><ion-icon name="options-outline"></ion-icon></button>
   </div>
-
-  <div class="action-list">
-    <div class="action-card" (click)="navigate('purchase')">
-      <div class="ac-icon purchase">
-        <ion-icon name="cart-outline"></ion-icon>
-      </div>
-      <div class="ac-body">
-        <h3>Purchase Screen</h3>
-        <p>Buy a shared screen slot from a verified seller</p>
-      </div>
-      <ion-icon name="chevron-forward-outline" class="ac-arrow"></ion-icon>
-    </div>
-
-    <div class="action-card seller-card" (click)="navigate('share')" *ngIf="isSeller">
-      <div class="ac-icon share">
-        <ion-icon name="share-social-outline"></ion-icon>
-      </div>
-      <div class="ac-body">
-        <h3>Share / Sell Screen</h3>
-        <p>List your remaining screen slots for buyers</p>
-      </div>
-      <ion-icon name="chevron-forward-outline" class="ac-arrow"></ion-icon>
-    </div>
+  <div class="logo-center"><div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div></div>
+  <div class="app-banner" [style.background]="ottColor">
+    <span class="app-name">{{ ottName }}</span>
   </div>
-
-  <div class="seller-hint" *ngIf="!isSeller">
-    <ion-icon name="information-circle-outline"></ion-icon>
-    <p>Enable <strong>Seller Mode</strong> on Home to share your screens.</p>
+  <p class="select-label">Select Option Below</p>
+  <div class="action-grid">
+    <button class="action-card purchase" (click)="navigate('purchase')">
+      <ion-icon name="cart-outline"></ion-icon>
+      <span class="ac-label">Purchase</span>
+      <span class="ac-sub">Private Screen</span>
+    </button>
+    <button class="action-card share" (click)="navigate('share')">
+      <ion-icon name="people-outline"></ion-icon>
+      <span class="ac-label">Share</span>
+      <span class="ac-sub">Personal Screen</span>
+    </button>
   </div>
+  <div style="height:80px"></div>
 </ion-content>

@@ -1,79 +1,21 @@
 @import '../../../global.scss';
-
-.ms-toolbar    { @include app-toolbar; }
-.wallet-content { --background: #{$gray-50}; }
-.admin-toolbar { --background: #1a1a2e; --color: #fff; }
-.admin-toolbar ion-title { color: #F9D54B; font-weight: 700; }
-.balance-hero {
-  background: linear-gradient(160deg, #{$primary-dark} 0%, #{$primary} 100%);
-  padding: $space-xl $space-lg $space-lg; color: #fff;
-
-  .bal-label  { font-size: $font-xs; color: rgba(255,255,255,0.72); text-transform: uppercase; letter-spacing: 0.6px; margin: 0 0 4px; }
-  .bal-amount { font-size: 40px; font-weight: 700; margin: 0 0 $space-md; letter-spacing: -1px;
-    span { font-size: $font-lg; font-weight: 400; opacity: 0.8; margin-right: 4px; } }
-
-  .bal-chips {
-    display: flex; gap: $space-sm; margin-bottom: $space-md;
-    .bal-chip {
-      flex: 1; display: flex; align-items: center; gap: $space-sm;
-      padding: $space-sm $space-md; border-radius: $radius-md; font-size: $font-xs;
-      ion-icon { font-size: 18px; flex-shrink: 0; }
-      div { display: flex; flex-direction: column; }
-      .chip-top { font-size: 10px; opacity: 0.8; }
-      .chip-val { font-size: $font-sm; font-weight: 700; }
-      &.locked   { background: rgba(255,255,255,0.15); color: #fff; }
-      &.unlocked { background: rgba(255,255,255,0.95); color: $success;
-        .chip-top { color: $success; opacity: 1; } }
-    }
-  }
-
-  .withdraw-btn {
-    --background: #{$accent}; --color: #{$primary-dark};
-    --border-radius: #{$radius-md}; --box-shadow: none;
-    font-size: $font-sm; font-weight: 700;
-  }
-}
-
-.seg-wrap {
-  padding: $space-md $space-lg;
-  .ms-seg {
-    --background: #{$gray-200}; border-radius: $radius-md;
-    ion-segment-button {
-      --color: #{$gray-600}; --color-checked: #{$primary};
-      --indicator-color: #fff; font-size: $font-xs; font-weight: 600; min-height: 36px;
-    }
-  }
-}
-
-.screens-list { padding: 0 $space-lg $space-xl; display: flex; flex-direction: column; gap: $space-sm; }
-
-.screen-card {
-  display: flex; justify-content: space-between; align-items: flex-start;
-  background: #fff; border-radius: $radius-md; padding: $space-md $space-lg;
-  border: 1px solid $gray-200; box-shadow: $shadow-sm;
-
-  .sc-left { display: flex; gap: $space-md; align-items: flex-start; flex: 1; }
-  .sc-logo  { width: 46px; height: 46px; border-radius: $radius-md; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: $font-base; font-weight: 700; box-shadow: $shadow-sm; }
-  .sc-info {
-    h3 { font-size: $font-sm; font-weight: 700; color: $gray-900; margin: 0 0 2px; }
-    p  { font-size: $font-xs; color: $gray-600; margin: 0 0 1px; }
-    .sc-date { font-size: $font-xs; color: $gray-400; }
-  }
-  .sc-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; margin-left: $space-sm; }
-  .sc-status {
-    font-size: $font-xs; padding: 3px 8px; border-radius: $radius-pill; font-weight: 600;
-    &.active    { background: $primary-light; color: $primary; }
-    &.completed { background: $success-light; color: $success; }
-    &.pending   { background: $accent-light;  color: $accent-dark; }
-  }
-  .sc-btns { display: flex; gap: 2px;
-    ion-button { --color: #{$primary}; margin: 0; } }
-}
-
-.empty-state {
-  display: flex; flex-direction: column; align-items: center; gap: $space-md; padding: 60px 0;
-  ion-icon { font-size: 52px; color: $gray-300; }
-  p { font-size: $font-sm; color: $gray-400; margin: 0; }
-}
+.page-content { --background: #{$white}; }
+.page-header { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; }
+.page-title-h { font-size: $font-xl; font-weight: 700; color: $black; margin: 0; }
+.search-row { padding: 0 $sp-lg $sp-md; }
+.search-box { display: flex; align-items: center; gap: $sp-sm; border: 1.5px solid $gray-200; border-radius: $r-lg; padding: 0 $sp-md; height: 46px; ion-icon { color: $gray-400; } input { flex: 1; border: none; outline: none; font-size: $font-sm; } }
+.list-area { padding: 0 $sp-lg $sp-xl; display: flex; flex-direction: column; gap: $sp-md; }
+.card { background: $white; border-radius: $r-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm; padding: $sp-md $sp-lg; }
+.wallet-row { display: grid; grid-template-columns: repeat(3,1fr); gap: $sp-sm; margin-bottom: $sp-md; }
+.wc { border-radius: $r-lg; padding: $sp-sm; text-align: center; span { font-size: 22px; display: block; } .wc-lbl { font-size: $font-xs; font-weight: 700; color: $black; margin: 2px 0 0; } .wc-amt { font-size: $font-base; font-weight: 700; color: $black; margin: 2px 0 4px; }
+  &.yellow { background: $yellow; } &.blue { background: #DBEAFE; } &.green { background: #DCFCE7; } }
+.wc-save { border: none; border-radius: $r-pill; height: 28px; padding: 0 $sp-sm; font-size: $font-xs; font-weight: 700; cursor: pointer; width: 100%; }
+.yellow-save { background: $black; color: $white; }
+.blue-save { background: $blue; color: $white; }
+.green-save { background: $green; color: $white; }
+.user-row { display: flex; align-items: center; gap: $sp-md; margin-bottom: $sp-sm; }
+.u-av { width: 44px; height: 44px; border-radius: 50%; background: $yellow; @include flex-center; font-size: $font-base; font-weight: 700; color: $black; flex-shrink: 0; }
+.u-name { font-size: $font-sm; font-weight: 700; color: $black; margin: 0; .uid { color: $gray-600; font-weight: 400; margin-left: 4px; } }
+.role-badge { font-size: $font-xs; padding: 2px 8px; border-radius: $r-pill; font-weight: 600; background: $blue-light; color: $blue; &.seller { background: $yellow-light; color: $black; } }
+.screens-mini { border-top: 1px solid $gray-100; padding-top: $sp-sm; .screens-lbl { font-size: $font-xs; font-weight: 700; color: $black; margin: 0 0 4px; } .screen-item { font-size: $font-xs; color: $gray-600; margin-bottom: 2px; } }

@@ -1,50 +1,17 @@
 @import '../../../global.scss';
-.admin-toolbar { --background: #1a1a2e; --color: #fff; }
-.admin-toolbar ion-title { color: #F9D54B; font-weight: 700; }
-.ga-content { --background: #{$gray-50}; }
-
-.filter-row { padding: $space-md $space-lg;
-  .admin-segment {
-    --background: #{$gray-200}; border-radius: $radius-md;
-    ion-segment-button { --color: #{$gray-600}; --color-checked: #{$primary}; --indicator-color: #fff; font-size: $font-xs; font-weight: 500; }
-    ion-badge { margin-left: 4px; font-size: 10px; }
-  }
-}
-
-.groups-list { padding: 0 $space-lg $space-xl; }
-
-.group-card {
-  background: #fff; border-radius: $radius-md; padding: $space-md $space-lg;
-  margin-bottom: $space-md; border: 0.5px solid $gray-200; box-shadow: $shadow-sm;
-}
-
-.group-top {
-  display: flex; gap: $space-md; align-items: flex-start; margin-bottom: $space-sm;
-  .group-logo { width: 44px; height: 44px; border-radius: $radius-sm; @include flex-center; color: #fff; font-weight: 700; font-size: $font-base; flex-shrink: 0; }
-  .group-info { flex: 1;
-    h3 { font-size: $font-sm; font-weight: 600; color: $gray-900; margin: 0; }
-    p  { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; }
-  }
-  .status-pill {
-    font-size: $font-xs; padding: 3px 8px; border-radius: $radius-pill; font-weight: 500; white-space: nowrap; flex-shrink: 0;
-    &.pending  { @include badge($warning-light, $warning); }
-    &.approved { @include badge($success-light, $success); }
-    &.rejected { @include badge($danger-light, $danger); }
-  }
-}
-
-.proof-row {
-  display: flex; align-items: center; gap: $space-sm; font-size: $font-xs; color: $primary;
-  margin-bottom: $space-sm; cursor: pointer;
-  ion-icon { font-size: 16px; }
-}
-
-.action-row { display: flex; gap: $space-sm;
-  .approve-btn { --background: #{$success}; --color: #fff; --border-radius: #{$radius-md}; flex: 1; height: 40px; }
-  .reject-btn  { --border-radius: #{$radius-md}; flex: 1; height: 40px; }
-}
-
-.empty-state { @include flex-center; flex-direction: column; gap: $space-md; padding: 60px 0;
-  ion-icon { font-size: 52px; color: $gray-400; }
-  p { font-size: $font-sm; color: $gray-400; margin: 0; }
-}
+.page-content { --background: #{$white}; }
+.page-header { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; }
+.page-title { text-align: center; font-size: $font-xl; font-weight: 700; color: $black; padding: 0 $sp-lg $sp-sm; margin: 0; }
+.filter-chips { display: flex; gap: $sp-sm; padding: 0 $sp-lg $sp-md; overflow-x: auto; scrollbar-width: none; &::-webkit-scrollbar { display: none; } }
+.chip { padding: 8px $sp-lg; border-radius: $r-pill; background: $white; border: 1.5px solid $gray-200; font-size: $font-xs; font-weight: 600; color: $gray-600; cursor: pointer; flex-shrink: 0; font-family: inherit; display: flex; align-items: center; gap: $sp-xs; .badge { background: $red; color: $white; border-radius: 50%; width: 18px; height: 18px; @include flex-center; font-size: 10px; } &.active { background: $yellow; border-color: $yellow; color: $black; } }
+.section-sub { font-size: $font-base; font-weight: 700; color: $black; padding: 0 $sp-lg $sp-sm; margin: 0; }
+.list-area { padding: 0 $sp-lg $sp-xl; display: flex; flex-direction: column; gap: $sp-sm; }
+.card { background: $white; border-radius: $r-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm; padding: $sp-md $sp-lg; }
+.g-top { display: flex; gap: $sp-md; margin-bottom: $sp-md; }
+.g-logo { width: 48px; height: 48px; border-radius: $r-md; @include flex-center; font-size: $font-xl; font-weight: 900; color: $white; flex-shrink: 0; }
+.g-info { flex: 1; .g-name { font-size: $font-sm; font-weight: 700; color: $black; margin: 0; } .g-seller { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; } .g-meta { display: flex; gap: $sp-sm; margin-top: 4px; span { font-size: $font-xs; color: $gray-600; } } }
+.g-actions { display: flex; gap: $sp-sm; }
+.green-btn { display: flex; align-items: center; gap: 4px; background: $green; color: $white; border: none; border-radius: $r-pill; height: 38px; padding: 0 $sp-lg; font-size: $font-sm; font-weight: 700; cursor: pointer; font-family: inherit; flex: 1; justify-content: center; ion-icon { font-size: 16px; } }
+.red-btn { display: flex; align-items: center; gap: 4px; background: $red; color: $white; border: none; border-radius: $r-pill; height: 38px; padding: 0 $sp-lg; font-size: $font-sm; font-weight: 700; cursor: pointer; font-family: inherit; flex: 1; justify-content: center; ion-icon { font-size: 16px; } }
+.status-badge { font-size: $font-xs; padding: 4px 12px; border-radius: $r-pill; font-weight: 600; &.approved { background: $green-light; color: $green; } &.rejected { background: $red-light; color: $red; } }

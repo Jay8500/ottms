@@ -1,50 +1,33 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar class="admin-toolbar">
-    <ion-title>Group Approvals</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="ga-content">
-
-  <div class="filter-row">
-    <ion-segment [(ngModel)]="activeFilter" (ionChange)="filterGroups()" class="admin-segment">
-      <ion-segment-button value="pending">Pending <ion-badge color="danger">{{ pendingCount }}</ion-badge></ion-segment-button>
-      <ion-segment-button value="approved">Approved</ion-segment-button>
-      <ion-segment-button value="rejected">Rejected</ion-segment-button>
-    </ion-segment>
+<ion-content class="page-content" [scrollY]="true">
+  <div class="page-header">
+    <button class="icon-btn" onclick="history.back()"><ion-icon name="arrow-back-outline"></ion-icon></button>
+    <div style="width:40px"></div>
   </div>
-
-  <div class="groups-list">
-    <div class="group-card" *ngFor="let g of filteredGroups">
-      <div class="group-top">
-        <div class="group-logo" [style.background]="g.color">{{ g.initial }}</div>
-        <div class="group-info">
-          <h3>{{ g.ottName }} · {{ g.validity }}</h3>
-          <p>Seller: <strong>{{ g.sellerName }}</strong></p>
-          <p>{{ g.plan }} · ₹{{ g.price }}/screen · {{ g.screens }} screens</p>
+  <p class="page-title">Admin Page</p>
+  <div class="filter-chips">
+    <button class="chip" [class.active]="activeFilter==='pending'" (click)="activeFilter='pending';filterGroups()">
+      👥 Pending Groups <span class="badge" *ngIf="pendingCount">{{ pendingCount }}</span>
+    </button>
+    <button class="chip" [class.active]="activeFilter==='approved'" (click)="activeFilter='approved';filterGroups()">🏅 Approved Groups</button>
+    <button class="chip" [class.active]="activeFilter==='all'" (click)="activeFilter='all';filteredGroups=allGroups">✅ All Groups</button>
+  </div>
+  <p class="section-sub">Newly Created Sellers</p>
+  <div class="list-area">
+    <div class="card" *ngFor="let g of filteredGroups">
+      <div class="g-top">
+        <div class="g-logo" [style.background]="g.color">{{ g.initial }}</div>
+        <div class="g-info">
+          <p class="g-name">{{ g.ottName }} — {{ g.validity }}</p>
+          <p class="g-seller">{{ g.sellerName }}</p>
+          <div class="g-meta"><span>🟢 Online</span><span>Plan: {{ g.plan }}</span><span>₹{{ g.price }}</span></div>
         </div>
-        <span class="status-pill" [ngClass]="g.status">{{ g.statusLabel }}</span>
       </div>
-
-      <div class="proof-row" *ngIf="g.screenshotUrl">
-        <ion-icon name="image-outline"></ion-icon>
-        <span (click)="viewProof(g)">View Screenshot</span>
+      <div class="g-actions" *ngIf="g.status==='pending'">
+        <button class="green-btn" (click)="approve(g)"><ion-icon name="checkmark-outline"></ion-icon> Approve</button>
+        <button class="red-btn" (click)="reject(g)"><ion-icon name="trash-outline"></ion-icon> Delete</button>
       </div>
-
-      <div class="action-row" *ngIf="g.status === 'pending'">
-        <ion-button expand="block" class="approve-btn" (click)="approve(g)">
-          <ion-icon name="checkmark-outline" slot="start"></ion-icon> Approve
-        </ion-button>
-        <ion-button expand="block" fill="outline" class="reject-btn" color="danger" (click)="reject(g)">
-          <ion-icon name="close-outline" slot="start"></ion-icon> Reject
-        </ion-button>
-      </div>
-    </div>
-
-    <div class="empty-state" *ngIf="filteredGroups.length === 0">
-      <ion-icon name="checkmark-done-circle-outline"></ion-icon>
-      <p>No {{ activeFilter }} groups</p>
+      <span class="status-badge" *ngIf="g.status!=='pending'" [class.approved]="g.status==='approved'" [class.rejected]="g.status==='rejected'">{{ g.statusLabel }}</span>
     </div>
   </div>
-
+  <div style="height:80px"></div>
 </ion-content>

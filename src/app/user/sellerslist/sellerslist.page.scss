@@ -1,84 +1,14 @@
 @import '../../../global.scss';
-
-.ms-toolbar { @include app-toolbar; }
-.sellers-content { --background: #{$gray-50}; }
-
-.filter-row {
-  display: flex; gap: $space-xs; overflow-x: auto;
-  padding: $space-md $space-lg; scrollbar-width: none;
-  &::-webkit-scrollbar { display: none; }
-
-  .filter-chip {
-    --background: #fff; --color: #{$gray-700};
-    border: 1px solid $gray-300; border-radius: $radius-pill;
-    font-size: $font-xs; font-weight: 500; flex-shrink: 0;
-    &.active { --background: #{$primary}; --color: #fff; border-color: $primary; }
-  }
-}
-
-.sellers-list { padding: 0 $space-lg $space-xl; }
-
-.seller-card {
-  background: #fff; border-radius: $radius-md; padding: $space-md $space-lg;
-  margin-bottom: $space-sm; box-shadow: $shadow-sm; border: 1px solid $gray-200; cursor: pointer;
-  &:active { transform: scale(0.99); }
-}
-
-.seller-top {
-  display: flex; align-items: flex-start; gap: $space-md; margin-bottom: $space-sm;
-
-  .seller-avatar {
-    width: 46px; height: 46px; border-radius: 50%;
-    background: $primary-light; @include flex-center;
-    font-size: $font-lg; font-weight: 700; color: $primary; flex-shrink: 0;
-    border: 2px solid $primary-light;
-  }
-
-  .seller-info {
-    flex: 1;
-    .seller-name {
-      font-size: $font-sm; font-weight: 700; color: $gray-900; margin: 0;
-      display: flex; align-items: center; gap: $space-xs;
-      .verified-badge { font-size: 14px; color: $primary; }
-    }
-    .seller-uid { font-size: $font-xs; color: $gray-600; margin: 1px 0 0; }
-    .seller-rating {
-      display: flex; align-items: center; gap: 3px; margin-top: 3px;
-      .stars { color: $accent-dark; font-size: 12px; }
-      .rating-val { font-size: $font-xs; font-weight: 600; color: $gray-700; }
-      .review-cnt { font-size: $font-xs; color: $gray-400; }
-    }
-  }
-
-  .seller-status {
-    display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0;
-    .online-dot {
-      width: 8px; height: 8px; border-radius: 50%; background: $gray-300;
-      &.online { background: $success; box-shadow: 0 0 0 2px $success-light; }
-    }
-    .price { font-size: $font-base; font-weight: 700; color: $primary; }
-    .price-label { font-size: 10px; color: $gray-50; }
-  }
-}
-
-.seller-badges {
-  display: flex; gap: $space-xs; flex-wrap: wrap;
-  .badge-chip {
-    @include badge($primary-light, $primary);
-    font-size: 10px;
-  }
-}
-
-.buy-btn {
-  --background: #{$primary}; --color: #fff;
-  --border-radius: #{$radius-md}; --box-shadow: none;
-  margin-top: $space-sm; height: 40px;
-  font-size: $font-xs; font-weight: 600;
-}
-
-.empty-state {
-  display: flex; flex-direction: column; align-items: center;
-  gap: $space-md; padding: 60px 0;
-  ion-icon { font-size: 52px; color: $gray-300; }
-  p { font-size: $font-sm; color: $gray-400; margin: 0; }
-}
+.sellers-content { --background: #{$white}; }
+.top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; } .logo-badge { @include logo-badge; }
+.filter-row { display: flex; gap: $sp-sm; padding: $sp-sm $sp-lg $sp-md; overflow-x: auto; scrollbar-width: none; &::-webkit-scrollbar { display: none; } }
+.f-chip { padding: 8px $sp-lg; border-radius: $r-pill; background: $white; border: 1.5px solid $gray-200; font-size: $font-sm; font-weight: 600; color: $gray-600; cursor: pointer; display: flex; align-items: center; gap: $sp-xs; flex-shrink: 0; font-family: inherit; ion-icon { font-size: 18px; } &.active { background: $yellow; border-color: $yellow; color: $black; } }
+.sellers-list { padding: 0 $sp-lg $sp-xl; display: flex; flex-direction: column; gap: $sp-sm; }
+.seller-card { background: $white; border-radius: $r-lg; padding: $sp-md $sp-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm; display: flex; align-items: center; gap: $sp-md; }
+.s-av { width: 56px; height: 56px; border-radius: 50%; background: $yellow; @include flex-center; font-size: $font-xl; font-weight: 700; color: $black; flex-shrink: 0; border: 2px solid $yellow-dark; }
+.s-info { flex: 1; min-width: 0;
+  .s-name { font-size: $font-base; font-weight: 700; color: $black; margin: 0; .uid { color: $gray-600; font-weight: 400; margin-left: 4px; } .verified { color: $blue; font-size: 14px; } }
+  .stars { display: flex; align-items: center; gap: 2px; .star { color: $yellow-dark; font-size: 14px; } .star.empty { color: $gray-300; } .rc { font-size: $font-xs; color: $gray-600; margin-left: 4px; } }
+  .online-row { display: flex; align-items: center; gap: 4px; font-size: $font-xs; color: $gray-600; .dot { width: 8px; height: 8px; border-radius: 50%; background: $gray-400; &.online { background: $green; } } .batch { background: $yellow-light; color: $black; padding: 1px 6px; border-radius: $r-pill; font-size: 10px; } } }
+.price-btn { background: $yellow; color: $black; border: none; border-radius: $r-pill; padding: 8px $sp-md; font-size: $font-base; font-weight: 700; cursor: pointer; flex-shrink: 0; font-family: inherit; }

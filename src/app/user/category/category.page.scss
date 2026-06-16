@@ -1,55 +1,10 @@
 @import '../../../global.scss';
-
-.ms-toolbar { @include app-toolbar; }
-.cat-content { --background: #{$gray-50}; }
-
-.search-wrap {
-  padding: $space-sm $space-md 0;
-  .ms-searchbar {
-    --background: #fff;
-    --border-radius: #{$radius-md};
-    --box-shadow: #{$shadow-sm};
-    --placeholder-color: #{$gray-400};
-    --color: #{$gray-900};
-    padding: 0;
-  }
-}
-
-.section-label { @include section-label; }
-
-.cat-grid {
-  padding: 0 $space-lg $space-xl;
-  display: flex;
-  flex-direction: column;
-  gap: $space-sm;
-}
-
-.cat-card {
-  @include flex-between;
-  background: #fff;
-  border-radius: $radius-md;
-  padding: $space-md $space-lg;
-  box-shadow: $shadow-sm;
-  border: 1px solid $gray-200;
-  cursor: pointer;
-
-  &:active { opacity: 0.88; }
-
-  .cat-icon-wrap {
-    width: 48px;
-    height: 48px;
-    border-radius: $radius-sm;
-    @include flex-center;
-    flex-shrink: 0;
-    .cat-emoji { font-size: 26px; }
-  }
-
-  .cat-info {
-    flex: 1;
-    margin-left: $space-md;
-    .cat-name  { font-size: $font-base; font-weight: 600; color: $gray-900; margin: 0; }
-    .cat-count { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; }
-  }
-
-  .cat-arrow { color: $primary; font-size: 18px; }
-}
+.cat-content { --background: #{$white}; }
+.top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; }
+.logo-badge { @include logo-badge; }
+.cat-list { padding: $sp-md $sp-lg $sp-xl; display: flex; flex-direction: column; gap: $sp-md; }
+.cat-banner { border-radius: $r-lg; height: 86px; display: flex; align-items: center; padding: $sp-md $sp-lg; cursor: pointer; border: none; font-family: inherit; width: 100%; box-shadow: $shadow-sm; &:active { opacity: 0.88; }
+  .cat-emoji { font-size: 40px; margin-right: $sp-md; flex-shrink: 0; }
+  .cat-info { flex: 1; text-align: left; .cat-name { font-size: $font-xl; font-weight: 700; color: $black; margin: 0; } .cat-sub { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; } }
+  .cat-arrow { width: 36px; height: 36px; background: $yellow; border-radius: $r-pill; @include flex-center; flex-shrink: 0; ion-icon { font-size: 18px; color: $black; } } }

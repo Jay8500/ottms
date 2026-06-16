@@ -1,61 +1,17 @@
 @import '../../../global.scss';
-
-.admin-toolbar { --background: #1a1a2e; --color: #fff; }
-.admin-users-content { --background: #{$gray-50}; }
-
-.search-bar-wrap {
-  display: flex; align-items: center; gap: $space-sm; padding: $space-sm $space-md;
-  .admin-searchbar { --background: #fff; --border-radius: #{$radius-md}; --box-shadow: #{$shadow-sm}; flex: 1; padding: 0; }
-  .role-filter {
-    --background: #fff; --padding-start: #{$space-sm};
-    border: 0.5px solid $gray-200; border-radius: $radius-md;
-    font-size: $font-xs; min-width: 90px; height: 40px;
-  }
-}
-
-.result-count { font-size: $font-xs; color: $gray-600; padding: 0 $space-lg; margin: 0 0 $space-sm; }
-
-.users-list { padding: 0 $space-lg $space-xl; }
-
-.user-card {
-  background: #fff; border-radius: $radius-md; padding: $space-md $space-lg;
-  margin-bottom: $space-sm; border: 0.5px solid $gray-200; box-shadow: $shadow-sm;
-}
-
-.user-top {
-  display: flex; gap: $space-md; align-items: flex-start; margin-bottom: $space-sm;
-
-  .user-avatar {
-    width: 44px; height: 44px; border-radius: 50%; background: #1a1a2e;
-    @include flex-center; color: #fff; font-size: $font-lg; font-weight: 700; flex-shrink: 0;
-  }
-
-  .user-info { flex: 1;
-    h3   { font-size: $font-sm; font-weight: 600; color: $gray-900; margin: 0; }
-    .uid { font-weight: 400; color: $gray-600; }
-    p    { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; }
-  }
-
-  .user-actions { display: flex; flex-direction: column; gap: 2px;
-    ion-button { --padding-start: 6px; --padding-end: 6px; margin: 0; }
-  }
-}
-
-.user-badges {
-  display: flex; gap: $space-xs; flex-wrap: wrap;
-
-  .role-badge {
-    font-size: $font-xs; padding: 3px 8px; border-radius: $radius-pill; font-weight: 500;
-    &.buyer  { @include badge($primary-light, $primary); }
-    &.seller { @include badge($seller-light, $seller-color); }
-  }
-
-  .status-badge {
-    font-size: $font-xs; padding: 3px 8px; border-radius: $radius-pill;
-    &.active   { @include badge($success-light, $success); }
-    &.inactive { @include badge($gray-100, $gray-600); }
-    &.banned   { @include badge($danger-light, $danger); }
-  }
-
-  .wallet-badge { @include badge(#e8f5e9, #2e7d32); }
-}
+.page-content { --background: #{$white}; }
+.page-header { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; } .logo-badge { @include logo-badge; }
+.page-title { text-align: center; font-size: $font-xl; font-weight: 700; color: $black; padding: 0 $sp-lg $sp-md; margin: 0; }
+.search-row { display: flex; gap: $sp-sm; padding: 0 $sp-lg $sp-md; }
+.search-box { flex: 1; display: flex; align-items: center; gap: $sp-sm; border: 1.5px solid $gray-200; border-radius: $r-lg; padding: 0 $sp-md; height: 46px; ion-icon { color: $gray-400; } input { flex: 1; border: none; outline: none; font-size: $font-sm; } }
+.role-sel { border: 1.5px solid $gray-200; border-radius: $r-lg; padding: 0 $sp-sm; height: 46px; font-size: $font-xs; outline: none; background: $white; }
+.list-area { padding: 0 $sp-lg $sp-xl; display: flex; flex-direction: column; gap: $sp-sm; }
+.card { background: $white; border-radius: $r-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm; padding: $sp-md $sp-lg; }
+.user-top { display: flex; align-items: center; gap: $sp-md; margin-bottom: $sp-sm; }
+.u-av { width: 44px; height: 44px; border-radius: 50%; background: $yellow; @include flex-center; font-size: $font-base; font-weight: 700; color: $black; flex-shrink: 0; }
+.u-info { flex: 1; .u-name { font-size: $font-sm; font-weight: 700; color: $black; margin: 0; .uid { color: $gray-600; font-weight: 400; margin-left: 4px; } } .u-mobile, .u-email { font-size: $font-xs; color: $gray-600; margin: 1px 0 0; } }
+.role-badge { font-size: $font-xs; padding: 2px 8px; border-radius: $r-pill; font-weight: 600; background: $blue-light; color: $blue; &.seller { background: $yellow-light; color: $black; } }
+.u-actions { display: flex; gap: $sp-sm; }
+.yellow-sm { display: flex; align-items: center; gap: 4px; background: $yellow; color: $black; border: none; border-radius: $r-pill; height: 34px; padding: 0 $sp-md; font-size: $font-xs; font-weight: 700; cursor: pointer; font-family: inherit; ion-icon { font-size: 14px; } }
+.red-sm { display: flex; align-items: center; gap: 4px; background: $red-light; color: $red; border: none; border-radius: $r-pill; height: 34px; padding: 0 $sp-md; font-size: $font-xs; font-weight: 700; cursor: pointer; font-family: inherit; ion-icon { font-size: 14px; } }

@@ -1,42 +1,31 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar class="ms-toolbar">
-    <ion-buttons slot="start"><ion-back-button defaultHref="/user/wallet"></ion-back-button></ion-buttons>
-    <ion-title>Rate &amp; Review</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="rating-content">
-  <div class="seller-card">
-    <div class="seller-av">{{ peerName[0] }}</div>
-    <div>
-      <h3>{{ peerName }}</h3>
-      <p>{{ ottName }} · {{ validity }}</p>
+<ion-content class="rating-content" [scrollY]="true">
+  <div class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-hdr">
+        <p class="modal-title">Leave a Review</p>
+        <button class="close-btn" (click)="skip()">✕</button>
+      </div>
+      <div class="seller-banner">
+        <div class="s-av">{{ peerName.charAt(0) }}</div>
+        <div class="s-info">
+          <p class="s-name">{{ peerName }}</p>
+          <p class="s-meta">{{ ottName }} • {{ validity }}</p>
+        </div>
+        <div class="s-rating"><span *ngFor="let i of [1,2,3,4,5]">{{ i<=selected ? '★' : '☆' }}</span></div>
+      </div>
+      <div class="stars-row">
+        <button class="star-btn" *ngFor="let i of [1,2,3,4,5]" [class.filled]="i<=selected" [class.empty]="i>selected" (click)="selected=i">
+          {{ i<=selected ? '★' : '☆' }}
+        </button>
+      </div>
+      <div class="badges-wrap">
+        <button class="badge-pill" *ngFor="let b of badges" [class.active]="activeBadges.includes(b.key)" (click)="toggleBadge(b.key)">
+          {{ b.emoji }} {{ b.label }}
+        </button>
+      </div>
+      <textarea class="review-ta" [(ngModel)]="review" placeholder="Write your review..." rows="4"></textarea>
+      <button class="submit-btn" (click)="submit()">Submit</button>
+      <p class="skip-link" (click)="skip()">Skip</p>
     </div>
-  </div>
-
-  <p class="section-label">Your Rating</p>
-  <div class="stars-row">
-    <button *ngFor="let i of [1,2,3,4,5]" class="star-btn"
-      [class.filled]="i <= selected" (click)="selected = i">★</button>
-  </div>
-  <p class="rating-text">{{ selected > 0 ? labels[selected-1] : '' }}</p>
-
-  <p class="section-label">Quick Badges <span class="optional">(optional)</span></p>
-  <div class="badges-wrap">
-    <button class="badge-pill" *ngFor="let b of badges"
-      [class.active]="activeBadges.includes(b.key)" (click)="toggleBadge(b.key)">
-      {{ b.emoji }} {{ b.label }}
-    </button>
-  </div>
-
-  <p class="section-label">Review <span class="optional">(optional)</span></p>
-  <div class="review-wrap">
-    <ion-textarea [(ngModel)]="review" placeholder="Share your experience..."
-      [rows]="4" class="review-ta" [counter]="true" maxlength="300"></ion-textarea>
-  </div>
-
-  <div class="bottom-cta">
-    <ion-button expand="block" class="submit-btn" [disabled]="selected===0" (click)="submit()">Submit Rating</ion-button>
-    <p class="skip-link" (click)="skip()">Skip for now</p>
   </div>
 </ion-content>

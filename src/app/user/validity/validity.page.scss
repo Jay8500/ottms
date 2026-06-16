@@ -1,66 +1,15 @@
 @import '../../../global.scss';
-
-.ms-toolbar { @include app-toolbar; }
-.val-content { --background: #{$gray-50}; }
-
-.app-banner {
-  display: flex; flex-direction: column; align-items: center; gap: $space-xs;
-  background: linear-gradient(135deg, #{$primary-dark}, #{$primary});
-  color: #fff; padding: $space-xl $space-lg;
-  
-  .app-icon {
-    width: 64px; height: 64px; border-radius: $radius-md;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 26px; font-weight: 700; color: #fff; margin-bottom: $space-sm;
-    border: 2px solid rgba(255,255,255,0.2);
-  }
-  h2 { font-size: $font-xl; font-weight: 700; margin: 0; }
-  p  { font-size: $font-sm; color: rgba(255,255,255,0.75); margin: 0; }
-}
-
-.section-title {
-  padding: $space-lg $space-lg $space-sm;
-  font-size: $font-sm; font-weight: 700; color: $gray-900;
-}
-
-.validity-list { padding: 0 $space-lg; display: flex; flex-direction: column; gap: $space-sm; }
-
-.validity-card {
-  background: #fff; border-radius: $radius-md; padding: $space-md $space-lg;
-  border: 1.5px solid $gray-200; box-shadow: $shadow-sm; cursor: pointer;
-  display: flex; align-items: center; justify-content: space-between;
-
-  &.selected {
-    border-color: $primary;
-    background: $primary-light;
-    box-shadow: 0 0 0 2px rgba(21,101,192,0.15);
-  }
-
-  .val-left {
-    display: flex; align-items: center; gap: $space-md;
-    .val-check {
-      width: 22px; height: 22px; border-radius: 50%; border: 2px solid $gray-300;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-      &.active { background: $primary; border-color: $primary; ion-icon { color: #fff; font-size: 14px; } }
-    }
-    .val-info {
-      .val-label  { font-size: $font-base; font-weight: 700; color: $gray-900; margin: 0; }
-      .val-save   { font-size: $font-xs; color: $success; font-weight: 500; margin: 2px 0 0; }
-    }
-  }
-
-  .val-right {
-    text-align: right;
-    .val-amount  { font-size: $font-lg; font-weight: 700; color: $primary; margin: 0; }
-    .val-per     { font-size: $font-xs; color: $gray-600; margin: 1px 0 0; }
-  }
-}
-
-.proceed-wrap {
-  padding: $space-lg $space-lg $space-xl;
-  .proceed-btn {
-    --background: #{$primary}; --color: #fff;
-    --border-radius: #{$radius-md}; --box-shadow: none;
-    height: 52px; font-weight: 700; font-size: $font-base;
-  }
-}
+.val-content { --background: #{$white}; }
+.top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; } .tab-pills { @include tab-pills; }
+.logo-center { @include flex-center; padding: $sp-xs 0 $sp-md; } .logo-badge { @include logo-badge; }
+.page-title { text-align: center; font-size: $font-xl; font-weight: 700; color: $black; margin: 0 0 $sp-sm; }
+.app-banner { margin: 0 $sp-lg $sp-md; border-radius: $r-lg; height: 64px; @include flex-center; font-size: $font-xl; font-weight: 700; color: $white; }
+.val-list { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-sm; }
+.val-row { display: flex; align-items: center; background: $white; border-radius: $r-lg; padding: $sp-md $sp-lg; border: 1.5px solid $gray-200; box-shadow: $shadow-sm; cursor: pointer; gap: $sp-md; font-family: inherit; width: 100%; &.hl { background: $yellow; border-color: $yellow; } &:active { opacity: 0.88; }
+  .cal-icon { font-size: 28px; color: $yellow-dark; flex-shrink: 0; }
+  .val-label { flex: 1; font-size: $font-base; font-weight: 600; color: $black; text-align: left; }
+  .save-badge { background: $green; color: $white; font-size: $font-xs; font-weight: 700; padding: 2px 8px; border-radius: $r-pill; flex-shrink: 0; }
+  .val-price { background: $yellow; color: $black; font-size: $font-base; font-weight: 700; padding: 6px $sp-md; border-radius: $r-pill; white-space: nowrap; flex-shrink: 0; } }
+.proceed-wrap { padding: $sp-lg $sp-lg 0; }
+.yellow-btn { @include yellow-btn; } .proceed { width: 100%; height: 52px; }

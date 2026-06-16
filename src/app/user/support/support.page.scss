@@ -1,58 +1,13 @@
 @import '../../../global.scss';
-
-.ms-toolbar      { @include app-toolbar; }
-.support-content { --background: #{$gray-50}; }
-
-.support-hero {
-  display: flex; flex-direction: column; align-items: center; gap: $space-sm;
-  background: linear-gradient(135deg, #{$primary-dark}, #{$primary});
-  color: #fff; padding: $space-xl $space-lg; text-align: center;
-  .hero-icon {
-    width: 70px; height: 70px; border-radius: 50%;
-    background: rgba(255,255,255,0.15);
-    display: flex; align-items: center; justify-content: center;
-    border: 1.5px solid rgba(255,255,255,0.25);
-    ion-icon { font-size: 36px; }
-  }
-  h2 { font-size: $font-xl; font-weight: 700; margin: 0; }
-  p  { font-size: $font-sm; color: rgba(255,255,255,0.75); margin: 0; }
-}
-
-.section-label { @include section-label; }
-
-.contact-list { padding: 0 $space-lg; display: flex; flex-direction: column; gap: $space-sm; }
-
-.contact-card {
-  display: flex; align-items: center; gap: $space-md;
-  background: #fff; border-radius: $radius-md; padding: $space-md $space-lg;
-  border: 1px solid $gray-200; box-shadow: $shadow-sm; cursor: pointer;
-  &:active { opacity: 0.85; }
-  .cc-icon {
-    width: 50px; height: 50px; border-radius: $radius-md; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    ion-icon { font-size: 24px; }
-    &.inapp { background: $primary-light; ion-icon { color: $primary; } }
-    &.wa    { background: #E7F7EF;        ion-icon { color: #25D366; } }
-    &.call  { background: $success-light; ion-icon { color: $success; } }
-  }
-  .cc-body { flex: 1;
-    h3 { font-size: $font-sm; font-weight: 700; color: $gray-900; margin: 0; }
-    p  { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; } }
-  .cc-arrow { color: $primary; }
-}
-
-.faq-list { padding: 0 $space-lg $space-xl; display: flex; flex-direction: column; gap: $space-sm; }
-
-.faq-item {
-  background: #fff; border-radius: $radius-md; border: 1px solid $gray-200; overflow: hidden;
-  .faq-q {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: $space-md $space-lg; cursor: pointer;
-    font-size: $font-sm; font-weight: 600; color: $gray-900;
-    ion-icon { color: $primary; font-size: 18px; flex-shrink: 0; }
-  }
-  .faq-a {
-    padding: 0 $space-lg $space-md; border-top: 0.5px solid $gray-100;
-    p { font-size: $font-xs; color: $gray-600; margin: $space-sm 0 0; line-height: 1.6; }
-  }
-}
+.support-content { --background: #{$white}; }
+.top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; } .logo-badge { @include logo-badge; }
+.contact-list { padding: $sp-md $sp-lg $sp-lg; display: flex; flex-direction: column; gap: $sp-md; }
+.contact-btn { display: flex; align-items: center; gap: $sp-md; background: $yellow; border: none; border-radius: $r-pill; padding: $sp-md $sp-xl; cursor: pointer; width: 100%; font-family: inherit; box-shadow: $shadow-md; &:active { opacity: 0.88; }
+  .c-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(0,0,0,0.12); @include flex-center; ion-icon { font-size: 24px; color: $black; } }
+  span { font-size: $font-xl; font-weight: 700; color: $black; } }
+.faq-section { padding: 0 $sp-lg $sp-xl; }
+.faq-title { font-size: $font-lg; font-weight: 700; color: $black; margin-bottom: $sp-md; }
+.faq-item { background: $white; border-radius: $r-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm; margin-bottom: $sp-sm; overflow: hidden;
+  .faq-q { display: flex; justify-content: space-between; align-items: center; padding: $sp-md $sp-lg; cursor: pointer; font-size: $font-sm; font-weight: 600; color: $black; ion-icon { color: $yellow-dark; font-size: 20px; flex-shrink: 0; } }
+  .faq-a { padding: 0 $sp-lg $sp-md; border-top: 1px solid $gray-100; p { font-size: $font-xs; color: $gray-600; line-height: 1.6; margin: $sp-sm 0 0; } } }

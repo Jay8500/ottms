@@ -1,39 +1,20 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar class="admin-toolbar">
-    <ion-title>Category Management</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="addCategory()">
-        <ion-icon name="add-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="ac-content">
-
-  <div class="info-card">
-    <ion-icon name="information-circle-outline"></ion-icon>
-    <p>Changes here update the category list visible to all users instantly.</p>
+<ion-content class="page-content" [scrollY]="true">
+  <div class="page-header">
+    <button class="icon-btn" onclick="history.back()"><ion-icon name="settings-outline"></ion-icon></button>
+    <p class="hdr-title">Admin Page</p>
+    <button class="icon-btn dark"><ion-icon name="options-outline"></ion-icon></button>
   </div>
-
-  <div class="categories-list">
+  <p class="page-title">Edit Entertainment Page</p>
+  <p class="page-sub">Edit or change options for the page.</p>
+  <div class="list-area">
     <div class="cat-item" *ngFor="let cat of categories">
-      <div class="cat-icon-bg" [style.background]="cat.bgColor">
-        <span>{{ cat.emoji }}</span>
-      </div>
-      <div class="cat-info">
-        <h3>{{ cat.name }}</h3>
-        <p>{{ cat.appCount }} apps · Color: <span [style.color]="cat.color">{{ cat.color }}</span></p>
-      </div>
-      <div class="cat-actions">
-        <ion-button fill="clear" size="small" (click)="editCategory(cat)">
-          <ion-icon name="create-outline" slot="icon-only"></ion-icon>
-        </ion-button>
-        <ion-button fill="clear" size="small" color="danger" (click)="deleteCategory(cat)">
-          <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
-        </ion-button>
-      </div>
+      <div class="cat-left" [style.background]="cat.bgColor"><span class="cat-emoji">{{ cat.emoji }}</span></div>
+      <span class="cat-name" [style.color]="cat.color">{{ cat.name }}</span>
+      <button class="edit-btn" (click)="editCategory(cat)"><ion-icon name="create-outline"></ion-icon></button>
+      <button class="del-btn" (click)="deleteCategory(cat)"><ion-icon name="trash-outline"></ion-icon></button>
     </div>
   </div>
-
+  <button class="add-btn" (click)="addCategory()"><ion-icon name="add-circle-outline"></ion-icon> Add New Category</button>
+  <button class="save-btn">Save Changes</button>
+  <div style="height:80px"></div>
 </ion-content>

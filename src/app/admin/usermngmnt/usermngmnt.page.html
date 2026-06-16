@@ -1,56 +1,32 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar class="admin-toolbar">
-    <ion-title>User Management</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="addUser()">
-        <ion-icon name="person-add-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="admin-users-content">
-
-  <div class="search-bar-wrap">
-    <ion-searchbar
-      [(ngModel)]="searchTerm"
-      (ionInput)="filterUsers()"
-      placeholder="Search by name, ID, mobile..."
-      class="admin-searchbar"
-    ></ion-searchbar>
-    <ion-select [(ngModel)]="roleFilter" (ionChange)="filterUsers()" class="role-filter" interface="popover">
-      <ion-select-option value="all">All Roles</ion-select-option>
-      <ion-select-option value="user">Buyer</ion-select-option>
-      <ion-select-option value="seller">Seller</ion-select-option>
-    </ion-select>
+<ion-content class="page-content" [scrollY]="true">
+  <div class="page-header">
+    <button class="icon-btn" onclick="history.back()"><ion-icon name="arrow-back-outline"></ion-icon></button>
+    <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
+    <div style="width:40px"></div>
   </div>
-
-  <p class="result-count">{{ filteredUsers.length }} users found</p>
-
-  <div class="users-list">
-    <div class="user-card" *ngFor="let u of filteredUsers">
+  <p class="page-title">Admin Page</p>
+  <div class="search-row">
+    <div class="search-box"><ion-icon name="search-outline"></ion-icon><input [(ngModel)]="searchTerm" (ngModelChange)="filterUsers()" placeholder="Search..." /></div>
+    <select [(ngModel)]="roleFilter" (ngModelChange)="filterUsers()" class="role-sel">
+      <option value="all">All</option><option value="buyer">Buyer</option><option value="seller">Seller</option>
+    </select>
+  </div>
+  <div class="list-area">
+    <div class="card" *ngFor="let u of filteredUsers">
       <div class="user-top">
-        <div class="user-avatar">{{ u.name[0] }}</div>
-        <div class="user-info">
-          <h3>{{ u.name }} <span class="uid">({{ u.uniqueNum }})</span></h3>
-          <p>{{ u.mobile }}</p>
-          <p>{{ u.email }}</p>
+        <div class="u-av">{{ u.name.charAt(0) }}</div>
+        <div class="u-info">
+          <p class="u-name">{{ u.name }} <span class="uid">{{ u.uniqueNum }}</span></p>
+          <p class="u-mobile">{{ u.mobile }}</p>
+          <p class="u-email">{{ u.email }}</p>
         </div>
-        <div class="user-actions">
-          <ion-button fill="clear" size="small" (click)="editUser(u)">
-            <ion-icon name="create-outline" slot="icon-only"></ion-icon>
-          </ion-button>
-          <ion-button fill="clear" size="small" color="danger" (click)="deleteUser(u)">
-            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
-          </ion-button>
-        </div>
+        <span class="role-badge" [class.seller]="u.role==='seller'">{{ u.roleLabel }}</span>
       </div>
-      <div class="user-badges">
-        <span class="role-badge" [ngClass]="u.role">{{ u.roleLabel }}</span>
-        <span class="status-badge" [ngClass]="u.status">{{ u.status }}</span>
-        <span class="wallet-badge">₹{{ u.wallet }}</span>
+      <div class="u-actions">
+        <button class="yellow-sm" (click)="editUser(u)"><ion-icon name="create-outline"></ion-icon> Edit</button>
+        <button class="red-sm" (click)="deleteUser(u)"><ion-icon name="trash-outline"></ion-icon> Delete</button>
       </div>
     </div>
   </div>
-
+  <div style="height:80px"></div>
 </ion-content>

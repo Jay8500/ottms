@@ -1,72 +1,57 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar class="seller-toolbar">
-    <ion-buttons slot="start"><ion-back-button defaultHref="/user/home"></ion-back-button></ion-buttons>
-    <ion-title>Create Seller Group</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="cg-content">
-  <div class="info-banner">
-    <ion-icon name="information-circle-outline"></ion-icon>
-    <p>Your group must be <strong>approved by admin</strong> before it goes live to buyers.</p>
+<ion-content class="cg-content" [scrollY]="true">
+  <div class="top-bar">
+    <button class="icon-btn" onclick="history.back()"><ion-icon name="settings-outline"></ion-icon></button>
+    <div class="tab-pills"><div class="pill active"></div><div class="pill"></div><div class="pill"></div></div>
+    <button class="icon-btn dark"><ion-icon name="options-outline"></ion-icon></button>
   </div>
-
+  <div class="logo-center"><div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div></div>
+  <p class="page-title">Create New Group</p>
   <div class="form-section">
-    <div class="form-group">
-      <label class="form-label">Select OTT App</label>
-      <ion-select [(ngModel)]="form.ottId" placeholder="Choose platform" class="ms-select" interface="action-sheet">
-        <ion-select-option *ngFor="let app of ottApps" [value]="app.id">{{ app.name }}</ion-select-option>
-      </ion-select>
+    <p class="section-lbl">Account Validity</p>
+    <label class="form-lbl">Select App</label>
+    <div class="sel-wrap">
+      <select [(ngModel)]="form.ottId" class="form-sel">
+        <option value="" disabled>Select OTT App</option>
+        <option *ngFor="let app of ottApps" [value]="app.id">{{ app.name }}</option>
+      </select>
     </div>
-
-    <div class="form-group">
-      <label class="form-label">Select Validity</label>
-      <ion-select [(ngModel)]="form.validity" placeholder="Choose duration" class="ms-select" interface="action-sheet">
-        <ion-select-option value="1m">1 Month</ion-select-option>
-        <ion-select-option value="3m">3 Months</ion-select-option>
-        <ion-select-option value="6m">6 Months</ion-select-option>
-        <ion-select-option value="12m">12 Months</ion-select-option>
-      </ion-select>
+    <label class="form-lbl">Validity</label>
+    <div class="sel-wrap">
+      <select [(ngModel)]="form.validity" class="form-sel">
+        <option value="" disabled>Select Validity</option>
+        <option value="1m">01 Month</option>
+        <option value="3m">03 Months</option>
+        <option value="6m">06 Months</option>
+        <option value="12m">12 Months</option>
+      </select>
     </div>
-
-    <div class="form-group">
-      <label class="form-label">Select Plan</label>
-      <ion-select [(ngModel)]="form.plan" placeholder="Choose plan" class="ms-select" interface="action-sheet">
-        <ion-select-option value="4k">4K Ultra HD</ion-select-option>
-        <ion-select-option value="hd">Full HD</ion-select-option>
-        <ion-select-option value="mobile">Mobile HD</ion-select-option>
-      </ion-select>
+    <div class="date-row">
+      <div><label class="form-lbl">From</label><input type="date" class="form-input" /></div>
+      <div><label class="form-lbl">To</label><input type="date" class="form-input" /></div>
     </div>
-
-    <div class="form-group">
-      <label class="form-label">Number of Screens</label>
-      <ion-item class="ms-input-item" lines="none">
-        <ion-input type="number" [(ngModel)]="form.screenCount" placeholder="1 to 4" min="1" max="4"></ion-input>
-      </ion-item>
+    <label class="form-lbl">Select Plan</label>
+    <div class="sel-wrap">
+      <select [(ngModel)]="form.plan" class="form-sel">
+        <option value="" disabled>(Mobile, Standard, Premium)</option>
+        <option value="mobile">Mobile</option>
+        <option value="standard">Standard</option>
+        <option value="premium">Premium</option>
+      </select>
     </div>
-
-    <div class="form-group">
-      <label class="form-label">Screen Price (₹)</label>
-      <ion-item class="ms-input-item" lines="none">
-        <ion-input type="number" [(ngModel)]="form.price" placeholder="e.g. 149"></ion-input>
-      </ion-item>
+    <p class="section-lbl">Upload Membership Image</p>
+    <div class="upload-box" (click)="uploadProof()">
+      <ion-icon name="cloud-upload-outline"></ion-icon>
+      <p class="up-text">Upload Image</p>
+      <button class="up-btn" type="button">⬆ Upload</button>
+      <p class="file-name" *ngIf="proofFile">✅ {{ proofFile.name }}</p>
     </div>
-
-    <div class="form-group">
-      <label class="form-label">Upload Membership Screenshot</label>
-      <div class="upload-box" (click)="uploadProof()">
-        <ion-icon [name]="proofFile ? 'checkmark-circle-outline' : 'cloud-upload-outline'" [class.uploaded]="proofFile"></ion-icon>
-        <p>{{ proofFile ? proofFile.name : 'Tap to upload validity screenshot' }}</p>
-      </div>
-      <input type="file" #proofInput accept="image/*" (change)="onProofSelected($event)" hidden />
+    <input type="file" #proofInput style="display:none" accept="image/*" (change)="onProofSelected($event)" />
+    <div class="publish-row">
+      <input type="checkbox" id="pub" checked />
+      <label for="pub">Publish the Group</label>
     </div>
+    <label class="form-lbl">Comment</label>
+    <textarea class="comment-ta" placeholder="Enter your comment here..."></textarea>
   </div>
-
-  <div class="bottom-action">
-    <ion-button expand="block" class="submit-btn" [disabled]="!isFormValid()" (click)="submitGroup()">
-      <ion-icon name="send-outline" slot="start"></ion-icon>
-      Send for Admin Approval
-    </ion-button>
-  </div>
-  <div style="height:80px"></div>
+  <button class="create-btn" (click)="submitGroup()">Create</button>
 </ion-content>

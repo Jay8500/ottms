@@ -1,32 +1,27 @@
 <ion-tabs>
   <ion-router-outlet></ion-router-outlet>
-
   <ion-tab-bar slot="bottom" class="admin-tabbar">
-
     <ion-tab-button tab="homemgnmt" href="/admin/homemgnmt">
       <ion-icon name="home-outline"></ion-icon>
       <ion-label>Home</ion-label>
     </ion-tab-button>
-
-    <ion-tab-button tab="usermngmnt" href="/admin/usermngmnt">
-      <ion-icon name="people-outline"></ion-icon>
-      <ion-label>Users</ion-label>
-    </ion-tab-button>
-
     <ion-tab-button tab="groupapprovals" href="/admin/groupapprovals">
       <ion-icon name="shield-checkmark-outline"></ion-icon>
       <ion-label>Groups</ion-label>
     </ion-tab-button>
-
-    <ion-tab-button tab="paymentaprpovals" href="/admin/paymentaprpovals">
-      <ion-icon name="card-outline"></ion-icon>
-      <ion-label>Payments</ion-label>
+    <ion-tab-button tab="paymentaprpovals" href="/admin/paymentaprpovals" class="center-tab">
+      <div class="center-circle">
+        <ion-icon name="card-outline"></ion-icon>
+      </div>
+      <ion-label>Pending Payments</ion-label>
     </ion-tab-button>
-
     <ion-tab-button tab="walletadmin" href="/admin/walletadmin">
       <ion-icon name="wallet-outline"></ion-icon>
       <ion-label>Wallet</ion-label>
     </ion-tab-button>
-
+    <ion-tab-button tab="usermngmnt" href="/admin/usermngmnt">
+      <ion-icon name="people-outline"></ion-icon>
+      <ion-label>Users</ion-label>
+    </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>

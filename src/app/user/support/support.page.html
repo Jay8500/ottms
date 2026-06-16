@@ -1,39 +1,24 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar class="ms-toolbar">
-    <ion-title>Support</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="support-content">
-  <div class="support-hero">
-    <div class="hero-icon"><ion-icon name="headset-outline"></ion-icon></div>
-    <h2>How can we help?</h2>
-    <p>Available 9 AM – 9 PM every day</p>
+<ion-content class="support-content" [scrollY]="true">
+  <div class="top-bar">
+    <button class="icon-btn" onclick="history.back()"><ion-icon name="settings-outline"></ion-icon></button>
+    <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
+    <button class="icon-btn dark"><ion-icon name="options-outline"></ion-icon></button>
   </div>
-
-  <p class="section-label">Contact Us</p>
   <div class="contact-list">
-    <div class="contact-card" (click)="openInApp()">
-      <div class="cc-icon inapp"><ion-icon name="chatbubbles-outline"></ion-icon></div>
-      <div class="cc-body"><h3>In-App Chat</h3><p>Fastest response</p></div>
-      <ion-icon name="chevron-forward-outline" class="cc-arrow"></ion-icon>
-    </div>
-    <div class="contact-card" (click)="openWhatsApp()">
-      <div class="cc-icon wa"><ion-icon name="logo-whatsapp"></ion-icon></div>
-      <div class="cc-body"><h3>WhatsApp Support</h3><p>+91 98765 00000</p></div>
-      <ion-icon name="chevron-forward-outline" class="cc-arrow"></ion-icon>
-    </div>
-    <div class="contact-card" (click)="callSupport()">
-      <div class="cc-icon call"><ion-icon name="call-outline"></ion-icon></div>
-      <div class="cc-body"><h3>Call Support</h3><p>+91 98765 11111</p></div>
-      <ion-icon name="chevron-forward-outline" class="cc-arrow"></ion-icon>
-    </div>
+    <button class="contact-btn" (click)="openInApp()">
+      <div class="c-icon"><ion-icon name="headset-outline"></ion-icon></div><span>Support</span>
+    </button>
+    <button class="contact-btn" (click)="openWhatsApp()">
+      <div class="c-icon"><ion-icon name="logo-whatsapp"></ion-icon></div><span>WhatsApp</span>
+    </button>
+    <button class="contact-btn" (click)="callSupport()">
+      <div class="c-icon"><ion-icon name="call-outline"></ion-icon></div><span>Call Us</span>
+    </button>
   </div>
-
-  <p class="section-label">FAQ</p>
-  <div class="faq-list">
-    <div class="faq-item" *ngFor="let f of faqs" (click)="f.open = !f.open">
-      <div class="faq-q">
+  <div class="faq-section">
+    <p class="faq-title">Frequently Asked Questions</p>
+    <div class="faq-item" *ngFor="let f of faqs">
+      <div class="faq-q" (click)="f.open=!f.open">
         <span>{{ f.q }}</span>
         <ion-icon [name]="f.open ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
       </div>

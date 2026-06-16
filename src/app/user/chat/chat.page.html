@@ -1,55 +1,37 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar class="ms-toolbar">
-    <ion-buttons slot="start"><ion-back-button defaultHref="/user/wallet"></ion-back-button></ion-buttons>
-    <ion-title>
-      <div class="chat-title">
-        <span class="peer-name">{{ peerName }}</span>
-        <span class="peer-status" [class.online]="peerOnline">{{ peerOnline ? 'Online' : 'Offline' }}</span>
-      </div>
-    </ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="toggleLock()">
-        <ion-icon [name]="locked ? 'lock-closed-outline' : 'lock-open-outline'" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="chat-content" #scrollArea>
-  <div class="info-banner" *ngIf="showBanner">
-    <ion-icon name="information-circle-outline"></ion-icon>
-    <p>Share credentials <strong>only after</strong> payment is confirmed.</p>
-    <ion-icon name="close-outline" class="close-btn" (click)="showBanner=false"></ion-icon>
+<ion-content class="chat-content" #scrollArea [scrollY]="true">
+  <div class="seller-banner">
+    <div class="s-av">{{ peerName.charAt(0) }}</div>
+    <div class="s-info">
+      <p class="s-name">{{ peerName }}</p>
+      <div class="online-row"><span class="dot" [class.on]="peerOnline"></span><span>{{ peerOnline ? 'Online' : 'Offline' }}</span></div>
+    </div>
+    <button class="lock-btn" (click)="toggleLock()"><ion-icon [name]="locked ? 'lock-closed-outline' : 'lock-open-outline'"></ion-icon></button>
   </div>
-
-  <div class="lock-banner" *ngIf="locked">
-    <ion-icon name="lock-closed-outline"></ion-icon>
-    <span>Chat locked — only suggested texts can be sent.</span>
+  <div class="notice-card">
+    <p class="notice-title">NOTICE</p>
+    <p class="n-item">1). Do Not Share any personal details like Mobile No, WhatsApp No, Mail Id or any social media details.</p>
+    <p class="n-item">2). Do not involve into any arguments.</p>
+    <p class="n-item">3). Do not use unprofessional / vulgarity language.</p>
+    <p class="n-item">4). Sharing details may lead to fraudulent activities.</p>
   </div>
-
   <div class="msg-list">
-    <div *ngFor="let m of messages" class="msg-wrap" [class.mine]="m.isMine" [class.theirs]="!m.isMine">
+    <div class="msg-wrap" *ngFor="let m of messages" [class.mine]="m.isMine" [class.theirs]="!m.isMine">
       <div class="bubble" [class.mine]="m.isMine" [class.theirs]="!m.isMine">
-        <p class="bubble-text">{{ m.text }}</p>
-        <span class="bubble-time">{{ m.time }}</span>
+        <p class="b-text">{{ m.text }}</p>
+        <span class="b-time">{{ m.time }}</span>
       </div>
     </div>
   </div>
-</ion-content>
-
-<div class="suggested-strip">
-  <div class="suggested-inner">
-    <button class="sug-chip" *ngFor="let s of suggestedTexts" (click)="sendSuggested(s)">{{ s }}</button>
+  <p class="acct-label">Account details</p>
+  <div class="sug-row">
+    <button class="sug-chip" *ngFor="let t of suggestedTexts" (click)="sendSuggested(t)">{{ t }}</button>
   </div>
-</div>
-
-<ion-footer class="chat-footer">
+</ion-content>
+<div class="chat-footer">
   <div class="input-row">
     <button class="icon-btn" (click)="attachImage()"><ion-icon name="image-outline"></ion-icon></button>
-    <ion-input [(ngModel)]="draft" placeholder="Type a message..." class="msg-input"
-      [disabled]="locked" (keyup.enter)="send()"></ion-input>
-    <button class="send-btn" (click)="send()" [disabled]="!draft.trim() || locked">
-      <ion-icon name="send-outline"></ion-icon>
-    </button>
+    <input class="msg-input" [(ngModel)]="draft" placeholder="Message" (keyup.enter)="send()" />
+    <span class="auto-lbl">AUTO</span>
+    <button class="send-btn" (click)="send()" [disabled]="!draft.trim()"><ion-icon name="send-outline"></ion-icon></button>
   </div>
-</ion-footer>
+</div>

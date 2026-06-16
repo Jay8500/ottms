@@ -1,55 +1,9 @@
 @import '../../../global.scss';
-
-.ms-toolbar { @include app-toolbar; }
-.ott-content { --background: #{$gray-50}; }
-
-.ms-searchbar {
-  --background: #fff; --border-radius: #{$radius-md};
-  --box-shadow: #{$shadow-sm}; --placeholder-color: #{$gray-400};
-  padding: $space-md $space-md 0;
-}
-
-.result-count {
-  font-size: $font-xs; color: $gray-600; padding: $space-sm $space-lg;
-  margin: 0; text-transform: uppercase; letter-spacing: 0.5px;
-}
-
-.ott-list { padding: 0 $space-lg $space-xl; display: flex; flex-direction: column; gap: $space-sm; }
-
-.ott-card {
-  display: flex; align-items: center; gap: $space-md;
-  background: #fff; border-radius: $radius-md; padding: $space-md $space-lg;
-  border: 1px solid $gray-200; box-shadow: $shadow-sm; cursor: pointer;
-  &:active { opacity: 0.85; }
-
-  .ott-logo {
-    width: 56px; height: 56px; border-radius: $radius-md;
-    display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 22px; font-weight: 700; flex-shrink: 0;
-    box-shadow: $shadow-sm;
-  }
-
-  .ott-info {
-    flex: 1; min-width: 0;
-    h3 { font-size: $font-base; font-weight: 700; color: $gray-900; margin: 0 0 2px; }
-    p  { font-size: $font-xs; color: $gray-600; margin: 0 0 4px; }
-    .ott-meta {
-      display: flex; align-items: center; gap: 5px; font-size: $font-xs; color: $gray-600;
-      .dot { color: $gray-400; }
-      .price { color: $primary; font-weight: 600; }
-    }
-  }
-
-  .ott-right {
-    display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0;
-    .avail-badge { font-size: $font-xs; padding: 2px 8px; border-radius: $radius-pill; background: $success-light; color: $success; font-weight: 600; }
-    .sold-badge  { font-size: $font-xs; padding: 2px 8px; border-radius: $radius-pill; background: $danger-light; color: $danger; font-weight: 600; }
-    ion-icon { color: $primary; font-size: 18px; }
-  }
-}
-
-.empty-state {
-  display: flex; flex-direction: column; align-items: center; gap: $space-md; padding: 60px 0;
-  ion-icon { font-size: 48px; color: $gray-300; }
-  p { font-size: $font-sm; color: $gray-400; margin: 0; }
-}
+.ott-content { --background: #{$white}; }
+.top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; }
+.page-name { font-size: $font-base; font-weight: 700; color: $black; }
+.banner-bar { background: $yellow; border-radius: $r-lg; margin: $sp-sm $sp-lg $sp-lg; padding: $sp-md $sp-lg; display: flex; align-items: center; gap: $sp-md; box-shadow: $shadow-md; .banner-emoji { font-size: 36px; } .banner-title { font-size: $font-xl; font-weight: 700; color: $black; } }
+.ott-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: $sp-md; padding: 0 $sp-lg $sp-xl; }
+.ott-item { background: transparent; border: none; padding: 0; cursor: pointer; border-radius: $r-lg; overflow: hidden; aspect-ratio: 1; &:active { opacity: 0.85; transform: scale(0.96); }
+  .ott-logo { width: 100%; height: 100%; border-radius: $r-lg; @include flex-center; box-shadow: $shadow-sm; span { font-size: $font-3xl; font-weight: 900; color: $white; } } }

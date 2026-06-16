@@ -1,34 +1,16 @@
 @import '../../../global.scss';
-.admin-toolbar { --background: #1a1a2e; --color: #fff; }
-.admin-toolbar ion-title { color: #F9D54B; font-weight: 700; }
-.ac-content { --background: #{$gray-50}; }
-
-.info-card {
-  display: flex; align-items: flex-start; gap: $space-sm;
-  background: $primary-light; border-radius: $radius-md;
-  margin: $space-md $space-lg; padding: $space-md;
-  ion-icon { color: $primary; font-size: 18px; flex-shrink: 0; }
-  p { font-size: $font-xs; color: $primary; margin: 0; }
-}
-
-.categories-list { padding: 0 $space-lg $space-xl; }
-
-.cat-item {
-  display: flex; align-items: center; gap: $space-md;
-  background: #fff; border-radius: $radius-md; padding: $space-md $space-lg;
-  margin-bottom: $space-sm; border: 0.5px solid $gray-200; box-shadow: $shadow-sm;
-
-  .cat-icon-bg {
-    width: 44px; height: 44px; border-radius: $radius-sm; @include flex-center; flex-shrink: 0;
-    span { font-size: 22px; }
-  }
-
-  .cat-info { flex: 1;
-    h3 { font-size: $font-sm; font-weight: 600; color: $gray-900; margin: 0; }
-    p  { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; }
-  }
-
-  .cat-actions { display: flex;
-    ion-button { --padding-start: 6px; --padding-end: 6px; margin: 0; }
-  }
-}
+.page-content { --background: #{$white}; }
+.page-header { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; }
+.hdr-title { font-size: $font-base; font-weight: 700; color: $black; margin: 0; }
+.page-title { text-align: center; font-size: $font-xl; font-weight: 700; color: $black; padding: 0 $sp-lg $sp-xs; margin: 0; }
+.page-sub { font-size: $font-xs; color: $gray-600; padding: 0 $sp-lg $sp-md; margin: 0; text-align: center; }
+.list-area { padding: 0 $sp-lg $sp-md; display: flex; flex-direction: column; gap: $sp-sm; }
+.cat-item { display: flex; align-items: center; gap: $sp-md; background: $white; border-radius: $r-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm; overflow: hidden;
+  .cat-left { width: 80px; height: 64px; @include flex-center; flex-shrink: 0; .cat-emoji { font-size: 32px; } }
+  .cat-name { flex: 1; font-size: $font-base; font-weight: 700; }
+  .edit-btn, .del-btn { background: transparent; border: none; cursor: pointer; width: 40px; height: 40px; @include flex-center; }
+  .edit-btn ion-icon { font-size: 20px; color: $gray-400; }
+  .del-btn  ion-icon { font-size: 20px; color: $red; } }
+.add-btn { display: flex; align-items: center; justify-content: center; gap: $sp-sm; background: $yellow; color: $black; border: none; border-radius: $r-pill; height: 50px; width: calc(100% - #{$sp-lg} * 2); margin: 0 $sp-lg $sp-sm; font-size: $font-base; font-weight: 700; cursor: pointer; ion-icon { font-size: 20px; } }
+.save-btn { display: block; background: $yellow; color: $black; border: none; border-radius: $r-pill; height: 50px; width: calc(100% - #{$sp-lg} * 2); margin: 0 $sp-lg; font-size: $font-base; font-weight: 700; cursor: pointer; }

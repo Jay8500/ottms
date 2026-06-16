@@ -1,52 +1,22 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar class="ms-toolbar">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/user/account-type"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Select Validity</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="validity-content">
-  <div class="app-banner">
-    <div class="app-logo" [style.background]="ottColor">{{ ottInitial }}</div>
-    <div>
-      <h2 class="app-name">{{ ottName }}</h2>
-      <p class="app-action">{{ action === 'purchase' ? 'Purchase a Screen' : 'Share Your Screen' }}</p>
-    </div>
+<ion-content class="val-content" [scrollY]="true">
+  <div class="top-bar">
+    <button class="icon-btn" onclick="history.back()"><ion-icon name="settings-outline"></ion-icon></button>
+    <div class="tab-pills"><div class="pill active"></div><div class="pill"></div><div class="pill"></div></div>
+    <button class="icon-btn dark"><ion-icon name="options-outline"></ion-icon></button>
   </div>
-
-  <div class="section-label">Choose Plan Duration</div>
-
-  <div class="validity-list">
-    <div
-      class="validity-card"
-      *ngFor="let v of validities"
-      [class.selected]="selectedId === v.id"
-      (click)="selectValidity(v)"
-    >
-      <div class="v-left">
-        <div class="v-icon">
-          <ion-icon name="calendar-outline"></ion-icon>
-        </div>
-        <div>
-          <h3 class="v-title">{{ v.label }}</h3>
-          <p class="v-save">Save upto ₹{{ v.saveUpto }}</p>
-        </div>
-      </div>
-      <div class="v-right">
-        <span class="v-price">₹{{ v.amount }}</span>
-        <ion-icon
-          [name]="selectedId === v.id ? 'checkmark-circle' : 'ellipse-outline'"
-          [class.checked]="selectedId === v.id"
-        ></ion-icon>
-      </div>
-    </div>
+  <div class="logo-center"><div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div></div>
+  <p class="page-title">Select Validity</p>
+  <div class="app-banner" [style.background]="ottColor"><span>{{ ottName }}</span></div>
+  <div class="val-list">
+    <button class="val-row" *ngFor="let v of validities; let i=index" [class.hl]="selectedId===v.id" (click)="selectValidity(v)">
+      <ion-icon name="calendar-outline" class="cal-icon"></ion-icon>
+      <span class="val-label">{{ v.label }}</span>
+      <span class="save-badge" *ngIf="i>0">SAVE ₹{{ v.saveUpto }}</span>
+      <div class="val-price">₹{{ v.amount }} &gt;</div>
+    </button>
   </div>
-
-  <div class="bottom-action">
-    <ion-button expand="block" class="proceed-btn" [disabled]="!selectedId" (click)="proceed()">
-      View Available Sellers
-    </ion-button>
+  <div class="proceed-wrap">
+    <button class="yellow-btn proceed" (click)="proceed()" [disabled]="!selectedId">Proceed</button>
   </div>
+  <div style="height:40px"></div>
 </ion-content>

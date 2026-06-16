@@ -1,4 +1,4 @@
-// ─── OTT Money Saver — Global Design Tokens ───────────────────────────────
+// ─── OTT Money Saver — PPT Exact Design System ────────────────────────────
 @import "@ionic/angular/css/core.css";
 @import "@ionic/angular/css/normalize.css";
 @import "@ionic/angular/css/structure.css";
@@ -10,190 +10,113 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-// ─── Brand Colors (from client PPT) ───────────────────────────────────────────
-// Primary: Deep blue — used for headers, buttons, primary actions
-$primary:         #1565C0;
-$primary-light:   #E3F2FD;
-$primary-dark:    #0D47A1;
-
-// Accent: Golden yellow — used for brand name, highlights, badges
-$accent:          #F9D54B;
-$accent-dark:     #F0B429;
-$accent-light:    #FFF8E1;
-
-$success:         #2E7D32;
-$success-light:   #E8F5E9;
-$warning:         #E65100;
-$warning-light:   #FFF3E0;
-$danger:          #C62828;
-$danger-light:    #FFEBEE;
-
-$seller-color:    #6A1B9A;
-$seller-light:    #F3E5F5;
-
-// ─── Neutral ──────────────────────────────────────────────────────────────────
-$gray-50:   #FAFAFA;
-$gray-100:  #F5F5F5;
-$gray-200:  #EEEEEE;
-$gray-300:  #E0E0E0;
-$gray-400:  #BDBDBD;
-$gray-600:  #757575;
-$gray-700:  #616161;
-$gray-800:  #424242;
-$gray-900:  #212121;
-
-// ─── Typography ───────────────────────────────────────────────────────────────
-$font-base: 14px;
-$font-sm:   12px;
+// PPT Colors
+$yellow:      #F9D54B;
+$yellow-dark: #E6BB1A;
+$yellow-light:#FFF9E0;
+$blue:        #1565C0;
+$blue-light:  #E3F2FD;
+$green:       #2E7D32;
+$green-light: #E8F5E9;
+$red:         #C62828;
+$red-light:   #FFEBEE;
+$white:       #FFFFFF;
+$black:       #212121;
+$gray-50:     #FAFAFA;
+$gray-100:    #F5F5F5;
+$gray-200:    #EEEEEE;
+$gray-300:    #E0E0E0;
+$gray-400:    #BDBDBD;
+$gray-600:    #757575;
+$gray-700: #616161;
+// Typography
 $font-xs:   11px;
+$font-sm:   12px;
+$font-base: 14px;
 $font-lg:   16px;
-$font-xl:   20px;
-$font-2xl:  24px;
-$font-3xl:  28px;
+$font-xl:   18px;
+$font-2xl:  22px;
+$font-3xl:  26px;
 
-// ─── Spacing ──────────────────────────────────────────────────────────────────
-$space-xs: 4px;
-$space-sm: 8px;
-$space-md: 12px;
-$space-lg: 16px;
-$space-xl: 24px;
+// Spacing
+$sp-xs: 4px;  $sp-sm: 8px;  $sp-md: 12px;
+$sp-lg: 16px; $sp-xl: 20px; $sp-2xl: 24px;
 
-// ─── Radius ───────────────────────────────────────────────────────────────────
-$radius-sm:   6px;
-$radius-md:   10px;
-$radius-lg:   16px;
-$radius-pill: 999px;
+// Radius
+$r-sm: 6px; $r-md: 10px; $r-lg: 16px;
+$r-xl: 24px; $r-pill: 999px;
 
-// ─── Shadows ──────────────────────────────────────────────────────────────────
+// Shadows
 $shadow-sm: 0 1px 4px rgba(0,0,0,0.08);
-$shadow-md: 0 2px 12px rgba(0,0,0,0.10);
-$shadow-lg: 0 4px 24px rgba(0,0,0,0.12);
+$shadow-md: 0 2px 10px rgba(0,0,0,0.10);
+$shadow-lg: 0 4px 20px rgba(0,0,0,0.12);
 
-// ─── OTT Brand Colors ─────────────────────────────────────────────────────────
-$ott-netflix: #E50914;
-$ott-prime:   #00A8E0;
-$ott-hotstar: #1565C0;
-$ott-sony:    #E91E63;
-$ott-spotify: #1DB954;
-$ott-zee5:    #8E24AA;
+// Mixins
+@mixin flex-center  { display: flex; align-items: center; justify-content: center; }
+@mixin flex-between { display: flex; align-items: center; justify-content: space-between; }
 
-// ─── Mixins ───────────────────────────────────────────────────────────────────
-@mixin flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+// Logo badge mixin
+@mixin logo-badge {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  .money { background: $yellow; color: $black; font-weight: 900; font-size: $font-sm; padding: 2px 10px; border-radius: 5px; letter-spacing: 0.5px; }
+  .saver { background: $blue;   color: $white; font-weight: 900; font-size: $font-sm; padding: 2px 10px; border-radius: 5px; letter-spacing: 0.5px; }
 }
 
-@mixin flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+// Page header (gear + content + filter)
+@mixin page-header {
+  @include flex-between;
+  padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm;
 }
 
-@mixin card {
-  background: #fff;
-  border-radius: $radius-md;
-  border: 0.5px solid $gray-200;
-  padding: $space-md $space-lg;
-  margin-bottom: $space-sm;
-  box-shadow: $shadow-sm;
+// Top icon buttons
+@mixin icon-btn {
+  width: 40px; height: 40px; border-radius: $r-sm; background: $white;
+  border: none; @include flex-center; box-shadow: $shadow-sm; cursor: pointer;
+  ion-icon { font-size: 22px; color: $black; }
+  &.dark { background: $black; border-radius: $r-sm;
+    ion-icon { color: $white; } }
 }
 
-@mixin badge($bg, $color) {
-  display: inline-block;
-  background: $bg;
-  color: $color;
-  font-size: $font-xs;
-  padding: 3px 10px;
-  border-radius: $radius-pill;
-  font-weight: 500;
+// Yellow pill button
+@mixin yellow-btn {
+  background: $yellow; color: $black; border: none; border-radius: $r-pill;
+  font-weight: 700; font-size: $font-base; cursor: pointer;
+  font-family: inherit; @include flex-center; gap: $sp-sm;
+  &:disabled { opacity: 0.5; }
+  &:active { opacity: 0.88; }
 }
 
-@mixin section-label {
-  font-size: $font-xs;
-  color: $gray-600;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  margin: $space-lg 0 $space-sm;
-  padding: 0 $space-lg;
+// Tab pills (center of header)
+@mixin tab-pills {
+  display: flex; gap: 6px;
+  .pill { width: 40px; height: 14px; border-radius: $r-pill; background: $gray-300; }
+  .pill.active { background: $yellow; }
 }
 
-@mixin primary-btn {
-  --background: #{$primary};
-  --color: #fff;
-  --border-radius: #{$radius-md};
-  --box-shadow: none;
-  font-weight: 600;
-  font-size: $font-base;
-}
-
-@mixin outline-btn {
-  --background: transparent;
-  --color: #{$primary};
-  --border-color: #{$primary};
-  --border-width: 1.5px;
-  --border-style: solid;
-  --border-radius: #{$radius-md};
-  --box-shadow: none;
-  font-weight: 600;
-  font-size: $font-base;
-}
-
-// ─── APP HEADER MIXIN ─────────────────────────────────────────────────────────
-@mixin app-toolbar {
-  --background: #{$primary-dark};
-  --color: #fff;
-  --min-height: 56px;
-}
-
-// ─── IONIC INTERNALS ──────────────────────────────────────────────────────────
+// ─── ION CONTENT ──────────────────────────────────────────────────────────
 ion-content {
+  --background: #{$white};
   --overflow: auto;
   --keyboard-offset: 0 !important;
 }
 
-// ─── TAB BAR (User) ───────────────────────────────────────────────────────────
+// ─── TAB BAR ──────────────────────────────────────────────────────────────
 ion-tab-bar {
-  --background: #ffffff;
-  --border: 0.5px solid #{$gray-200};
-
+  --background: #{$white};
+  border-top: 1px solid $gray-200;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+  height: 64px;
   ion-tab-button {
     --color: #{$gray-400};
-    --color-selected: #{$primary};
-  }
-
-  ion-label {
-    font-size: 10px !important;
-    font-weight: 500;
-    margin-top: 2px;
-  }
-
-  ion-icon {
-    font-size: 22px !important;
+    --color-selected: #{$black};
+    ion-label { font-size: 11px !important; font-weight: 500; }
+    ion-icon  { font-size: 24px !important; }
   }
 }
 
-// ─── TOUCH & POINTER FIXES ────────────────────────────────────────────────────
-* {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-}
-
-a, button, ion-button, ion-tab-button, ion-item,
-div[click], [ng-click], [onclick] {
-  touch-action: manipulation;
-  cursor: pointer;
-}
-
-ion-router-outlet {
-  pointer-events: none;
-}
-
-ion-router-outlet > .ion-page {
-  pointer-events: all;
-}
-
-ion-tab-bar,
-ion-tab-button {
-  pointer-events: all !important;
-}
+// ─── TOUCH FIXES ──────────────────────────────────────────────────────────
+* { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; }
+a, button, ion-button, ion-tab-button, ion-item { touch-action: manipulation; cursor: pointer; }
+ion-router-outlet { pointer-events: none; }
+ion-router-outlet > .ion-page { pointer-events: all; }
+ion-tab-bar, ion-tab-button { pointer-events: all !important; }

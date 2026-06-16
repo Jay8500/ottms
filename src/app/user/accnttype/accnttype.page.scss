@@ -1,55 +1,12 @@
 @import '../../../global.scss';
-
-.ms-toolbar { @include app-toolbar; }
-.at-content  { --background: #{$gray-50}; }
-
-.app-hero {
-  display: flex; flex-direction: column; align-items: center; gap: $space-sm;
-  background: linear-gradient(160deg, #{$primary-dark}, #{$primary});
-  color: #fff; padding: $space-xl $space-lg calc(#{$space-xl} + 4px);
-
-  .app-logo {
-    width: 84px; height: 84px; border-radius: $radius-lg;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 34px; font-weight: 700; color: #fff;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.28);
-    border: 2px solid rgba(255,255,255,0.2);
-  }
-  h2 { font-size: $font-xl; font-weight: 700; margin: 0; }
-  p  { font-size: $font-sm; color: rgba(255,255,255,0.75); margin: 0; }
-}
-
-.action-list { padding: $space-lg $space-lg 0; display: flex; flex-direction: column; gap: $space-md; }
-
-.action-card {
-  display: flex; align-items: center; gap: $space-lg;
-  background: #fff; border-radius: $radius-lg; padding: $space-lg;
-  border: 1px solid $gray-200; box-shadow: $shadow-md; cursor: pointer;
-  &:active { opacity: 0.85; }
-  &.seller-card { border-color: rgba(106,27,154,0.25); }
-
-  .ac-icon {
-    width: 58px; height: 58px; border-radius: $radius-md;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    ion-icon { font-size: 28px; }
-    &.purchase { background: $primary-light; ion-icon { color: $primary; } }
-    &.share    { background: $seller-light;  ion-icon { color: $seller-color; } }
-  }
-
-  .ac-body {
-    flex: 1;
-    h3 { font-size: $font-base; font-weight: 700; color: $gray-900; margin: 0 0 4px; }
-    p  { font-size: $font-xs; color: $gray-600; margin: 0; line-height: 1.5; }
-  }
-
-  .ac-arrow { color: $primary; font-size: 20px; }
-}
-
-.seller-hint {
-  display: flex; align-items: flex-start; gap: $space-sm;
-  margin: $space-md $space-lg 0; padding: $space-md;
-  background: $accent-light; border-radius: $radius-md; border-left: 3px solid $accent-dark;
-  ion-icon { font-size: 18px; color: $accent-dark; flex-shrink: 0; }
-  p { font-size: $font-xs; color: #7a4000; margin: 0; line-height: 1.5; }
-  strong { font-weight: 600; }
-}
+.at-content { --background: #{$white}; }
+.top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; } .tab-pills { @include tab-pills; }
+.logo-center { @include flex-center; padding: $sp-xs 0 $sp-md; } .logo-badge { @include logo-badge; }
+.app-banner { margin: $sp-sm $sp-lg $sp-xl; border-radius: $r-lg; height: 64px; @include flex-center; font-size: $font-xl; font-weight: 700; color: $white; .app-name { font-size: $font-xl; font-weight: 700; } }
+.select-label { text-align: center; font-size: $font-xl; font-weight: 700; color: $black; padding: 0 $sp-lg $sp-lg; margin: 0; }
+.action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: $sp-lg; padding: 0 $sp-lg; }
+.action-card { border-radius: $r-xl; padding: $sp-xl $sp-md; @include flex-center; flex-direction: column; gap: $sp-md; cursor: pointer; border: none; font-family: inherit; min-height: 150px; box-shadow: $shadow-md; &:active { opacity: 0.85; }
+  ion-icon { font-size: 48px; } .ac-label { font-size: $font-xl; font-weight: 700; } .ac-sub { font-size: $font-xs; opacity: 0.8; }
+  &.purchase { background: $blue; ion-icon, .ac-label, .ac-sub { color: $white; } }
+  &.share    { background: $yellow; ion-icon, .ac-label, .ac-sub { color: $black; } } }

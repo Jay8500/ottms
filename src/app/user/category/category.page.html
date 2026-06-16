@@ -1,35 +1,18 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar class="ms-toolbar">
-    <ion-title>Categories</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="cat-content">
-  <div class="search-wrap">
-    <ion-searchbar
-      placeholder="Search categories..."
-      [(ngModel)]="searchTerm"
-      (ionInput)="filterCategories()"
-      class="ms-searchbar"
-    ></ion-searchbar>
+<ion-content class="cat-content" [scrollY]="true">
+  <div class="top-bar">
+    <button class="icon-btn" onclick="history.back()"><ion-icon name="settings-outline"></ion-icon></button>
+    <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
+    <button class="icon-btn dark"><ion-icon name="options-outline"></ion-icon></button>
   </div>
-
-  <div class="section-label">All Membership Categories</div>
-
-  <div class="cat-grid">
-    <div
-      class="cat-card"
-      *ngFor="let cat of filteredCategories"
-      (click)="openCategory(cat)"
-    >
-      <div class="cat-icon-wrap" [style.background]="cat.bgColor">
-        <span class="cat-emoji">{{ cat.emoji }}</span>
-      </div>
+  <div class="cat-list">
+    <button class="cat-banner" *ngFor="let cat of filteredCategories" (click)="openCategory(cat)" [style.background]="cat.bgColor">
+      <span class="cat-emoji">{{ cat.emoji }}</span>
       <div class="cat-info">
-        <h3 class="cat-name">{{ cat.name }}</h3>
-        <p class="cat-count">{{ cat.appCount }} apps available</p>
+        <p class="cat-name">{{ cat.name }}</p>
+        <p class="cat-sub">{{ cat.appCount }} Apps</p>
       </div>
-      <ion-icon name="chevron-forward-outline" class="cat-arrow"></ion-icon>
-    </div>
+      <div class="cat-arrow"><ion-icon name="chevron-forward-outline"></ion-icon></div>
+    </button>
   </div>
+  <div style="height:80px"></div>
 </ion-content>

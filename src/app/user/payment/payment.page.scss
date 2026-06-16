@@ -1,80 +1,15 @@
 @import '../../../global.scss';
-
-.ms-toolbar { @include app-toolbar; }
-.payment-content { --background: #{$gray-50}; }
-
-.amount-banner {
-  background: linear-gradient(135deg, #{$primary-dark}, #{$primary});
-  color: #fff; padding: $space-xl $space-lg; text-align: center;
-  .amount-label { font-size: $font-xs; color: rgba(255,255,255,0.72); text-transform: uppercase; letter-spacing: 0.6px; margin: 0 0 4px; }
-  .amount-value { font-size: 36px; font-weight: 700; margin: 0; letter-spacing: -1px; }
-  .amount-sub   { font-size: $font-xs; color: rgba(255,255,255,0.7); margin: 6px 0 0; }
-}
-
-.section-title {
-  padding: $space-lg $space-lg $space-sm;
-  font-size: $font-sm; font-weight: 700; color: $gray-900;
-}
-
-.payment-card {
-  @include card;
-  margin: 0 $space-lg $space-md;
-
-  .upi-row {
-    display: flex; align-items: center; justify-content: space-between; margin-bottom: $space-sm;
-    .upi-label { font-size: $font-xs; color: $gray-600; margin: 0; text-transform: uppercase; letter-spacing: 0.4px; }
-    .upi-val   { font-size: $font-base; font-weight: 700; color: $primary; margin: 0; }
-  }
-
-  .copy-btn {
-    --background: #{$primary-light}; --color: #{$primary};
-    --border-radius: #{$radius-sm}; --box-shadow: none;
-    font-size: $font-xs; font-weight: 600; height: 36px;
-    ion-icon { font-size: 14px; margin-right: 4px; }
-  }
-}
-
-.qr-card {
-  @include card;
-  margin: 0 $space-lg $space-md;
-  align-items: center; display: flex; flex-direction: column;
-  
-  .qr-placeholder {
-    width: 160px; height: 160px; border-radius: $radius-md;
-    background: $gray-100; @include flex-center;
-    border: 2px dashed $gray-300; margin-bottom: $space-md;
-    ion-icon { font-size: 64px; color: $gray-400; }
-  }
-  
-  p { font-size: $font-xs; color: $gray-600; margin: 0; text-align: center; }
-}
-
-.upload-section {
-  padding: 0 $space-lg $space-md;
-
-  .upload-btn {
-    border: 2px dashed $primary;
-    border-radius: $radius-md;
-    background: $primary-light;
-    padding: $space-xl $space-lg;
-    display: flex; flex-direction: column; align-items: center; gap: $space-sm;
-    cursor: pointer; width: 100%; font-family: inherit;
-
-    ion-icon { font-size: 36px; color: $primary; }
-    .upload-text  { font-size: $font-sm; font-weight: 600; color: $primary; }
-    .upload-hint  { font-size: $font-xs; color: $gray-600; }
-    
-    &.uploaded {
-      border-color: $success; background: $success-light;
-      ion-icon { color: $success; }
-      .upload-text { color: $success; }
-    }
-  }
-}
-
-.submit-btn {
-  --background: #{$primary}; --color: #fff;
-  --border-radius: #{$radius-md}; --box-shadow: none;
-  margin: 0 $space-lg $space-xl; height: 52px;
-  font-weight: 700; font-size: $font-base; display: block;
-}
+.payment-content { --background: #{$white}; }
+.top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; } .logo-badge { @include logo-badge; }
+.page-title { text-align: center; font-size: $font-xl; font-weight: 700; color: $black; padding: 0 $sp-lg $sp-md; margin: 0; }
+.qr-card { margin: 0 $sp-lg $sp-md; background: $white; border-radius: $r-xl; border: 1.5px solid $gray-200; box-shadow: $shadow-sm; padding: $sp-xl $sp-lg; @include flex-center; flex-direction: column; gap: $sp-md;
+  .qr-box { border: 2px solid $yellow; border-radius: $r-lg; width: 160px; height: 160px; @include flex-center; ion-icon { font-size: 100px; color: $gray-300; } }
+  .qr-label { font-size: $font-sm; font-weight: 600; color: $black; margin: 0; } }
+.upi-info { margin: 0 $sp-lg $sp-sm;
+  .info-row { display: flex; align-items: center; justify-content: space-between; padding: $sp-sm 0; border-bottom: 1px solid $gray-100; .lbl { font-size: $font-sm; color: $gray-600; } .val { font-size: $font-sm; font-weight: 600; color: $black; } .val-copy { display: flex; align-items: center; gap: $sp-sm; } .copy-btn { background: $yellow; color: $black; border: none; padding: 4px $sp-md; border-radius: $r-pill; font-size: $font-xs; font-weight: 700; cursor: pointer; } } }
+.divider-lbl { text-align: center; font-size: $font-base; font-weight: 700; color: $black; display: flex; align-items: center; gap: $sp-md; padding: $sp-md $sp-lg; &::before, &::after { content: ''; flex: 1; height: 1.5px; background: $gray-200; } }
+.after-section { padding: 0 $sp-lg; }
+.amount-row { display: flex; align-items: center; gap: $sp-sm; border: 1.5px solid $gray-200; border-radius: $r-lg; padding: 0 $sp-md; height: 50px; margin-bottom: $sp-md; label { font-size: $font-sm; color: $gray-600; white-space: nowrap; } input { flex: 1; border: none; outline: none; font-size: $font-base; background: transparent; color: $black; } }
+.upload-area { background: $yellow-light; border-radius: $r-lg; padding: $sp-xl $sp-lg; @include flex-center; flex-direction: column; gap: $sp-sm; cursor: pointer; margin-bottom: $sp-md; ion-icon { font-size: 40px; color: $yellow-dark; } .up-title { font-size: $font-base; font-weight: 700; color: $black; margin: 0; } .up-sub { font-size: $font-xs; color: $gray-600; margin: 0; } .choose-btn { background: $yellow; color: $black; border: none; padding: 8px $sp-xl; border-radius: $r-pill; font-size: $font-sm; font-weight: 700; cursor: pointer; } .file-hint { font-size: $font-xs; color: $gray-400; margin: 0; } .file-name { font-size: $font-xs; color: $green; font-weight: 600; margin: 0; } }
+.submit-btn { display: flex; align-items: center; justify-content: center; gap: $sp-sm; background: $yellow; color: $black; border: none; border-radius: $r-pill; height: 52px; width: calc(100% - #{$sp-lg} * 2); margin: 0 $sp-lg $sp-xl; font-size: $font-lg; font-weight: 700; cursor: pointer; ion-icon { font-size: 22px; } }
