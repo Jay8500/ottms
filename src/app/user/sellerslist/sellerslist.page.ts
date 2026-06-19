@@ -3,13 +3,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar,IonIcon,IonButtons,IonBackButton,IonChip } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { settingsOutline, optionsOutline, shieldCheckmarkOutline, starOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-sellerslist',
   templateUrl: './sellerslist.page.html',
   styleUrls: ['./sellerslist.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule,IonIcon,IonButtons,IonBackButton,IonChip]
+  imports: [IonContent, CommonModule, FormsModule,IonIcon,]
 })
 export class SellerslistPage implements OnInit {
   activeFilter = 'all';
@@ -30,7 +32,9 @@ export class SellerslistPage implements OnInit {
  
   filteredSellers = [...this.allSellers];
  
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(private route: ActivatedRoute, private router: Router) {
+    addIcons({ settingsOutline, optionsOutline, shieldCheckmarkOutline, starOutline });
+  }
  
   ngOnInit() {
     // ottId and validityId available from route params for real API call

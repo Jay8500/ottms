@@ -7,14 +7,14 @@ import {
 } from '@ionic/angular/standalone';
 import { Auth } from '../../auth';
 import { addIcons } from 'ionicons';
-import { cartOutline, shareSocialOutline, chevronForwardOutline, informationCircleOutline } from 'ionicons/icons';
+import { cartOutline, shareSocialOutline, chevronForwardOutline, informationCircleOutline, peopleOutline, settingsOutline, optionsOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-accnttype',
   templateUrl: './accnttype.page.html',
   styleUrls: ['./accnttype.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonContent, IonIcon]
+  imports: [CommonModule,  IonContent, IonIcon]
 })
 export class AccnttypePage implements OnInit {
   ottId = ''; ottName = ''; ottColor = '#1a73e8'; ottInitial = 'A'; isSeller = false;
@@ -29,7 +29,7 @@ export class AccnttypePage implements OnInit {
   };
 
   constructor(private route: ActivatedRoute, private router: Router, private auth: Auth) {
-    addIcons({ cartOutline, shareSocialOutline, chevronForwardOutline, informationCircleOutline });
+    addIcons({ cartOutline, shareSocialOutline, chevronForwardOutline, informationCircleOutline, peopleOutline, settingsOutline, optionsOutline });
   }
 
   ngOnInit() {

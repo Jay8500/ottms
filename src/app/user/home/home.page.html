@@ -2,7 +2,7 @@
   <div class="top-bar">
     <button class="icon-btn" (click)="openNotifications()"><ion-icon name="settings-outline"></ion-icon></button>
     <div class="tab-pills"><div class="pill active"></div><div class="pill"></div><div class="pill"></div></div>
-    <button class="icon-btn dark" (click)="logout()"><ion-icon name="options-outline"></ion-icon></button>
+    <button class="icon-btn" (click)="goFilter()"><ion-icon name="options-outline"></ion-icon></button>
   </div>
   <div class="logo-center">
     <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
@@ -33,5 +33,6 @@
     </div>
     <ion-toggle [(ngModel)]="sellerToggle" (ionChange)="toggleSeller($event)" class="yellow-toggle"></ion-toggle>
   </div>
+  <p class="logout-link" (click)="logout()">Logout</p>
   <div style="height:80px"></div>
 </ion-content>

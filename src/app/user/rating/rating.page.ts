@@ -14,8 +14,7 @@ import {
   standalone: true,
   imports: [
     CommonModule, FormsModule,
-    IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton,
-    IonContent, IonTextarea, IonButton
+    IonContent, 
   ]
 })
 export class RatingPage implements OnInit {

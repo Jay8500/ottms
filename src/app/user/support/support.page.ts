@@ -2,14 +2,14 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { headsetOutline, chatbubblesOutline, logoWhatsapp, callOutline, chevronForwardOutline, chevronUpOutline, chevronDownOutline } from 'ionicons/icons';
+import { headsetOutline, chatbubblesOutline, logoWhatsapp, callOutline, chevronForwardOutline, chevronUpOutline, chevronDownOutline, settingsOutline, optionsOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-support',
   templateUrl: './support.page.html',
   styleUrls: ['./support.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonHeader, IonToolbar, IonTitle, IonContent, IonIcon]
+  imports: [CommonModule, IonContent, IonIcon]
 })
 export class SupportPage {
   faqs = [
@@ -22,7 +22,7 @@ export class SupportPage {
   ];
 
   constructor() {
-    addIcons({ headsetOutline, chatbubblesOutline, logoWhatsapp, callOutline, chevronForwardOutline, chevronUpOutline, chevronDownOutline });
+    addIcons({ headsetOutline, chatbubblesOutline, logoWhatsapp, callOutline, chevronForwardOutline, chevronUpOutline, chevronDownOutline, settingsOutline, optionsOutline });
   }
 
   openInApp()    { /* TODO: navigate to support chat */ }

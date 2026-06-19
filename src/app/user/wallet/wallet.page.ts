@@ -9,7 +9,7 @@ import {
 } from '@ionic/angular/standalone';
 import { Auth } from '../../auth';
 import { addIcons } from 'ionicons';
-import { arrowUpCircleOutline, arrowUpOutline, lockClosedOutline, lockOpenOutline, walletOutline, chatbubbleOutline, starOutline } from 'ionicons/icons';
+import { arrowUpCircleOutline, arrowUpOutline, lockClosedOutline, lockOpenOutline, walletOutline, chatbubbleOutline, starOutline, settingsOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-wallet',
@@ -18,8 +18,7 @@ import { arrowUpCircleOutline, arrowUpOutline, lockClosedOutline, lockOpenOutlin
   standalone: true,
   imports: [
     CommonModule, FormsModule,
-    IonHeader, IonToolbar, IonTitle, IonButtons, IonButton,
-    IonContent, IonSegment, IonSegmentButton, IonIcon
+    IonContent, IonIcon
   ]
 })
 export class WalletPage implements OnInit {
@@ -37,7 +36,7 @@ export class WalletPage implements OnInit {
   displayScreens: any[] = [];
 
   constructor(private router: Router, private auth: Auth, private alertCtrl: AlertController) {
-    addIcons({ arrowUpCircleOutline, arrowUpOutline, lockClosedOutline, lockOpenOutline, walletOutline, chatbubbleOutline, starOutline });
+    addIcons({ arrowUpCircleOutline, arrowUpOutline, lockClosedOutline, lockOpenOutline, walletOutline, chatbubbleOutline, starOutline, settingsOutline });
   }
 
   ngOnInit() {

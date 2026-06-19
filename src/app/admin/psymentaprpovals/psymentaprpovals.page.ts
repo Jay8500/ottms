@@ -3,13 +3,15 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AlertController, ToastController } from '@ionic/angular';
 import { IonContent, IonHeader, IonTitle, IonToolbar,IonIcon,IonButton,IonSegmentButton } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { arrowBackOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-psymentaprpovals',
   templateUrl: './psymentaprpovals.page.html',
   styleUrls: ['./psymentaprpovals.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule,IonIcon,IonButton,IonSegmentButton]
+  imports: [IonContent, CommonModule, FormsModule,IonIcon]
 })
 export class PsymentaprpovalsPage implements OnInit {
   activeFilter = 'pending';
@@ -24,7 +26,9 @@ export class PsymentaprpovalsPage implements OnInit {
   filteredPayments: any[] = [];
   get pendingPayments() { return this.allPayments.filter(p => p.status === 'pending'); }
  
-  constructor(private alertCtrl: AlertController, private toastCtrl: ToastController) {}
+  constructor(private alertCtrl: AlertController, private toastCtrl: ToastController) {
+    addIcons({ arrowBackOutline });
+  }
   ngOnInit() { this.filterPayments(); }
  
   filterPayments() { this.filteredPayments = this.allPayments.filter(p => p.status === this.activeFilter); }

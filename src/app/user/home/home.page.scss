@@ -16,3 +16,4 @@
   .s-title { font-size: $font-sm; font-weight: 700; color: $black; margin: 0; }
   .s-sub   { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; } }
 .yellow-toggle { --track-background: #{$gray-300}; --track-background-checked: #{$yellow}; --handle-background: #{$white}; }
+.logout-link { text-align: center; font-size: $font-sm; color: $red; font-weight: 600; cursor: pointer; margin: $sp-sm 0 0; }

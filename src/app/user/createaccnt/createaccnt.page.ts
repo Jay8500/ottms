@@ -7,14 +7,14 @@ import {
   ToastController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { tvOutline, cameraOutline, personOutline, callOutline, mailOutline, happyOutline, lockClosedOutline, eyeOutline, eyeOffOutline, idCardOutline } from 'ionicons/icons';
+import { tvOutline, cameraOutline, personOutline, callOutline, mailOutline, happyOutline, lockClosedOutline, eyeOutline, eyeOffOutline, idCardOutline, addOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-createaccnt',
   templateUrl: './createaccnt.page.html',
   styleUrls: ['./createaccnt.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonContent, IonItem, IonInput, IonIcon, IonButton, IonSpinner]
+  imports: [CommonModule, FormsModule, IonContent, IonIcon, IonSpinner]
 })
 export class CreateaccntPage {
   @ViewChild('avatarInput') avatarInput!: ElementRef<HTMLInputElement>;
@@ -24,7 +24,7 @@ export class CreateaccntPage {
   form = { name:'', mobile:'', email:'', nickName:'', password:'' };
 
   constructor(private router: Router, private toastCtrl: ToastController) {
-    addIcons({ tvOutline, cameraOutline, personOutline, callOutline, mailOutline, happyOutline, lockClosedOutline, eyeOutline, eyeOffOutline, idCardOutline });
+    addIcons({ tvOutline, cameraOutline, personOutline, callOutline, mailOutline, happyOutline, lockClosedOutline, eyeOutline, eyeOffOutline, idCardOutline, addOutline });
   }
 
   pickAvatar() { this.avatarInput.nativeElement.click(); }

@@ -16,8 +16,8 @@ import { lockClosedOutline, lockOpenOutline, informationCircleOutline, closeOutl
   standalone: true,
   imports: [
     CommonModule, FormsModule,
-    IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton,
-    IonContent, IonFooter, IonInput, IonIcon, IonButton
+   
+    IonContent,  IonIcon
   ]
 })
 export class ChatPage implements OnInit {

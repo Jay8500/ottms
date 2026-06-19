@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouterOutlet } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { homeOutline, gridOutline, walletOutline, headsetOutline } from 'ionicons/icons';
+import { homeOutline, gridOutline, walletOutline, headsetOutline, cartOutline, chatbubblesOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-usertab',
@@ -21,6 +21,6 @@ import { homeOutline, gridOutline, walletOutline, headsetOutline } from 'ionicon
 })
 export class UsertabPage {
   constructor() {
-    addIcons({ homeOutline, gridOutline, walletOutline, headsetOutline });
+    addIcons({ homeOutline, gridOutline, walletOutline, headsetOutline, cartOutline, chatbubblesOutline });
   }
 }

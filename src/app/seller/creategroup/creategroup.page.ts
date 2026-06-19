@@ -8,7 +8,7 @@ import {
   IonButton, IonIcon, ToastController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { informationCircleOutline, cloudUploadOutline, checkmarkCircleOutline, sendOutline } from 'ionicons/icons';
+import { informationCircleOutline, cloudUploadOutline, checkmarkCircleOutline, sendOutline, settingsOutline, optionsOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-creategroup',
@@ -17,9 +17,8 @@ import { informationCircleOutline, cloudUploadOutline, checkmarkCircleOutline, s
   standalone: true,
   imports: [
     CommonModule, FormsModule,
-    IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton,
-    IonContent, IonItem, IonInput, IonSelect, IonSelectOption,
-    IonButton, IonIcon
+ 
+    IonContent,  IonIcon
   ]
 })
 export class CreategroupPage {
@@ -35,7 +34,7 @@ export class CreategroupPage {
   ];
 
   constructor(private router: Router, private toastCtrl: ToastController) {
-    addIcons({ informationCircleOutline, cloudUploadOutline, checkmarkCircleOutline, sendOutline });
+    addIcons({ informationCircleOutline, cloudUploadOutline, checkmarkCircleOutline, sendOutline, settingsOutline, optionsOutline });
   }
 
   uploadProof() { this.proofInput.nativeElement.click(); }

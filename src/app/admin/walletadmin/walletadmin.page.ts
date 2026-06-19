@@ -10,6 +10,8 @@ import {
   IonButton,
   IonIcon,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { searchOutline, settingsOutline } from 'ionicons/icons';
 @Component({
   selector: 'app-walletadmin',
   templateUrl: './walletadmin.page.html',
@@ -74,7 +76,9 @@ export class WalletadminPage implements OnInit {
 
   filteredWallets = [...this.allWallets];
 
-  constructor(private alertCtrl: AlertController) {}
+  constructor(private alertCtrl: AlertController) {
+    addIcons({ searchOutline, settingsOutline });
+  }
   ngOnInit() {}
 
   filterWallets() {

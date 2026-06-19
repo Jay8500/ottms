@@ -21,6 +21,9 @@ import {
   headsetOutline,
   addCircleOutline,
   walletOutline,
+  settingsOutline,
+  optionsOutline,
+  pricetagOutline,
 } from 'ionicons/icons';
 
 @Component({
@@ -80,20 +83,23 @@ export class HomePage implements OnInit {
       headsetOutline,
       addCircleOutline,
       walletOutline,
-      logOutOutline 
+      logOutOutline,
+      settingsOutline,
+      optionsOutline,
+      pricetagOutline,
     });
   }
 
   ngOnInit() {
-    this.auth.user$.subscribe(u => {
-    if (!u) return;
-    this.userName     = u.name || 'User';
-    this.uniqueNumber = u.uniqueNumber || 0;
-    this.initials     = u.name ? u.name.substring(0, 2).toUpperCase() : 'UU';
-    this.isSeller     = u.isSeller;
-    this.sellerToggle = u.isSeller;
-    console.log('isSeller updated:', this.isSeller); // debug
-  });
+    this.auth.user$.subscribe((u) => {
+      if (!u) return;
+      this.userName = u.name || 'User';
+      this.uniqueNumber = u.uniqueNumber || 0;
+      this.initials = u.name ? u.name.substring(0, 2).toUpperCase() : 'UU';
+      this.isSeller = u.isSeller;
+      this.sellerToggle = u.isSeller;
+      console.log('isSeller updated:', this.isSeller); // debug
+    });
   }
 
   ionViewDidEnter() {
@@ -125,6 +131,10 @@ export class HomePage implements OnInit {
     // points to wallet for now — TODO: real notifications
   }
 
+  goFilter() {
+    // TODO: open filter/sort options sheet
+  }
+
   toggleSeller(event: any) {
     if (event?.detail) {
       this.auth.toggleSellerMode(event.detail.checked);
@@ -132,8 +142,7 @@ export class HomePage implements OnInit {
   }
 
   logout() {
-  this.auth.logout();
-  this.router.navigate(['/login'], { replaceUrl: true });
-}
-
+    this.auth.logout();
+    this.router.navigate(['/login'], { replaceUrl: true });
+  }
 }

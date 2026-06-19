@@ -3,13 +3,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar,IonButton,IonIcon,IonButtons,IonSelectOption } from '@ionic/angular/standalone';
 import { AlertController, ToastController } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { arrowBackOutline, createOutline, trashOutline, searchOutline } from 'ionicons/icons';
  
 @Component({
   selector: 'app-usermngmnt',
   templateUrl: './usermngmnt.page.html',
   styleUrls: ['./usermngmnt.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule,IonButton,IonIcon,IonButtons,IonSelectOption,
+  imports: [IonContent, CommonModule, FormsModule,IonIcon,
   ]
 })
 export class UsermngmntPage implements OnInit {
@@ -25,7 +27,9 @@ export class UsermngmntPage implements OnInit {
  
   filteredUsers = [...this.allUsers];
  
-  constructor(private alertCtrl: AlertController, private toastCtrl: ToastController) {}
+  constructor(private alertCtrl: AlertController, private toastCtrl: ToastController) {
+    addIcons({ arrowBackOutline, createOutline, trashOutline, searchOutline });
+  }
   ngOnInit() {}
  
   filterUsers() {

@@ -7,7 +7,7 @@ import {
   IonIcon, IonButton, IonButtons, IonBackButton
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { calendarOutline, checkmarkCircle, ellipseOutline } from 'ionicons/icons';
+import { calendarOutline, checkmarkCircle, ellipseOutline, settingsOutline, optionsOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-validity',
@@ -15,8 +15,8 @@ import { calendarOutline, checkmarkCircle, ellipseOutline } from 'ionicons/icons
   styleUrls: ['./validity.page.scss'],
   standalone: true,
   imports: [
-    IonContent, IonHeader, IonTitle, IonToolbar,
-    CommonModule, FormsModule, IonIcon, IonButton, IonButtons, IonBackButton
+    IonContent, 
+    CommonModule, FormsModule, IonIcon,
   ]
 })
 export class ValidityPage implements OnInit {
@@ -44,7 +44,7 @@ export class ValidityPage implements OnInit {
   };
 
   constructor(private route: ActivatedRoute, private router: Router) {
-    addIcons({ calendarOutline, checkmarkCircle, ellipseOutline });
+    addIcons({ calendarOutline, checkmarkCircle, ellipseOutline, settingsOutline, optionsOutline });
   }
 
   ngOnInit() {

@@ -13,7 +13,7 @@ import {
   imageOutline, appsOutline, textOutline, addCircleOutline,
   settingsOutline, shieldCheckmarkOutline, cardOutline,
   walletOutline, gridOutline, documentTextOutline, chevronForwardOutline,
-  logOutOutline
+  logOutOutline, optionsOutline, createOutline, trashOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -21,7 +21,7 @@ import {
   templateUrl: './homemgnmt.page.html',
   styleUrls: ['./homemgnmt.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonContent, IonIcon, IonHeader, IonToolbar, IonButton, IonButtons, IonTitle, IonBadge]
+  imports: [CommonModule, FormsModule, IonContent, IonIcon, IonBadge]
 })
 export class HomemgnmtPage {
   stats = [
@@ -50,7 +50,7 @@ export class HomemgnmtPage {
   ];
 
   constructor(private router: Router, private auth: Auth) {
-    addIcons({ peopleOutline, storefrontOutline, tvOutline, cashOutline, imageOutline, appsOutline, textOutline, addCircleOutline, settingsOutline, shieldCheckmarkOutline, cardOutline, walletOutline, gridOutline, documentTextOutline, chevronForwardOutline, logOutOutline });
+    addIcons({ peopleOutline, storefrontOutline, tvOutline, cashOutline, imageOutline, appsOutline, textOutline, addCircleOutline, settingsOutline, shieldCheckmarkOutline, cardOutline, walletOutline, gridOutline, documentTextOutline, chevronForwardOutline, logOutOutline, optionsOutline, createOutline, trashOutline });
   }
 
   navigate(route: string) { this.router.navigate([`/admin/${route}`]); }

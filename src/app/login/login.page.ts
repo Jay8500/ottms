@@ -15,22 +15,20 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Keyboard } from '@capacitor/keyboard';
+import { addIcons } from 'ionicons';
+import {
+  callOutline,
+  lockClosedOutline,
+  eyeOutline,
+  eyeOffOutline,
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonContent,
-    IonItem,
-    IonInput,
-    IonIcon,
-    IonButton,
-    IonSpinner,
-  ],
+  imports: [CommonModule, FormsModule, IonContent, IonIcon, IonSpinner],
 })
 export class LoginPage {
   mobile = '';
@@ -42,7 +40,14 @@ export class LoginPage {
     private auth: Auth,
     private router: Router,
     private toastCtrl: ToastController
-  ) {}
+  ) {
+    addIcons({
+      callOutline,
+      lockClosedOutline,
+      eyeOutline,
+      eyeOffOutline,
+    });
+  }
 
   ionViewDidEnter() {
     Keyboard.setAccessoryBarVisible({ isVisible: false });

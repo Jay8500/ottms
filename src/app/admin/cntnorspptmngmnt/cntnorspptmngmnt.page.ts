@@ -4,13 +4,13 @@ import { AlertController, ToastController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { IonContent, IonHeader, IonTitle, IonToolbar,IonIcon,IonButton,IonLabel } from '@ionic/angular/standalone';
-import { closeCircleOutline, addCircleOutline, createOutline, trashOutline, chatbubblesOutline, logoWhatsapp, callOutline } from 'ionicons/icons';
+import { closeCircleOutline, addCircleOutline, createOutline, trashOutline, chatbubblesOutline, logoWhatsapp, callOutline, settingsOutline, searchOutline } from 'ionicons/icons';
 @Component({
   selector: 'app-cntnorspptmngmnt',
   templateUrl: './cntnorspptmngmnt.page.html',
   styleUrls: ['./cntnorspptmngmnt.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule,IonIcon,IonButton,IonLabel]
+  imports: [IonContent,  CommonModule, FormsModule,IonIcon]
 })
 export class CntnorspptmngmntPage {
  
@@ -32,7 +32,7 @@ export class CntnorspptmngmntPage {
   ];
  
   constructor(private alertCtrl: AlertController, private toastCtrl: ToastController) {
-    addIcons({ closeCircleOutline, addCircleOutline, createOutline, trashOutline, chatbubblesOutline, logoWhatsapp, callOutline });
+    addIcons({ closeCircleOutline, addCircleOutline, createOutline, trashOutline, chatbubblesOutline, logoWhatsapp, callOutline, settingsOutline, searchOutline });
   }
  
   async saveContacts() {

@@ -7,7 +7,7 @@ import {
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { qrCodeOutline, copyOutline, cloudUploadOutline, checkmarkCircleOutline } from 'ionicons/icons';
+import { qrCodeOutline, copyOutline, cloudUploadOutline, checkmarkCircleOutline, arrowBackOutline, helpCircleOutline, sendOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-payment',
@@ -15,8 +15,8 @@ import { qrCodeOutline, copyOutline, cloudUploadOutline, checkmarkCircleOutline 
   styleUrls: ['./payment.page.scss'],
   standalone: true,
   imports: [
-    IonContent, IonHeader, IonTitle, IonToolbar, CommonModule,
-    FormsModule, IonIcon, IonButton, IonButtons, IonBackButton
+    IonContent, CommonModule,
+    FormsModule, IonIcon, 
   ]
 })
 export class PaymentPage {
@@ -24,7 +24,7 @@ export class PaymentPage {
   screenshotFile: File | null = null;
 
   constructor(private router: Router, private toastCtrl: ToastController) {
-    addIcons({ qrCodeOutline, copyOutline, cloudUploadOutline, checkmarkCircleOutline });
+    addIcons({ qrCodeOutline, copyOutline, cloudUploadOutline, checkmarkCircleOutline, arrowBackOutline, helpCircleOutline, sendOutline });
   }
 
   uploadScreenshot() { this.fileInput.nativeElement.click(); }

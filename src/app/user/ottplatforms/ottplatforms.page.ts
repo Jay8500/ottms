@@ -7,7 +7,7 @@ import {
   IonButtons, IonBackButton, IonIcon, IonSearchbar
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { chevronForwardOutline, searchOutline } from 'ionicons/icons';
+import { chevronForwardOutline, searchOutline, settingsOutline, optionsOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-ottplatforms',
@@ -16,8 +16,7 @@ import { chevronForwardOutline, searchOutline } from 'ionicons/icons';
   standalone: true,
   imports: [
     CommonModule, FormsModule,
-    IonContent, IonHeader, IonTitle, IonToolbar,
-    IonButtons, IonBackButton, IonIcon, IonSearchbar
+    IonContent, IonIcon, 
   ]
 })
 export class OttplatformsPage implements OnInit {
@@ -56,7 +55,7 @@ export class OttplatformsPage implements OnInit {
   filtered: any[] = [];
 
   constructor(private route: ActivatedRoute, private router: Router) {
-    addIcons({ chevronForwardOutline, searchOutline });
+    addIcons({ chevronForwardOutline, searchOutline, settingsOutline, optionsOutline });
   }
 
   ngOnInit() {

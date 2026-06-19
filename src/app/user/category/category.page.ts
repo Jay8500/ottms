@@ -4,14 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonSearchbar } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { chevronForwardOutline } from 'ionicons/icons';
+import { chevronForwardOutline, settingsOutline, optionsOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-category',
   templateUrl: './category.page.html',
   styleUrls: ['./category.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonIcon, IonSearchbar]
+  imports: [IonContent,  CommonModule, FormsModule, IonIcon]
 })
 export class CategoryPage implements OnInit {
   searchTerm = '';
@@ -28,7 +28,7 @@ export class CategoryPage implements OnInit {
   filteredCategories = [...this.categories];
 
   constructor(private router: Router) {
-    addIcons({ chevronForwardOutline });
+    addIcons({ chevronForwardOutline, settingsOutline, optionsOutline });
   }
 
   ngOnInit() {}

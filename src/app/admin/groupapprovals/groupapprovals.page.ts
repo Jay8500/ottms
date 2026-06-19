@@ -5,14 +5,15 @@ import { AlertController, ToastController } from '@ionic/angular';
 import { IonContent, IonHeader, IonTitle, IonToolbar,IonIcon,IonButton ,IonSegmentButton,
   IonBadge
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { arrowBackOutline, checkmarkOutline, trashOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-groupapprovals',
   templateUrl: './groupapprovals.page.html',
   styleUrls: ['./groupapprovals.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule,IonIcon,IonButton,IonSegmentButton,
-    IonBadge,
+  imports: [IonContent, CommonModule, FormsModule,IonIcon,
   ]
 })
 export class GroupapprovalsPage implements OnInit {
@@ -27,7 +28,9 @@ export class GroupapprovalsPage implements OnInit {
   filteredGroups = [...this.allGroups];
   get pendingCount() { return this.allGroups.filter(g => g.status === 'pending').length; }
  
-  constructor(private alertCtrl: AlertController, private toastCtrl: ToastController) {}
+  constructor(private alertCtrl: AlertController, private toastCtrl: ToastController) {
+    addIcons({ arrowBackOutline, checkmarkOutline, trashOutline });
+  }
   ngOnInit() { this.filterGroups(); }
  
   filterGroups() { this.filteredGroups = this.allGroups.filter(g => g.status === this.activeFilter); }

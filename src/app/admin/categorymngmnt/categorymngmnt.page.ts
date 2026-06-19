@@ -3,13 +3,15 @@ import { AlertController, ToastController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar,IonIcon,IonButton,IonButtons } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { settingsOutline, optionsOutline, createOutline, trashOutline, addCircleOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-categorymngmnt',
   templateUrl: './categorymngmnt.page.html',
   styleUrls: ['./categorymngmnt.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule,IonIcon,IonButton,IonButtons]
+  imports: [IonContent, CommonModule, FormsModule,IonIcon]
 })
 export class CategorymngmntPage  implements OnInit {
  
@@ -22,7 +24,9 @@ export class CategorymngmntPage  implements OnInit {
     { id:'c6', name:'Fitness',       emoji:'💪', bgColor:'#e0f7fa', color:'#00838f', appCount:3 },
   ];
  
-  constructor(private alertCtrl: AlertController, private toastCtrl: ToastController) {}
+  constructor(private alertCtrl: AlertController, private toastCtrl: ToastController) {
+    addIcons({ settingsOutline, optionsOutline, createOutline, trashOutline, addCircleOutline });
+  }
   ngOnInit() {}
  
   async addCategory() {
