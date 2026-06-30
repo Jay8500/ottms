@@ -10,8 +10,9 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "sub": "ionic build && npx cap sync android && powershell -Command \"$env:ANDROID_HOME='C:\\sdk'; cd android; ./gradlew clean; ./gradlew assembleDebug\" && npm run deploy-apk",
-    "jay": "git add . && git commit -m \"Latest Jay Updated\" && git push origin main"
+    "sub": "ionic build && npx cap sync android && powershell -Command \"$env:ANDROID_HOME='C:\\sdk'; cd android; ./gradlew clean; ./gradlew assembleDebug\" ",
+    "jay": "git add . && git commit -m \"Latest Jay Updated\" && git push origin main",
+    "release": "ionic build --prod && npx cap sync android && powershell -Command \"$env:ANDROID_HOME='C:\\sdk'; cd android; ./gradlew bundleRelease\""
   },
   "private": true,
   "dependencies": {

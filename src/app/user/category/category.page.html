@@ -2,7 +2,8 @@
   <div class="top-bar">
     <button class="icon-btn" onclick="history.back()"><ion-icon name="settings-outline"></ion-icon></button>
     <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
-    <button class="icon-btn dark"><ion-icon name="options-outline"></ion-icon></button>
+    <button class="icon-btn" ><ion-icon name="options-outline"></ion-icon></button>
+
   </div>
   <div class="cat-list">
     <button class="cat-banner" *ngFor="let cat of filteredCategories" (click)="openCategory(cat)" [style.background]="cat.bgColor">
