@@ -1,0 +1,20 @@
+@import '../../../global.scss';
+.ca-content { --background: #{$white}; }
+.ca-wrap { display: flex; flex-direction: column; align-items: center; padding: calc(#{$sp-xl} + var(--ion-safe-area-top,0px)) $sp-lg calc(#{$sp-xl} + var(--ion-safe-area-bottom,0px)); }
+.logo-badge { @include logo-badge; margin-bottom: $sp-sm; }
+.brand-title { font-size: $font-3xl; font-weight: 700; color: $black; margin: 0 0 $sp-lg; .blue { color: $blue; } }
+.avatar-area { margin-bottom: $sp-sm; cursor: pointer;
+  .av-circle { width: 90px; height: 90px; border-radius: 50%; border: 2px dashed $gray-400; background: $gray-50; @include flex-center; position: relative; ion-icon { font-size: 44px; color: $gray-400; } .av-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+    .av-plus { position: absolute; bottom: 0; right: 0; width: 26px; height: 26px; border-radius: 50%; background: $yellow; @include flex-center; ion-icon { font-size: 16px; color: $black; } } } }
+.add-photo-btn { background: $yellow; border: none; border-radius: $r-pill; padding: $sp-sm $sp-xl; display: flex; align-items: center; gap: $sp-sm; cursor: pointer; font-family: inherit; font-size: $font-base; font-weight: 700; color: $black; margin-bottom: $sp-xl; ion-icon { font-size: 20px; } }
+.form-full { width: 100%; }
+.in-row { display: flex; align-items: center; gap: $sp-sm; border: 1.5px solid $gray-200; border-radius: $r-lg; padding: 0 $sp-md; height: 52px; margin-bottom: $sp-md; box-shadow: $shadow-sm;
+  ion-icon { font-size: 20px; color: $gray-400; flex-shrink: 0; }
+  input { flex: 1; border: none; outline: none; font-size: $font-base; color: $black; background: transparent; font-family: inherit; &::placeholder { color: $gray-400; } }
+  .send-otp { background: $blue; color: $white; border: none; padding: 6px $sp-md; border-radius: $r-pill; font-size: $font-xs; font-weight: 700; cursor: pointer; white-space: nowrap; } }
+.otp-row { display: flex; gap: $sp-xs; margin-bottom: $sp-md; align-items: center;
+  .otp-box { width: 38px; height: 38px; border: 1.5px solid $gray-200; border-radius: $r-md; text-align: center; font-size: $font-lg; font-weight: 700; outline: none; }
+  .sub-otp { background: $yellow; color: $black; border: none; padding: 6px $sp-md; border-radius: $r-pill; font-size: $font-xs; font-weight: 700; cursor: pointer; flex-shrink: 0; } }
+.terms-row { display: flex; align-items: center; gap: $sp-sm; margin-bottom: $sp-lg; input[type=checkbox] { width: 20px; height: 20px; accent-color: $yellow; } label { font-size: $font-sm; color: $black; a { color: $blue; font-weight: 600; } } }
+.save-btn { background: $yellow; color: $black; border: none; border-radius: $r-pill; height: 52px; width: 100%; font-size: $font-lg; font-weight: 700; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: $sp-sm; margin-bottom: $sp-md; }
+.login-link { text-align: center; font-size: $font-sm; color: $gray-600; margin: 0; span { color: $blue; font-weight: 700; cursor: pointer; } }

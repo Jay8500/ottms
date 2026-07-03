@@ -1,0 +1,11 @@
+@import '../../../global.scss';
+.ms-tabbar {
+  --background: #{$white};
+  border-top: 1px solid $gray-200;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+  height: 64px;
+  ion-tab-button { --color: #{$gray-400}; --color-selected: #{$black}; ion-label { font-size: 11px !important; font-weight: 500; } ion-icon { font-size: 24px !important; } }
+  .center-tab {
+    .center-circle { width: 54px; height: 54px; border-radius: 50%; background: $yellow; display: flex; align-items: center; justify-content: center; margin-bottom: 2px; box-shadow: 0 2px 8px rgba(249,213,75,0.5); ion-icon { font-size: 26px !important; color: $black !important; } }
+    ion-label { font-weight: 700 !important; color: $black !important; } }
+}

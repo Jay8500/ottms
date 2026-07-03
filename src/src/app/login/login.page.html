@@ -1,0 +1,29 @@
+<ion-content class="login-content">
+  <div class="login-wrap">
+    <div class="logo-area">
+      <div class="logo-badge">
+        <span class="money">Money</span>
+        <span class="saver">Saver</span>
+      </div>
+      <h1 class="brand-title">Money <span class="blue">Saver</span></h1>
+    </div>
+    <div class="form-card">
+      <div class="input-row">
+        <ion-icon name="call-outline"></ion-icon>
+        <input [(ngModel)]="mobile" type="tel" placeholder="Mobile Number" maxlength="10" inputmode="numeric" />
+      </div>
+      <div class="input-row">
+        <ion-icon name="lock-closed-outline"></ion-icon>
+        <input [(ngModel)]="password" [type]="showPassword ? 'text' : 'password'" placeholder="Password" />
+        <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" class="eye" (click)="showPassword=!showPassword"></ion-icon>
+      </div>
+      <button class="yellow-btn full" [disabled]="loading" (click)="login()">
+        <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+        {{ loading ? 'Signing in...' : 'Sign In' }}
+      </button>
+      <div class="or-row"><span>or</span></div>
+      <button class="outline-btn full" (click)="goRegister()">Create New Account</button>
+      <p class="forgot" (click)="forgotPassword()">Forgot Password?</p>
+    </div>
+  </div>
+</ion-content>

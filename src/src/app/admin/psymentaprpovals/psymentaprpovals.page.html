@@ -1,0 +1,38 @@
+<ion-content class="page-content" [scrollY]="true">
+  <div class="page-header">
+    <button class="icon-btn" onclick="history.back()"><ion-icon name="arrow-back-outline"></ion-icon></button>
+    <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
+    <div style="width:40px"></div>
+  </div>
+  <p class="page-title">Pending Payment Approvals</p>
+  <div class="wallet-summary">
+    <div class="ws-card yellow"><span>🪙</span><p>Total Wallet</p><p class="ws-amt">₹6,945</p></div>
+    <div class="ws-card blue"><span>🔒</span><p>Locked Amount</p><p class="ws-amt">₹2,800</p></div>
+    <div class="ws-card green"><span>🔓</span><p>Unlocked Amount</p><p class="ws-amt">₹4,145</p></div>
+  </div>
+  <div class="filter-chips">
+    <button class="chip" [class.active]="activeFilter==='pending'" (click)="activeFilter='pending';filterPayments()">Pending</button>
+    <button class="chip" [class.active]="activeFilter==='approved'" (click)="activeFilter='approved';filterPayments()">Approved</button>
+    <button class="chip" [class.active]="activeFilter==='rejected'" (click)="activeFilter='rejected';filterPayments()">Rejected</button>
+  </div>
+  <div class="list-area">
+    <div class="card" *ngFor="let p of filteredPayments">
+      <div class="p-top">
+        <div class="p-av">{{ p.userName.charAt(0) }}</div>
+        <div class="p-info">
+          <p class="p-name">{{ p.userName }}</p>
+          <p class="p-meta">{{ p.ottName }} • {{ p.validity }} • {{ p.date }}</p>
+        </div>
+        <span class="amt-tag">₹{{ p.amount }}</span>
+      </div>
+      <input type="text" placeholder="Remarks (optional)" class="remarks-input" />
+      <div class="p-actions" *ngIf="p.status==='pending'">
+        <button class="green-btn" (click)="approve(p)">✓ Approve</button>
+        <button class="red-btn" (click)="reject(p)">✕ Reject</button>
+        <button class="blue-btn" (click)="viewScreenshot(p)">View Image</button>
+      </div>
+      <span class="status-badge" *ngIf="p.status!=='pending'" [class.approved]="p.status==='approved'" [class.rejected]="p.status==='rejected'">{{ p.statusLabel }}</span>
+    </div>
+  </div>
+  <div style="height:80px"></div>
+</ion-content>

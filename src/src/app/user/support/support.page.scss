@@ -1,0 +1,13 @@
+@import '../../../global.scss';
+.support-content { --background: #{$white}; }
+.top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; } .logo-badge { @include logo-badge; }
+.contact-list { padding: $sp-md $sp-lg $sp-lg; display: flex; flex-direction: column; gap: $sp-md; }
+.contact-btn { display: flex; align-items: center; gap: $sp-md; background: $yellow; border: none; border-radius: $r-pill; padding: $sp-md $sp-xl; cursor: pointer; width: 100%; font-family: inherit; box-shadow: $shadow-md; &:active { opacity: 0.88; }
+  .c-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(0,0,0,0.12); @include flex-center; ion-icon { font-size: 24px; color: $black; } }
+  span { font-size: $font-xl; font-weight: 700; color: $black; } }
+.faq-section { padding: 0 $sp-lg $sp-xl; }
+.faq-title { font-size: $font-lg; font-weight: 700; color: $black; margin-bottom: $sp-md; }
+.faq-item { background: $white; border-radius: $r-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm; margin-bottom: $sp-sm; overflow: hidden;
+  .faq-q { display: flex; justify-content: space-between; align-items: center; padding: $sp-md $sp-lg; cursor: pointer; font-size: $font-sm; font-weight: 600; color: $black; ion-icon { color: $yellow-dark; font-size: 20px; flex-shrink: 0; } }
+  .faq-a { padding: 0 $sp-lg $sp-md; border-top: 1px solid $gray-100; p { font-size: $font-xs; color: $gray-600; line-height: 1.6; margin: $sp-sm 0 0; } } }

@@ -1,0 +1,21 @@
+@import '../../../global.scss';
+.page-content { --background: #{$white}; }
+.page-header { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; }
+.page-title-h { font-size: $font-xl; font-weight: 700; color: $black; margin: 0; }
+.search-row { padding: 0 $sp-lg $sp-md; }
+.search-box { display: flex; align-items: center; gap: $sp-sm; border: 1.5px solid $gray-200; border-radius: $r-lg; padding: 0 $sp-md; height: 46px; ion-icon { color: $gray-400; } input { flex: 1; border: none; outline: none; font-size: $font-sm; } }
+.list-area { padding: 0 $sp-lg $sp-xl; display: flex; flex-direction: column; gap: $sp-md; }
+.card { background: $white; border-radius: $r-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm; padding: $sp-md $sp-lg; }
+.wallet-row { display: grid; grid-template-columns: repeat(3,1fr); gap: $sp-sm; margin-bottom: $sp-md; }
+.wc { border-radius: $r-lg; padding: $sp-sm; text-align: center; span { font-size: 22px; display: block; } .wc-lbl { font-size: $font-xs; font-weight: 700; color: $black; margin: 2px 0 0; } .wc-amt { font-size: $font-base; font-weight: 700; color: $black; margin: 2px 0 4px; }
+  &.yellow { background: $yellow; } &.blue { background: #DBEAFE; } &.green { background: #DCFCE7; } }
+.wc-save { border: none; border-radius: $r-pill; height: 28px; padding: 0 $sp-sm; font-size: $font-xs; font-weight: 700; cursor: pointer; width: 100%; }
+.yellow-save { background: $black; color: $white; }
+.blue-save { background: $blue; color: $white; }
+.green-save { background: $green; color: $white; }
+.user-row { display: flex; align-items: center; gap: $sp-md; margin-bottom: $sp-sm; }
+.u-av { width: 44px; height: 44px; border-radius: 50%; background: $yellow; @include flex-center; font-size: $font-base; font-weight: 700; color: $black; flex-shrink: 0; }
+.u-name { font-size: $font-sm; font-weight: 700; color: $black; margin: 0; .uid { color: $gray-600; font-weight: 400; margin-left: 4px; } }
+.role-badge { font-size: $font-xs; padding: 2px 8px; border-radius: $r-pill; font-weight: 600; background: $blue-light; color: $blue; &.seller { background: $yellow-light; color: $black; } }
+.screens-mini { border-top: 1px solid $gray-100; padding-top: $sp-sm; .screens-lbl { font-size: $font-xs; font-weight: 700; color: $black; margin: 0 0 4px; } .screen-item { font-size: $font-xs; color: $gray-600; margin-bottom: 2px; } }

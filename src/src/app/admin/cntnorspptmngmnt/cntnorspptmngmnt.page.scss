@@ -1,0 +1,20 @@
+@import '../../../global.scss';
+.page-content { --background: #{$white}; }
+.page-header { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; }
+.hdr-title { font-size: $font-base; font-weight: 700; color: $black; margin: 0; }
+.logo-center { @include flex-center; padding: $sp-xs 0 $sp-md; } .logo-badge { @include logo-badge; }
+.notice-section, .sug-section, .contact-section { padding: 0 $sp-lg $sp-md; }
+.notice-hdr, .sug-hdr { @include flex-between; margin-bottom: $sp-sm; .n-title, .sug-title { font-size: $font-base; font-weight: 700; color: $black; margin: 0; } }
+.n-content { background: $gray-50; border-radius: $r-lg; padding: $sp-md; }
+.n-item { font-size: $font-xs; color: $gray-700; margin-bottom: 4px; line-height: 1.5; }
+.yellow-sm { background: $yellow; color: $black; border: none; border-radius: $r-pill; height: 32px; padding: 0 $sp-md; font-size: $font-xs; font-weight: 700; cursor: pointer; font-family: inherit; }
+.add-sug-btn { display: flex; align-items: center; gap: $sp-xs; background: $white; border: 1.5px dashed $gray-300; border-radius: $r-lg; padding: $sp-sm $sp-lg; font-size: $font-sm; color: $gray-600; cursor: pointer; font-family: inherit; margin-bottom: $sp-sm; ion-icon { font-size: 18px; } }
+.sug-list { display: flex; flex-direction: column; gap: $sp-sm; }
+.sug-item { display: flex; align-items: center; gap: $sp-sm; background: $white; border-radius: $r-lg; border: 1px solid $gray-200; padding: $sp-sm $sp-md;
+  .sug-num { width: 24px; height: 24px; border-radius: 50%; background: $yellow; @include flex-center; font-size: $font-xs; font-weight: 700; color: $black; flex-shrink: 0; }
+  .sug-text { flex: 1; font-size: $font-sm; color: $black; }
+  .del-btn { background: transparent; border: none; cursor: pointer; ion-icon { font-size: 18px; color: $red; } } }
+.section-title { font-size: $font-base; font-weight: 700; color: $black; margin-bottom: $sp-sm; }
+.c-row { display: flex; align-items: center; gap: $sp-sm; margin-bottom: $sp-sm; label { font-size: $font-sm; color: $gray-600; width: 80px; flex-shrink: 0; } input { flex: 1; border: 1.5px solid $gray-200; border-radius: $r-lg; padding: 0 $sp-md; height: 44px; font-size: $font-sm; outline: none; } }
+.save-btn { background: $yellow; color: $black; border: none; border-radius: $r-pill; height: 46px; width: 100%; font-size: $font-base; font-weight: 700; cursor: pointer; margin-top: $sp-sm; }

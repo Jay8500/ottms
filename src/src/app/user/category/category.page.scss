@@ -1,0 +1,10 @@
+@import '../../../global.scss';
+.cat-content { --background: #{$white}; }
+.top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; }
+.logo-badge { @include logo-badge; }
+.cat-list { padding: $sp-md $sp-lg $sp-xl; display: flex; flex-direction: column; gap: $sp-md; }
+.cat-banner { border-radius: $r-lg; height: 86px; display: flex; align-items: center; padding: $sp-md $sp-lg; cursor: pointer; border: none; font-family: inherit; width: 100%; box-shadow: $shadow-sm; &:active { opacity: 0.88; }
+  .cat-emoji { font-size: 40px; margin-right: $sp-md; flex-shrink: 0; }
+  .cat-info { flex: 1; text-align: left; .cat-name { font-size: $font-xl; font-weight: 700; color: $black; margin: 0; } .cat-sub { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; } }
+  .cat-arrow { width: 36px; height: 36px; background: $yellow; border-radius: $r-pill; @include flex-center; flex-shrink: 0; ion-icon { font-size: 18px; color: $black; } } }

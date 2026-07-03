@@ -1,0 +1,34 @@
+<ion-content class="page-content" [scrollY]="true">
+  <div class="page-header">
+    <button class="icon-btn" onclick="history.back()"><ion-icon name="settings-outline"></ion-icon></button>
+    <p class="hdr-title">Admin - Manage Instructions</p>
+    <button class="icon-btn"><ion-icon name="search-outline"></ion-icon></button>
+  </div>
+  <div class="logo-center"><div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div></div>
+  <div class="notice-section">
+    <div class="notice-hdr"><p class="n-title">NOTICE</p><button class="yellow-sm" (click)="addFaq()">Edit Notice</button></div>
+    <div class="n-content">
+      <p *ngFor="let faq of faqs; let i=index" class="n-item">{{ i+1 }}). {{ faq.question }}</p>
+    </div>
+  </div>
+  <div class="sug-section">
+    <div class="sug-hdr"><p class="sug-title">SUGGESTIONS</p><button class="yellow-sm" (click)="addSuggested()">Edit Suggestions</button></div>
+    <button class="add-sug-btn" (click)="addSuggested()"><ion-icon name="add-circle-outline"></ion-icon> Add Suggestion</button>
+    <div class="sug-list">
+      <div class="sug-item" *ngFor="let s of suggestedTexts; let i=index">
+        <span class="sug-num">{{ i+1 }}</span>
+        <span class="sug-text">{{ s.text }}</span>
+        <button class="yellow-sm" (click)="addSuggested()">Edit</button>
+        <button class="del-btn" (click)="deleteSuggested(s)"><ion-icon name="trash-outline"></ion-icon></button>
+      </div>
+    </div>
+  </div>
+  <div class="contact-section">
+    <p class="section-title">Support Contacts</p>
+    <div class="c-row"><label>WhatsApp</label><input [(ngModel)]="contacts.whatsapp" type="text" /></div>
+    <div class="c-row"><label>Phone</label><input [(ngModel)]="contacts.phone" type="text" /></div>
+    <div class="c-row"><label>Email</label><input [(ngModel)]="contacts.email" type="email" /></div>
+    <button class="save-btn" (click)="saveContacts()">Save Changes</button>
+  </div>
+  <div style="height:80px"></div>
+</ion-content>

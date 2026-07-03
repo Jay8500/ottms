@@ -1,0 +1,16 @@
+@import '../../../global.scss';
+.rating-content { --background: rgba(0,0,0,0.3); }
+.modal-overlay { min-height: 100%; display: flex; align-items: flex-end; }
+.modal-card { background: $white; border-radius: $r-xl $r-xl 0 0; width: 100%; padding: $sp-xl; }
+.modal-hdr { @include flex-between; margin-bottom: $sp-lg; .modal-title { font-size: $font-xl; font-weight: 700; color: $black; } .close-btn { background: none; border: none; cursor: pointer; font-size: $font-xl; color: $black; } }
+.seller-banner { display: flex; align-items: center; gap: $sp-md; background: $yellow; border-radius: $r-lg; padding: $sp-md; margin-bottom: $sp-lg;
+  .s-av { width: 52px; height: 52px; border-radius: 50%; background: $white; @include flex-center; font-size: $font-xl; font-weight: 700; color: $black; flex-shrink: 0; }
+  .s-info { flex: 1; .s-name { font-size: $font-base; font-weight: 700; color: $black; margin: 0; } .s-meta { font-size: $font-xs; color: $black; margin: 2px 0 0; } }
+  .s-rating { font-size: 16px; color: $yellow-dark; } }
+.stars-row { display: flex; justify-content: center; gap: $sp-md; margin-bottom: $sp-lg; }
+.star-btn { background: none; border: none; font-size: 44px; cursor: pointer; padding: 0; &.filled { color: $yellow-dark; } &.empty { color: $gray-200; } }
+.badges-wrap { display: flex; flex-wrap: wrap; gap: $sp-sm; margin-bottom: $sp-lg; }
+.badge-pill { padding: 7px $sp-md; border-radius: $r-pill; border: 1.5px solid $gray-200; background: $white; font-size: $font-sm; cursor: pointer; font-family: inherit; &.active { background: $yellow; border-color: $yellow; } }
+.review-ta { width: 100%; border: 1.5px solid $gray-200; border-radius: $r-lg; padding: $sp-md; font-size: $font-sm; outline: none; font-family: inherit; resize: none; margin-bottom: $sp-lg; min-height: 100px; color: $black; background: $gray-50; box-sizing: border-box; }
+.submit-btn { background: $yellow; color: $black; border: none; border-radius: $r-pill; height: 52px; width: 100%; font-size: $font-lg; font-weight: 700; cursor: pointer; font-family: inherit; margin-bottom: $sp-sm; }
+.skip-link { text-align: center; font-size: $font-sm; color: $gray-600; cursor: pointer; padding: $sp-sm 0; margin: 0; }

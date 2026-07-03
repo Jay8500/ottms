@@ -1,0 +1,19 @@
+@import '../../../global.scss';
+.cg-content { --background: #{$white}; }
+.top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; } .tab-pills { @include tab-pills; }
+.logo-center { @include flex-center; padding: $sp-xs 0 $sp-sm; } .logo-badge { @include logo-badge; }
+.page-title { text-align: center; font-size: $font-xl; font-weight: 700; color: $black; padding: $sp-sm $sp-lg $sp-md; margin: 0; }
+.form-section { padding: 0 $sp-lg; }
+.section-lbl { font-size: $font-base; font-weight: 700; color: $black; margin: $sp-md 0 $sp-xs; }
+.form-lbl { font-size: $font-sm; font-weight: 600; color: $black; display: block; margin-bottom: $sp-xs; }
+.sel-wrap { position: relative; margin-bottom: $sp-md; }
+.form-sel { width: 100%; height: 50px; border: 1.5px solid $gray-200; border-radius: $r-lg; padding: 0 $sp-md; font-size: $font-base; color: $black; background: $white; outline: none; font-family: inherit; appearance: none; }
+.form-input { width: 100%; height: 50px; border: 1.5px solid $gray-200; border-radius: $r-lg; padding: 0 $sp-md; font-size: $font-base; color: $black; background: $white; outline: none; font-family: inherit; box-sizing: border-box; }
+.date-row { display: grid; grid-template-columns: 1fr 1fr; gap: $sp-md; margin-bottom: $sp-md; }
+.upload-box { border: 2px dashed $yellow; border-radius: $r-lg; background: $yellow-light; padding: $sp-xl $sp-lg; @include flex-center; flex-direction: column; gap: $sp-sm; cursor: pointer; margin-bottom: $sp-md;
+  ion-icon { font-size: 44px; color: $yellow-dark; } .up-text { font-size: $font-base; font-weight: 700; color: $black; margin: 0; } .file-name { font-size: $font-xs; color: $green; margin: 0; }
+  .up-btn { background: $yellow; color: $black; border: none; border-radius: $r-pill; padding: 8px $sp-xl; font-size: $font-sm; font-weight: 700; cursor: pointer; } }
+.publish-row { display: flex; align-items: center; gap: $sp-sm; margin-bottom: $sp-md; input[type=checkbox] { width: 20px; height: 20px; accent-color: $yellow; } label { font-size: $font-sm; font-weight: 600; color: $black; cursor: pointer; } }
+.comment-ta { width: 100%; border: 1.5px solid $gray-200; border-radius: $r-lg; padding: $sp-md; font-size: $font-sm; outline: none; font-family: inherit; resize: none; margin-bottom: $sp-lg; min-height: 80px; color: $black; background: $white; box-sizing: border-box; }
+.create-btn { display: block; background: $yellow; color: $black; border: none; border-radius: $r-pill; height: 52px; width: calc(100% - #{$sp-lg} * 2); margin: 0 $sp-lg 80px; font-size: $font-lg; font-weight: 700; cursor: pointer; font-family: inherit; }

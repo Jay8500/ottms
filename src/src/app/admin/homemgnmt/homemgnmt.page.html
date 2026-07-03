@@ -1,0 +1,29 @@
+<ion-content class="admin-home-content" [scrollY]="true">
+  <div class="top-bar">
+    <button class="icon-btn" onclick="history.back()"><ion-icon name="settings-outline"></ion-icon></button>
+    <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
+    <button class="icon-btn dark"><ion-icon name="options-outline"></ion-icon></button>
+  </div>
+  <p class="section-title">Edit Home Page</p>
+  <p class="section-sub">Edit or change options for the home page.</p>
+  <div class="items-list">
+    <div class="item-card" *ngFor="let a of actions">
+      <div class="item-icon"><ion-icon [name]="a.icon"></ion-icon></div>
+      <span class="item-lbl">{{ a.label }}</span>
+      <button class="edit-btn" (click)="a.action()"><ion-icon name="create-outline"></ion-icon></button>
+      <button class="del-btn"><ion-icon name="trash-outline"></ion-icon></button>
+    </div>
+  </div>
+  <button class="add-btn" (click)="navigate('categorymngmnt')"><ion-icon name="add-circle-outline"></ion-icon> Add New Option</button>
+  <p class="section-title" style="margin-top:8px">Admin Sections</p>
+  <div class="nav-cards">
+    <button class="nav-card" *ngFor="let n of navItems" (click)="navigate(n.route)">
+      <div class="nav-icon" [style.background]="n.bg"><ion-icon [name]="n.icon" [style.color]="n.color"></ion-icon></div>
+      <div class="nav-info"><h3>{{ n.label }}</h3><p>{{ n.desc }}</p></div>
+      <ion-badge *ngIf="n.badge" color="danger">{{ n.badge }}</ion-badge>
+      <ion-icon name="chevron-forward-outline" class="nav-arr"></ion-icon>
+    </button>
+  </div>
+  <button class="logout-btn" (click)="logout()"><ion-icon name="log-out-outline"></ion-icon> Logout</button>
+  <div style="height:80px"></div>
+</ion-content>

@@ -1,0 +1,31 @@
+<ion-content class="rating-content" [scrollY]="true">
+  <div class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-hdr">
+        <p class="modal-title">Leave a Review</p>
+        <button class="close-btn" (click)="skip()">✕</button>
+      </div>
+      <div class="seller-banner">
+        <div class="s-av">{{ peerName.charAt(0) }}</div>
+        <div class="s-info">
+          <p class="s-name">{{ peerName }}</p>
+          <p class="s-meta">{{ ottName }} • {{ validity }}</p>
+        </div>
+        <div class="s-rating"><span *ngFor="let i of [1,2,3,4,5]">{{ i<=selected ? '★' : '☆' }}</span></div>
+      </div>
+      <div class="stars-row">
+        <button class="star-btn" *ngFor="let i of [1,2,3,4,5]" [class.filled]="i<=selected" [class.empty]="i>selected" (click)="selected=i">
+          {{ i<=selected ? '★' : '☆' }}
+        </button>
+      </div>
+      <div class="badges-wrap">
+        <button class="badge-pill" *ngFor="let b of badges" [class.active]="activeBadges.includes(b.key)" (click)="toggleBadge(b.key)">
+          {{ b.emoji }} {{ b.label }}
+        </button>
+      </div>
+      <textarea class="review-ta" [(ngModel)]="review" placeholder="Write your review..." rows="4"></textarea>
+      <button class="submit-btn" (click)="submit()">Submit</button>
+      <p class="skip-link" (click)="skip()">Skip</p>
+    </div>
+  </div>
+</ion-content>

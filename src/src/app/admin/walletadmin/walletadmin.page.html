@@ -1,0 +1,28 @@
+<ion-content class="page-content" [scrollY]="true">
+  <div class="page-header">
+    <button class="icon-btn" onclick="history.back()"><ion-icon name="settings-outline"></ion-icon></button>
+    <p class="page-title-h">User Profile</p>
+    <button class="icon-btn dark"><ion-icon name="settings-outline"></ion-icon></button>
+  </div>
+  <div class="search-row">
+    <div class="search-box"><ion-icon name="search-outline"></ion-icon><input [(ngModel)]="searchTerm" (ngModelChange)="filterWallets()" placeholder="Search by name or ID..." /></div>
+  </div>
+  <div class="list-area">
+    <div class="card" *ngFor="let w of filteredWallets">
+      <div class="wallet-row">
+        <div class="wc yellow"><span>🪙</span><p class="wc-lbl">Total Wallet</p><p class="wc-amt">₹{{ w.total }}</p><button class="wc-save yellow-save" (click)="editWallet(w)">Save</button></div>
+        <div class="wc blue"><span>🔒</span><p class="wc-lbl">Locked Amount</p><p class="wc-amt">₹{{ w.locked }}</p><button class="wc-save blue-save" (click)="editWallet(w)">Save</button></div>
+        <div class="wc green"><span>🔓</span><p class="wc-lbl">Unlocked Amount</p><p class="wc-amt">₹{{ w.unlocked }}</p><button class="wc-save green-save" (click)="editWallet(w)">Save</button></div>
+      </div>
+      <div class="user-row">
+        <div class="u-av">{{ w.name.charAt(0) }}</div>
+        <div><p class="u-name">{{ w.name }} <span class="uid">{{ w.uid }}</span></p><span class="role-badge" [class.seller]="w.role==='Seller'">{{ w.role }}</span></div>
+      </div>
+      <div class="screens-mini">
+        <p class="screens-lbl">All Recent Purchased OTT Platforms</p>
+        <p class="screen-item" *ngFor="let s of w.screens">{{ s }}</p>
+      </div>
+    </div>
+  </div>
+  <div style="height:80px"></div>
+</ion-content>
