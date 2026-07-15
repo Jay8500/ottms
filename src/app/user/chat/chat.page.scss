@@ -39,7 +39,7 @@
 .msg-wrap { display: flex; &.mine { justify-content: flex-end; } &.theirs { justify-content: flex-start; } }
 .bubble {
   max-width: 76%; padding: $sp-sm $sp-md; border-radius: $r-lg;
-  .b-text { font-size: $font-sm; margin: 0 0 2px; }
+  .b-text { font-size: $font-sm; margin: 0 0 2px; color: $black; }
   .b-time { font-size: 10px; color: $gray-600; display: block; text-align: right; }
   &.mine   { background: $yellow; border-radius: $r-lg $r-lg 4px $r-lg; }
   &.theirs { background: $gray-100; border-radius: 4px $r-lg $r-lg $r-lg; }
@@ -56,6 +56,6 @@
 .rating-row { display: flex; align-items: center; gap: $sp-sm; background: $yellow-light; border: 1.5px solid $yellow; border-radius: $r-lg; margin: 0 $sp-lg $sp-sm; padding: $sp-sm $sp-md; cursor: pointer; font-family: inherit; width: calc(100% - #{$sp-lg} * 2);
   ion-icon { font-size: 18px; color: $yellow-dark; } span { font-size: $font-sm; font-weight: 600; color: $black; } }
 .input-row { display: flex; align-items: center; gap: $sp-sm; padding: 0 $sp-md $sp-sm; }
-.msg-input { flex: 1; border: 1.5px solid $gray-200; border-radius: $r-pill; padding: 0 $sp-md; height: 42px; font-size: $font-sm; outline: none; background: $white; font-family: inherit; }
+.msg-input { flex: 1; border: 1.5px solid $gray-200; border-radius: $r-pill; padding: 0 $sp-md; height: 42px; font-size: $font-sm; outline: none; background: $white; font-family: inherit; color: $black; }
 .auto-lbl { font-size: $font-xs; color: $gray-400; white-space: nowrap; }
 .send-btn { width: 42px; height: 42px; border-radius: 50%; background: $yellow; border: none; @include flex-center; cursor: pointer; ion-icon { font-size: 20px; color: $black; } &[disabled] { opacity: 0.4; } }

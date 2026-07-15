@@ -60,22 +60,39 @@ export class WalletPage implements OnInit {
     else if (this.activeTab === 'expense') this.displayScreens = this.allScreens.filter(s => s.txType === 'expense');
   }
 
-  async addFund() {
+  addFund() {
+    // Navigate to payment page for adding funds
+    this.router.navigate(['/user/payment'], { queryParams: { mode: 'addFund' } });
+  }
+
+  async withdraw() {
     const alert = await this.alertCtrl.create({
-      header: 'Add Fund',
+      header: '💸 Withdraw Amount',
+      subHeader: `Available: ₹${this.unlockedAmount}`,
+      cssClass: 'withdraw-alert',
       inputs: [
-        { name: 'amount', type: 'number', placeholder: 'Enter amount (₹)' },
-        { name: 'upiId',  type: 'text',   placeholder: 'UPI ID / Transaction ID' },
+        { name: 'amount',   type: 'number', placeholder: 'Amount to Withdraw (₹)' },
+        { name: 'method',   type: 'radio',  label: '📱 UPI Transfer', value: 'upi',  checked: true },
+        { name: 'method',   type: 'radio',  label: '🏦 Bank Transfer', value: 'bank' },
+        { name: 'upiId',    type: 'text',   placeholder: 'UPI ID (e.g. name@upi)' },
+        { name: 'mobile',   type: 'tel',    placeholder: 'Registered Mobile Number' },
+        { name: 'accName',  type: 'text',   placeholder: 'Account Holder Name' },
       ],
       buttons: [
-        { text: 'Cancel', role: 'cancel' },
+        { text: 'Cancel', role: 'cancel', cssClass: 'cancel-btn' },
         {
-          text: 'Submit Request',
+          text: '✅ Submit Request',
+          cssClass: 'submit-btn',
           handler: async (data) => {
-            if (!data.amount || !data.upiId) return;
-            // TODO: Supabase — submit add fund request
-            const t = await this.toastCtrl.create({ message: 'Fund request submitted! Pending for Approval.', duration: 3000, position: 'bottom' });
-            t.present();
+            if (!data.amount) {
+              this.showToast('Please enter amount'); return false;
+            }
+            if (data.amount > this.unlockedAmount) {
+              this.showToast('Amount exceeds unlocked balance'); return false;
+            }
+            // TODO: Supabase — submit withdraw request
+            this.showToast('Withdraw request submitted! Pending for Admin Approval. 🎉');
+            return true;
           }
         }
       ]
@@ -83,28 +100,9 @@ export class WalletPage implements OnInit {
     await alert.present();
   }
 
-  async withdraw() {
-    const alert = await this.alertCtrl.create({
-      header: 'Withdraw',
-      inputs: [
-        { name: 'amount',  type: 'number', placeholder: 'Enter amount (₹)' },
-        { name: 'upiId',   type: 'text',   placeholder: 'Your UPI ID' },
-        { name: 'mobile',  type: 'tel',    placeholder: 'Mobile Number' },
-      ],
-      buttons: [
-        { text: 'Cancel', role: 'cancel' },
-        {
-          text: 'Submit Request',
-          handler: async (data) => {
-            if (!data.amount || !data.upiId) return;
-            // TODO: Supabase — submit withdraw request
-            const t = await this.toastCtrl.create({ message: 'Withdraw request submitted! Pending for Approval.', duration: 3000, position: 'bottom' });
-            t.present();
-          }
-        }
-      ]
-    });
-    await alert.present();
+  private async showToast(msg: string) {
+    const t = await this.toastCtrl.create({ message: msg, duration: 3000, position: 'bottom' });
+    t.present();
   }
 
   openChat(s: any) { this.router.navigate(['/user/chat'], { queryParams: { screenId: s.id } }); }

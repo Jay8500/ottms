@@ -3,7 +3,7 @@
 .top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
 .icon-btn { @include icon-btn; }
 .page-title { font-size: $font-xl; font-weight: 700; color: $black; margin: 0; }
-.wallet-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: $sp-sm; padding: 0 $sp-lg $sp-sm; }
+.wallet-cards { display: grid; grid-template-columns: repeat(2,1fr); gap: $sp-sm; padding: 0 $sp-lg $sp-sm; }
 .wc { border-radius: $r-lg; padding: $sp-md; text-align: center; box-shadow: $shadow-sm; .wc-icon { font-size: 24px; display: block; margin-bottom: 2px; } .wc-lbl { font-size: $font-xs; font-weight: 700; color: $black; margin: 0 0 2px; } .wc-amt { font-size: $font-base; font-weight: 700; color: $black; margin: 0; }
   &.total { background: $yellow; } &.locked { background: #DBEAFE; } &.unlocked { background: #DCFCE7; } }
 
@@ -17,7 +17,7 @@
 .f-tab { font-size: $font-sm; font-weight: 600; color: $gray-400; padding: 6px $sp-md; border-radius: $r-pill; cursor: pointer; border: none; background: transparent; font-family: inherit; &.active { background: $yellow; color: $black; } }
 
 .screens-list { padding: $sp-md $sp-lg $sp-xl; display: flex; flex-direction: column; gap: $sp-sm; }
-.sc-card { background: $white; border-radius: $r-lg; padding: $sp-md $sp-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm; display: flex; align-items: center; gap: $sp-md; position: relative; }
+.sc-card { background: $white; border-radius: $r-lg; padding: $sp-md $sp-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm; display: flex; align-items: center; justify-content: space-between; gap: $sp-md; position: relative; }
 .tx-tag { position: absolute; top: 8px; right: 8px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: $r-pill;
   &.funded  { background: $green-light; color: $green; }
   &.expense { background: $red-light;   color: $red; } }
@@ -27,3 +27,10 @@
 .sc-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
 .sc-amount { font-size: $font-base; font-weight: 700; &.funded { color: $green; } &.expense { color: $red; } }
 .sc-btn { width: 36px; height: 36px; border-radius: 50%; background: $blue-light; border: none; @include flex-center; cursor: pointer; ion-icon { font-size: 18px; color: $blue; } }
+
+.sc-left { display: flex; align-items: flex-start; gap: $sp-sm; flex: 1; min-width: 0; }
+.sc-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+.sc-tx-date { font-size: 10px; color: $gray-400; }
+.tx-tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: $r-pill; display: inline-block; margin-bottom: 4px;
+  &.funded  { background: $green-light; color: $green; }
+  &.expense { background: $red-light;   color: $red; } }

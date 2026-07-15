@@ -18,3 +18,6 @@
   .validity-tag { background: $yellow; color: $black; font-size: $font-xs; font-weight: 700; padding: 3px 10px; border-radius: $r-pill; } }
 
 .s-ott-info { font-size: $font-xs; color: $blue; font-weight: 600; margin: 2px 0 0; }
+.status-txt { font-size: $font-xs; color: $gray-600; &.online-txt { color: $green; font-weight: 600; } }
+.batches-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.batch-pill { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: $r-pill; background: $yellow-light; color: $black; border: 1px solid $yellow; }

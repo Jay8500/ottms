@@ -33,8 +33,10 @@
         </div>
         <div class="online-row">
           <span class="dot" [class.online]="s.isOnline"></span>
-          <span>{{ s.isOnline ? 'Online' : 'Offline' }}</span>
-          <span class="batch" *ngFor="let b of s.batches">{{ b }}</span>
+          <span class="status-txt" [class.online-txt]="s.isOnline">{{ s.isOnline ? 'Online' : 'Offline' }}</span>
+        </div>
+        <div class="batches-row" *ngIf="s.batches.length > 0">
+          <span class="batch-pill" *ngFor="let b of s.batches">{{ b }}</span>
         </div>
         <!-- OTT + Validity info -->
         <p class="s-ott-info">{{ ottName }} • {{ selectedValidity }}</p>

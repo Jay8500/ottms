@@ -22,42 +22,5 @@
     </button>
   </div>
 
-  <!-- Create Group Form (visible only for sellers, after Share) -->
-  <div class="create-group-section" *ngIf="isSeller">
-    <div class="cg-divider"><span>Seller — Create New Group</span></div>
-    <div class="cg-form">
-      <label class="form-lbl">Date From</label>
-      <input type="date" class="form-input" [(ngModel)]="groupForm.dateFrom" />
-
-      <label class="form-lbl">Date To</label>
-      <input type="date" class="form-input" [(ngModel)]="groupForm.dateTo" />
-
-      <label class="form-lbl">Select Plan</label>
-      <div class="sel-wrap">
-        <select class="form-sel" [(ngModel)]="groupForm.plan">
-          <option value="" disabled>Select Plan</option>
-          <option value="mobile">Mobile</option>
-          <option value="standard">Standard</option>
-          <option value="premium">Premium</option>
-        </select>
-      </div>
-
-      <label class="form-lbl">Upload Subscription Screenshot</label>
-      <div class="upload-box" (click)="uploadProof()">
-        <ion-icon name="cloud-upload-outline"></ion-icon>
-        <p class="up-text">{{ groupForm.proofFile ? groupForm.proofFile : 'Tap to Upload Screenshot' }}</p>
-        <button class="up-btn" type="button">⬆ Upload</button>
-      </div>
-
-      <label class="form-lbl">Comments</label>
-      <textarea class="comment-ta" [(ngModel)]="groupForm.comment" placeholder="Enter any comments here..."></textarea>
-
-      <button class="create-btn" (click)="submitGroup()">
-        <ion-icon name="add-circle-outline"></ion-icon>
-        Create Group
-      </button>
-    </div>
-  </div>
-
   <div style="height:80px"></div>
 </ion-content>

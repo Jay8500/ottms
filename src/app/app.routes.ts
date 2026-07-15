@@ -1,10 +1,9 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './auth-guard';
+import { RoleGuard } from './role-guard';
+
 export const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full',
-  },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
     path: 'login',
     loadComponent: () => import('./login/login.page').then((m) => m.LoginPage),
@@ -16,9 +15,12 @@ export const routes: Routes = [
   {
     path: 'admin',
     loadChildren: () => import('./admin/admintab/admintab.routes').then((m) => m.routes),
+    canActivate: [AuthGuard, RoleGuard],
+    data: { role: 'admin' }
   },
   {
     path: 'user',
-    loadChildren: () => import('./user/usertab/usertab.routes').then(m => m.routes)
+    loadChildren: () => import('./user/usertab/usertab.routes').then(m => m.routes),
+    canActivate: [AuthGuard],
   }
 ];

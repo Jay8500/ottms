@@ -59,7 +59,13 @@ export class AccnttypePage implements OnInit {
   }
 
   navigate(action: 'purchase' | 'share') {
-    this.router.navigate(['/user/validity'], { queryParams: { id: this.ottId, action } });
+    if (action === 'share' && this.isSeller) {
+      // Seller → go to Create Group directly
+      this.router.navigate(['/user/creategroup'], { queryParams: { id: this.ottId } });
+    } else {
+      // Buyer → go to Validity/Sellers flow
+      this.router.navigate(['/user/validity'], { queryParams: { id: this.ottId, action } });
+    }
   }
 
   uploadProof() {

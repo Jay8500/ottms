@@ -108,13 +108,8 @@ export class HomePage implements OnInit {
     this.router.navigate(['/user/creategroup']);
   }
 
-  openNotifications() {
-    this.router.navigate(['/user/wallet']);
-    // points to wallet for now — TODO: real notifications
-  }
-
   goFilter() {
-    // TODO: open filter/sort options sheet
+    // TODO: Phase 2 - filter/sort options
   }
 
   toggleSeller(event: any) {
