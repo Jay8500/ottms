@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
- 
+import { Preferences } from '@capacitor/preferences';
+
 export interface UserProfile {
   id: string;
   name: string;
@@ -15,57 +16,54 @@ export interface UserProfile {
   unlockedAmount: number;
   avatarUrl?: string;
 }
- 
-@Injectable({
-  providedIn: 'root',
-})
+
+const STORAGE_KEY = 'ms_user';
+
+@Injectable({ providedIn: 'root' })
 export class Auth {
- private _user = new BehaviorSubject<UserProfile | null>(null);
+  private _user = new BehaviorSubject<UserProfile | null>(null);
   user$ = this._user.asObservable();
- 
-  get currentUser(): UserProfile | null {
-    return this._user.getValue();
-  }
- 
-  get isLoggedIn(): boolean {
-    return !!this._user.getValue();
-  }
- 
-  get role(): 'user' | 'admin' | null {
-    return this._user.getValue()?.role ?? null;
-  }
- 
-  get isSeller(): boolean {
-    return this._user.getValue()?.isSeller ?? false;
-  }
- 
-  // Call this after your HTTP login API responds
+
+  get currentUser(): UserProfile | null { return this._user.getValue(); }
+  get isLoggedIn(): boolean { return !!this._user.getValue(); }
+  get role(): 'user' | 'admin' | null { return this._user.getValue()?.role ?? null; }
+  get isSeller(): boolean { return this._user.getValue()?.isSeller ?? false; }
+
   setUser(profile: UserProfile): void {
     this._user.next(profile);
-    localStorage.setItem('ms_user', JSON.stringify(profile));
+    // Save to both Capacitor Preferences (mobile) and localStorage (web)
+    Preferences.set({ key: STORAGE_KEY, value: JSON.stringify(profile) });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
   }
- 
-  loadFromStorage(): void {
-    const stored = localStorage.getItem('ms_user');
-    if (stored) {
-      try {
-        this._user.next(JSON.parse(stored));
-      } catch {
-        localStorage.removeItem('ms_user');
+
+  async loadFromStorage(): Promise<void> {
+    try {
+      // Try Capacitor Preferences first (mobile)
+      const { value } = await Preferences.get({ key: STORAGE_KEY });
+      if (value) {
+        this._user.next(JSON.parse(value));
+        return;
       }
+    } catch {}
+    // Fallback to localStorage (web browser)
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) this._user.next(JSON.parse(stored));
+    } catch {
+      localStorage.removeItem(STORAGE_KEY);
     }
   }
- 
+
   toggleSellerMode(isSeller: boolean): void {
     const user = this.currentUser;
     if (!user) return;
     const updated = { ...user, isSeller };
-    this._user.next(updated);
-    localStorage.setItem('ms_user', JSON.stringify(updated));
+    this.setUser(updated);
   }
- 
-  logout(): void {
+
+  async logout(): Promise<void> {
     this._user.next(null);
-    localStorage.removeItem('ms_user');
-  } 
+    await Preferences.remove({ key: STORAGE_KEY });
+    localStorage.removeItem(STORAGE_KEY);
+  }
 }

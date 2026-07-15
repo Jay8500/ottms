@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { Auth } from './auth';
@@ -8,12 +8,13 @@ import { Auth } from './auth';
   templateUrl: 'app.component.html',
   imports: [IonApp, IonRouterOutlet],
 })
-export class AppComponent {
-  constructor(private auth: Auth, private router: Router) {
-    this.auth.loadFromStorage();
+export class AppComponent implements OnInit {
+  constructor(private auth: Auth, private router: Router) {}
+
+  async ngOnInit() {
+    await this.auth.loadFromStorage();
     if (this.auth.isLoggedIn) {
-      const role = this.auth.role;
-      this.router.navigate([`/${role}`], { replaceUrl: true });
+      this.router.navigate([`/${this.auth.role}`], { replaceUrl: true });
     }
   }
 }
