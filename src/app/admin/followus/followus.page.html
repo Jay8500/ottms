@@ -1,0 +1,63 @@
+<ion-content class="fu-content" [scrollY]="true">
+  <app-admin-header title="Follow Us" trailing="options"></app-admin-header>
+
+  <p class="fu-note">
+    These appear on the user's Support screen. Tap a link to test where it goes.
+  </p>
+
+  <div class="fu-list">
+    <div class="fu-row" *ngFor="let s of items" [class.off]="!s.active">
+      <div class="fu-ico" [style.background]="s.color">
+        <ion-icon [name]="s.icon"></ion-icon>
+      </div>
+
+      <div class="fu-mid">
+        <p class="fu-title">
+          {{ s.title }}
+          <ion-icon name="eye-off-outline" class="hid" *ngIf="!s.active"></ion-icon>
+        </p>
+        <p class="fu-url">{{ s.url }}</p>
+      </div>
+
+      <button class="fu-open" (click)="open(s)" aria-label="Open link">
+        <ion-icon name="open-outline"></ion-icon>
+      </button>
+      <button class="fu-edit" (click)="edit(s)" aria-label="Edit">
+        <ion-icon name="create-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <p class="empty" *ngIf="!loading && !items.length">
+    No links yet. Tap Add New to add your first one.
+  </p>
+
+  <div style="height:120px"></div>
+</ion-content>
+
+<ion-footer class="cta-footer">
+  <button class="cta-btn" (click)="create()">
+    <ion-icon name="add-circle-outline"></ion-icon> Add New
+  </button>
+</ion-footer>
+
+<app-entity-editor
+  [open]="editorOpen"
+  [heading]="isNew ? 'Add Link' : 'Edit Link'"
+  [model]="editing"
+  [icons]="icons"
+  [showSubName]="false"
+  [showImage]="false"
+  [showDelete]="!isNew"
+  (save)="onSave($event)"
+  (remove)="onRemove($event)"
+  (close)="editorOpen = false">
+
+  <ng-container *ngIf="editing">
+    <label class="ee-lbl">Link address</label>
+    <input class="ee-input" [(ngModel)]="editing.url"
+           placeholder="https://instagram.com/yourpage"
+           inputmode="url" autocapitalize="off" />
+    <p class="hint">Must start with http:// or https://</p>
+  </ng-container>
+</app-entity-editor>

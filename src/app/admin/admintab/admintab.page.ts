@@ -5,10 +5,7 @@ import {
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
-import {
-  homeOutline, peopleOutline, shieldCheckmarkOutline,
-  cardOutline, walletOutline
-} from 'ionicons/icons';
+import { homeOutline, chatbubblesOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-admintab',
@@ -19,7 +16,7 @@ import {
 })
 export class AdmintabPage implements OnInit {
   constructor() {
-    addIcons({ homeOutline, peopleOutline, shieldCheckmarkOutline, cardOutline, walletOutline });
+    addIcons({ homeOutline, chatbubblesOutline });
   }
   ngOnInit() {}
 }

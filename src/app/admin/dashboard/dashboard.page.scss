@@ -1,0 +1,76 @@
+@import '../../../global.scss';
+
+.dash-content { --background: #{$gray-50}; }
+
+.dash-search { display: flex; gap: $sp-sm; padding: 0 $sp-lg $sp-md; }
+
+.ds-input {
+  flex: 1; display: flex; align-items: center; gap: $sp-sm;
+  height: 48px; padding: 0 $sp-lg; background: $white;
+  border: 1.5px solid $gray-200; border-radius: $r-pill; box-shadow: $shadow-sm;
+  ion-icon { font-size: 20px; color: $gray-400; flex-shrink: 0; }
+  input {
+    flex: 1; min-width: 0; border: none; outline: none; background: transparent;
+    font-family: inherit; font-size: $font-base; color: $black;
+    &::placeholder { color: $gray-400; }
+  }
+}
+
+.ds-go {
+  @include yellow-btn; height: 48px; padding: 0 $sp-lg; flex-shrink: 0;
+  ion-icon { font-size: 18px; }
+}
+
+.feat-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: $sp-md; padding: $sp-xs $sp-lg $sp-lg;
+}
+
+.feat {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  gap: $sp-sm; padding: $sp-md 6px $sp-md;
+  min-height: 124px; background: $white; border: 1px solid $gray-200;
+  border-radius: $r-lg; box-shadow: $shadow-sm; cursor: pointer;
+  font-family: inherit; overflow: hidden;
+  &:active { transform: scale(0.97); }
+}
+
+.feat-ico {
+  @include flex-center; width: 46px; height: 46px; flex-shrink: 0;
+  ion-icon { font-size: 40px; }
+}
+
+.feat-lbl {
+  flex: 1; font-size: $font-sm; font-weight: 700; color: $black;
+  text-align: center; line-height: 1.25;
+}
+
+.feat-rule {
+  width: 26px; height: 4px; border-radius: 2px; flex-shrink: 0;
+}
+
+.feat-badge {
+  position: absolute; top: 6px; right: 6px; min-width: 20px; height: 20px;
+  padding: 0 5px; border-radius: $r-pill; background: #DC2626; color: $white;
+  font-size: 11px; font-weight: 800; @include flex-center;
+}
+
+.no-hits {
+  text-align: center; color: $gray-600; font-size: $font-base;
+  padding: $sp-xl $sp-lg;
+}
+
+.dash-cta {
+  position: fixed; left: 0; right: 0; z-index: 20;
+  bottom: calc(64px + var(--ion-safe-area-bottom, 0px));
+  padding: $sp-sm $sp-lg $sp-md;
+  background: linear-gradient(to top, $gray-50 62%, rgba(250, 250, 250, 0));
+  pointer-events: none;
+}
+
+.add-new {
+  @include yellow-btn; width: 100%; height: 52px; font-size: $font-lg;
+  box-shadow: $shadow-md; pointer-events: all;
+  ion-icon { font-size: 24px; }
+}

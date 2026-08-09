@@ -14,6 +14,7 @@ export const routes: Routes = [
       { path: 'validity',     loadComponent: () => import('../validity/validity.page').then(m => m.ValidityPage) },
       { path: 'sellerslist',  loadComponent: () => import('../sellerslist/sellerslist.page').then(m => m.SellerslistPage) },
       { path: 'payment',      loadComponent: () => import('../payment/payment.page').then(m => m.PaymentPage) },
+      { path: 'chats',        loadComponent: () => import('../chats/chats.page').then(m => m.UserChatsPage) },
       { path: 'chat',         loadComponent: () => import('../chat/chat.page').then(m => m.ChatPage) },
       { path: 'wallet',       loadComponent: () => import('../wallet/wallet.page').then(m => m.WalletPage) },
       { path: 'rating',       loadComponent: () => import('../rating/rating.page').then(m => m.RatingPage) },

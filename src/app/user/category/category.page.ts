@@ -1,45 +1,59 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonSearchbar } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
+import { IonContent, IonIcon, ToastController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { chevronForwardOutline, settingsOutline, optionsOutline } from 'ionicons/icons';
+import { chevronForwardOutline, arrowBackOutline, optionsOutline, lockClosedOutline } from 'ionicons/icons';
+import { DataService } from '../../shared/data.service';
+import { Category } from '../../shared/models';
 
 @Component({
   selector: 'app-category',
   templateUrl: './category.page.html',
   styleUrls: ['./category.page.scss'],
   standalone: true,
-  imports: [IonContent,  CommonModule, FormsModule, IonIcon]
+  imports: [IonContent, CommonModule, FormsModule, IonIcon],
 })
 export class CategoryPage implements OnInit {
-  searchTerm = '';
+  categories: Category[] = [];
+  loading = true;
+  error = '';
 
-  categories = [
-    { id: 'entertainment', name: 'Entertainment', emoji: '🎬', bgColor: '#fff8e1', appCount: 6 },
-    { id: 'music',         name: 'Music',         emoji: '🎵', bgColor: '#e8f5e9', appCount: 4 },
-    { id: 'gaming',        name: 'Gaming',        emoji: '🎮', bgColor: '#e3f2fd', appCount: 3 },
-    { id: 'education',     name: 'Education',     emoji: '📚', bgColor: '#fce4ec', appCount: 5 },
-    { id: 'news',          name: 'News',          emoji: '📰', bgColor: '#f3e5f5', appCount: 2 },
-    { id: 'fitness',       name: 'Fitness',       emoji: '💪', bgColor: '#e0f7fa', appCount: 3 },
-  ];
-
-  filteredCategories = [...this.categories];
-
-  constructor(private router: Router) {
-    addIcons({ chevronForwardOutline, settingsOutline, optionsOutline });
+  constructor(
+    private router: Router,
+    private data: DataService,
+    private toastCtrl: ToastController,
+  ) {
+    addIcons({ chevronForwardOutline, arrowBackOutline, optionsOutline, lockClosedOutline });
   }
 
-  ngOnInit() {}
+  async ngOnInit() { await this.load(); }
 
-  filterCategories() {
-    const t = this.searchTerm.toLowerCase();
-    this.filteredCategories = this.categories.filter(c => c.name.toLowerCase().includes(t));
+  async load() {
+    this.loading = true;
+    this.error = '';
+    try {
+      this.categories = await this.data.getCategories();
+    } catch (e) {
+      this.error = 'Could not load categories.';
+      console.error(e);
+    } finally {
+      this.loading = false;
+    }
   }
 
-  openCategory(cat: any) {
-    // Fixed: navigate to /user/ottplatforms with queryParam instead of /user/ott-list/:id
+  back() { this.router.navigate(['/user/home']); }
+
+  async openCategory(cat: Category) {
+    if (!cat.active) {
+      const t = await this.toastCtrl.create({
+        message: `${cat.title} is coming soon`,
+        duration: 1800, position: 'bottom',
+      });
+      t.present();
+      return;
+    }
     this.router.navigate(['/user/ottplatforms'], { queryParams: { cat: cat.id } });
   }
 }

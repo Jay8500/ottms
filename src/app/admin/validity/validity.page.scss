@@ -1,0 +1,78 @@
+@import '../../../global.scss';
+
+.vp-content { --background: #{$gray-50}; }
+
+.vp-list { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-md; }
+
+.vp-row {
+  display: flex; align-items: center; gap: $sp-sm;
+  background: $white; border: 1px solid $gray-200; border-radius: $r-lg;
+  padding: $sp-md; box-shadow: $shadow-sm;
+  &.off { opacity: 0.55; }
+}
+
+.vp-ico {
+  width: 46px; height: 46px; border-radius: $r-sm; flex-shrink: 0;
+  @include flex-center;
+  ion-icon { font-size: 24px; color: $black; }
+}
+
+.vp-mid {
+  flex: 1; min-width: 0;
+  .vp-title {
+    display: flex; align-items: center; gap: 5px;
+    font-size: $font-xl; font-weight: 800; color: $black; margin: 0;
+    .hidden-i { font-size: 15px; color: $gray-600; }
+  }
+  .vp-sub { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; }
+}
+
+.vp-save {
+  flex-shrink: 0; background: #15803D; color: $white;
+  font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: $r-sm;
+  white-space: nowrap;
+}
+
+.vp-price {
+  flex-shrink: 0; background: $yellow; color: $black;
+  font-size: $font-lg; font-weight: 800; padding: 6px 12px;
+  border-radius: $r-pill; white-space: nowrap;
+}
+
+.vp-edit {
+  flex-shrink: 0; width: 38px; height: 38px; border-radius: $r-sm;
+  border: 1.5px solid $gray-300; background: $white;
+  @include flex-center; cursor: pointer;
+  ion-icon { font-size: 18px; color: $black; }
+}
+
+.empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }
+
+// ── Editor extras ──────────────────────────────────────────────────────────
+.ee-lbl {
+  display: block; font-size: $font-base; font-weight: 700;
+  color: $black; margin: $sp-md 0 6px;
+}
+
+.ee-input {
+  width: 100%; height: 48px; padding: 0 $sp-md; background: $white;
+  border: 1.5px solid $gray-300; border-radius: $r-md;
+  font-family: inherit; font-size: $font-base; color: $black; outline: none;
+  &:focus { border-color: $yellow; }
+}
+
+.hint { font-size: $font-xs; color: $gray-600; margin: 5px 0 0; }
+
+.vp-cta {
+  position: fixed; left: 0; right: 0; z-index: 20;
+  bottom: calc(64px + var(--ion-safe-area-bottom, 0px));
+  padding: $sp-sm $sp-lg $sp-md;
+  background: linear-gradient(to top, $gray-50 62%, rgba(250, 250, 250, 0));
+  pointer-events: none;
+}
+
+.add-new {
+  @include yellow-btn; width: 100%; height: 52px; font-size: $font-lg;
+  box-shadow: $shadow-md; pointer-events: all;
+  ion-icon { font-size: 24px; }
+}

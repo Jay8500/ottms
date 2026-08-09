@@ -1,23 +1,148 @@
 @import '../../../global.scss';
-.sellers-content { --background: #{$white}; }
+
+.sl-content { --background: #{$white}; }
+
 .top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
-.icon-btn { @include icon-btn; } .logo-badge { @include logo-badge; }
-.filter-row { display: flex; gap: $sp-sm; padding: $sp-sm $sp-lg $sp-md; overflow-x: auto; scrollbar-width: none; &::-webkit-scrollbar { display: none; } }
-.f-chip { padding: 8px $sp-lg; border-radius: $r-pill; background: $white; border: 1.5px solid $gray-200; font-size: $font-sm; font-weight: 600; color: $gray-600; cursor: pointer; display: flex; align-items: center; gap: $sp-xs; flex-shrink: 0; font-family: inherit; ion-icon { font-size: 18px; } &.active { background: $yellow; border-color: $yellow; color: $black; } }
-.sellers-list { padding: 0 $sp-lg $sp-xl; display: flex; flex-direction: column; gap: $sp-sm; }
-.seller-card { background: $white; border-radius: $r-lg; padding: $sp-md $sp-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm; display: flex; align-items: center; gap: $sp-md; }
-.s-av { width: 56px; height: 56px; border-radius: 50%; background: $yellow; @include flex-center; font-size: $font-xl; font-weight: 700; color: $black; flex-shrink: 0; border: 2px solid $yellow-dark; }
-.s-info { flex: 1; min-width: 0;
-  .s-name { font-size: $font-base; font-weight: 700; color: $black; margin: 0; .uid { color: $gray-600; font-weight: 400; margin-left: 4px; } .verified { color: $blue; font-size: 14px; } }
-  .stars { display: flex; align-items: center; gap: 2px; .star { color: $yellow-dark; font-size: 14px; } .star.empty { color: $gray-300; } .rc { font-size: $font-xs; color: $gray-600; margin-left: 4px; } }
-  .online-row { display: flex; align-items: center; gap: 4px; font-size: $font-xs; color: $gray-600; .dot { width: 8px; height: 8px; border-radius: 50%; background: $gray-400; &.online { background: $green; } } .batch { background: $yellow-light; color: $black; padding: 1px 6px; border-radius: $r-pill; font-size: 10px; } } }
-.price-btn { background: $yellow; color: $black; border: none; border-radius: $r-pill; padding: 8px $sp-md; font-size: $font-base; font-weight: 700; cursor: pointer; flex-shrink: 0; font-family: inherit; }
+.icon-btn { @include icon-btn; }
+.logo-badge { @include logo-badge; }
 
-.app-banner { margin: 0 $sp-lg $sp-sm; border-radius: $r-lg; height: 52px; display: flex; align-items: center; justify-content: center; gap: $sp-md; font-size: $font-lg; font-weight: 700; color: $white;
-  .banner-name { font-size: $font-lg; font-weight: 700; }
-  .validity-tag { background: $yellow; color: $black; font-size: $font-xs; font-weight: 700; padding: 3px 10px; border-radius: $r-pill; } }
+// ── Sort ───────────────────────────────────────────────────────────────────
+.sort-row {
+  display: flex; gap: $sp-sm; padding: 0 $sp-lg $sp-md;
+  overflow-x: auto; &::-webkit-scrollbar { display: none; }
+}
 
-.s-ott-info { font-size: $font-xs; color: $blue; font-weight: 600; margin: 2px 0 0; }
-.status-txt { font-size: $font-xs; color: $gray-600; &.online-txt { color: $green; font-weight: 600; } }
-.batches-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
-.batch-pill { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: $r-pill; background: $yellow-light; color: $black; border: 1px solid $yellow; }
+.sort {
+  flex-shrink: 0; display: flex; align-items: center; gap: 5px;
+  height: 40px; padding: 0 $sp-md; border-radius: $r-md;
+  border: 1.5px solid $gray-300; background: $white;
+  font-family: inherit; font-size: $font-sm; font-weight: 700; color: $gray-700;
+  cursor: pointer;
+  ion-icon { font-size: 16px; }
+  &.on { background: $yellow; border-color: $yellow; color: $black; }
+}
+
+// ── Banner ─────────────────────────────────────────────────────────────────
+.app-banner {
+  display: flex; align-items: center; gap: $sp-md;
+  margin: 0 $sp-lg $sp-lg; padding: $sp-md $sp-lg;
+  border-radius: $r-lg; box-shadow: $shadow-sm;
+  .banner-name {
+    flex: 1; font-size: $font-xl; font-weight: 800; color: $white;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.35);
+  }
+  .validity-tag {
+    flex-shrink: 0; background: $yellow; color: $black;
+    font-size: $font-sm; font-weight: 800;
+    padding: 5px 12px; border-radius: $r-sm;
+  }
+}
+
+// ── Sellers ────────────────────────────────────────────────────────────────
+.seller-list { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-md; }
+
+.seller {
+  display: flex; align-items: center; gap: $sp-md; width: 100%;
+  padding: $sp-md; background: $white;
+  border: 1.5px solid $gray-200; border-radius: $r-lg;
+  cursor: pointer; font-family: inherit; box-shadow: $shadow-sm;
+  &:active { transform: scale(0.99); }
+
+  .s-av {
+    width: 50px; height: 50px; border-radius: 50%; flex-shrink: 0;
+    @include flex-center; background: $yellow-light; color: $black;
+    font-size: $font-xl; font-weight: 800; border: 2px solid $yellow;
+  }
+
+  .s-info {
+    flex: 1; min-width: 0; text-align: left;
+    .s-name {
+      font-size: $font-lg; font-weight: 800; color: $black; margin: 0;
+      .uid {
+        font-size: $font-xs; color: $gray-600; background: $gray-100;
+        padding: 1px 7px; border-radius: $r-pill; margin-left: 4px;
+      }
+    }
+    .s-plan { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; }
+    .s-seats {
+      display: flex; align-items: center; gap: 5px; margin-top: 4px;
+      font-size: $font-xs; font-weight: 600; color: $green;
+      .dot { width: 7px; height: 7px; border-radius: 50%; background: $green; }
+    }
+  }
+
+  .s-price {
+    flex-shrink: 0; background: $yellow; color: $black;
+    font-size: $font-lg; font-weight: 800;
+    padding: 8px 14px; border-radius: $r-pill; white-space: nowrap;
+  }
+}
+
+.skeleton { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-md; }
+.sk {
+  height: 82px; border-radius: $r-lg; background: $gray-100;
+  animation: sk-pulse 1.3s ease-in-out infinite;
+}
+@keyframes sk-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
+@media (prefers-reduced-motion: reduce) { .sk { animation: none; } }
+
+.state {
+  text-align: center; padding: $sp-xl $sp-lg;
+  p { font-size: $font-base; color: $gray-600; margin: 0 0 $sp-sm; }
+  .sub { font-size: $font-sm; color: $gray-400; }
+}
+.retry { @include yellow-btn; height: 42px; padding: 0 $sp-xl; margin: $sp-sm auto 0; }
+
+// ── Payments sheet ─────────────────────────────────────────────────────────
+.pay-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 900; }
+
+.pay-sheet {
+  position: fixed; left: $sp-lg; right: $sp-lg; z-index: 901;
+  top: 50%; transform: translateY(-50%);
+  background: $white; border-radius: $r-xl;
+  padding: $sp-lg; box-shadow: 0 8px 34px rgba(0,0,0,0.28);
+}
+
+.pay-head {
+  @include flex-between; margin-bottom: $sp-md;
+  h2 { flex: 1; text-align: center; font-size: $font-2xl; font-weight: 800; color: $black; margin: 0; }
+}
+
+.pay-x {
+  width: 34px; height: 34px; border: none; background: transparent;
+  @include flex-center; cursor: pointer; flex-shrink: 0;
+  ion-icon { font-size: 24px; color: $black; }
+}
+
+.pay-rows { border: 1.5px solid $gray-200; border-radius: $r-md; overflow: hidden; }
+
+.pr {
+  @include flex-between; padding: $sp-md $sp-lg;
+  & + .pr { border-top: 1.5px solid $gray-200; }
+  .k { font-size: $font-lg; font-weight: 700; color: $black; }
+  .v {
+    display: flex; align-items: center; gap: 8px;
+    font-size: $font-xl; font-weight: 800; color: $black;
+    background: $yellow-light; border: 1.5px solid $yellow;
+    border-radius: $r-sm; padding: 6px 14px;
+    b { font-weight: 700; color: $gray-700; }
+    &.pay { background: #FFF4D6; }
+  }
+}
+
+.pay-short {
+  font-size: $font-sm; font-weight: 600; color: $red;
+  background: $red-light; border-radius: $r-sm;
+  padding: 10px $sp-md; margin: $sp-md 0 0; text-align: center;
+}
+
+.pay-actions { display: flex; gap: $sp-md; margin-top: $sp-lg; }
+
+.pa {
+  flex: 1; height: 50px; border: none; border-radius: $r-md;
+  font-family: inherit; font-size: $font-lg; font-weight: 800;
+  cursor: pointer;
+  &:disabled { opacity: 0.45; }
+  &.buy    { background: $yellow; color: $black; }
+  &.wallet { background: #1D4ED8; color: $white; }
+}

@@ -1,14 +1,46 @@
 <ion-content class="ott-content" [scrollY]="true">
   <div class="top-bar">
-    <button class="icon-btn" onclick="history.back()"><ion-icon name="settings-outline"></ion-icon></button>
-    <span class="page-name">{{ categoryName }}</span>
-    <button class="icon-btn dark"><ion-icon name="options-outline"></ion-icon></button>
-  </div>
-  <div class="banner-bar"><span class="banner-emoji">🎬</span><span class="banner-title">{{ categoryName }}</span></div>
-  <div class="ott-grid">
-    <button class="ott-item" *ngFor="let app of filtered" (click)="selectApp(app)">
-      <div class="ott-logo" [style.background]="app.color"><span>{{ app.initial }}</span></div>
+    <button class="icon-btn" (click)="back()" aria-label="Back">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
+    <button class="icon-btn dark" aria-label="Options">
+      <ion-icon name="options-outline"></ion-icon>
     </button>
   </div>
+
+  <!-- Category heading, fixed rather than a tappable banner -->
+  <div class="banner-bar" [style.background]="categoryColor">
+    <ion-icon [name]="categoryIcon"></ion-icon>
+    <span class="banner-title">{{ categoryName }}</span>
+  </div>
+
+  <div class="search-row" *ngIf="all.length > 6">
+    <ion-icon name="search-outline"></ion-icon>
+    <input [(ngModel)]="searchTerm" (ngModelChange)="filter()" placeholder="Search platforms" />
+  </div>
+
+  <div class="ott-grid">
+    <button class="ott-item" *ngFor="let app of filtered" (click)="selectApp(app)">
+      <app-ott-logo [brand]="app.brand" [imageUrl]="app.imageUrl" [size]="76" [radius]="14"></app-ott-logo>
+      <span class="ott-name">{{ app.title }}</span>
+      <span class="ott-from" *ngIf="app.startingPrice">from ₹{{ app.startingPrice }}</span>
+    </button>
+  </div>
+
+  <div class="skeleton-grid" *ngIf="loading">
+    <div class="sk" *ngFor="let i of [1,2,3,4,5,6]"></div>
+  </div>
+
+  <div class="state" *ngIf="error">
+    <p>{{ error }}</p>
+    <button class="retry" (click)="load()">Try again</button>
+  </div>
+
+  <div class="state" *ngIf="!loading && !error && !filtered.length">
+    <p *ngIf="searchTerm">No platform matches “{{ searchTerm }}”.</p>
+    <p *ngIf="!searchTerm">No platforms in {{ categoryName }} yet.</p>
+  </div>
+
   <div style="height:80px"></div>
 </ion-content>

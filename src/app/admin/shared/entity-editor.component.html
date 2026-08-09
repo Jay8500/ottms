@@ -1,0 +1,77 @@
+<div class="ee-backdrop" *ngIf="open && model" (click)="close.emit()"></div>
+
+<div class="ee-sheet" *ngIf="open && model" role="dialog" aria-modal="true">
+  <div class="ee-head">
+    <h2>{{ heading }}</h2>
+    <button class="ee-x" (click)="close.emit()" aria-label="Close">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+  </div>
+
+  <div class="ee-body">
+    <label class="ee-lbl">Title</label>
+    <input class="ee-input" [(ngModel)]="model.title" placeholder="Enter title" />
+
+    <ng-container *ngIf="showSubName">
+      <label class="ee-lbl">Sub Name</label>
+      <input class="ee-input" [(ngModel)]="model.subName" placeholder="Enter sub name" />
+    </ng-container>
+
+    <!-- page-specific fields -->
+    <ng-content></ng-content>
+
+    <ng-container *ngIf="showColor">
+      <label class="ee-lbl">Color</label>
+      <div class="ee-swatches">
+        <button class="sw" *ngFor="let c of colors" [style.background]="c"
+                [class.on]="model.color === c" (click)="model.color = c"
+                [attr.aria-label]="'Colour ' + c">
+          <ion-icon name="checkmark-outline" *ngIf="model.color === c"></ion-icon>
+        </button>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="showIcon">
+      <label class="ee-lbl">Select Icon</label>
+      <div class="ee-icons">
+        <button class="ic" *ngFor="let i of icons" [class.on]="model.icon === i"
+                (click)="model.icon = i" [attr.aria-label]="i">
+          <ion-icon [name]="i"></ion-icon>
+        </button>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="showImage">
+      <label class="ee-lbl">Upload Image</label>
+      <label class="ee-upload">
+        <ion-icon name="cloud-upload-outline"></ion-icon>
+        <span *ngIf="!model.imageUrl">Click to upload image<br /><small>PNG, JPG up to 5MB</small></span>
+        <img *ngIf="model.imageUrl" [src]="model.imageUrl" alt="Preview" />
+        <input type="file" accept="image/*" hidden (change)="onImage($event)" />
+      </label>
+    </ng-container>
+
+    <ng-container *ngIf="showPosition">
+      <label class="ee-lbl">Position</label>
+      <select class="ee-input" [(ngModel)]="model.position">
+        <option *ngFor="let p of positionOptions" [ngValue]="p">{{ p }}</option>
+      </select>
+    </ng-container>
+
+    <div class="ee-toggle-row">
+      <span>Active</span>
+      <button class="ee-switch" [class.on]="model.active"
+              (click)="model.active = !model.active"
+              [attr.aria-pressed]="model.active"><i></i></button>
+    </div>
+  </div>
+
+  <div class="ee-actions">
+    <button class="ee-save" (click)="onSave()">
+      <ion-icon name="save-outline"></ion-icon> Save Changes
+    </button>
+    <button class="ee-del" *ngIf="showDelete" (click)="remove.emit(model.id)">
+      <ion-icon name="trash-outline"></ion-icon> Delete
+    </button>
+  </div>
+</div>

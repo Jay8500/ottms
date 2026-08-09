@@ -1,9 +1,63 @@
 @import '../../../global.scss';
+
 .ott-content { --background: #{$white}; }
+
 .top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
 .icon-btn { @include icon-btn; }
-.page-name { font-size: $font-base; font-weight: 700; color: $black; }
-.banner-bar { background: $yellow; border-radius: $r-lg; margin: $sp-sm $sp-lg $sp-lg; padding: $sp-md $sp-lg; display: flex; align-items: center; gap: $sp-md; box-shadow: $shadow-md; .banner-emoji { font-size: 36px; } .banner-title { font-size: $font-xl; font-weight: 700; color: $black; } }
-.ott-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: $sp-md; padding: 0 $sp-lg $sp-xl; }
-.ott-item { background: transparent; border: none; padding: 0; cursor: pointer; border-radius: $r-lg; overflow: hidden; aspect-ratio: 1; &:active { opacity: 0.85; transform: scale(0.96); }
-  .ott-logo { width: 100%; height: 100%; border-radius: $r-lg; @include flex-center; box-shadow: $shadow-sm; span { font-size: $font-3xl; font-weight: 900; color: $white; } } }
+.logo-badge { @include logo-badge; }
+
+// Fixed heading, not a tappable banner among others
+.banner-bar {
+  display: flex; align-items: center; gap: $sp-md;
+  margin: $sp-sm $sp-lg $sp-lg; padding: $sp-md $sp-lg;
+  border-radius: $r-lg; box-shadow: $shadow-sm;
+  ion-icon { font-size: 30px; color: $black; flex-shrink: 0; }
+  .banner-title { font-size: $font-2xl; font-weight: 800; color: $black; }
+}
+
+.search-row {
+  display: flex; align-items: center; gap: $sp-sm;
+  margin: 0 $sp-lg $sp-lg; padding: 0 $sp-lg; height: 46px;
+  background: $white; border: 1.5px solid $gray-200;
+  border-radius: $r-pill; box-shadow: $shadow-sm;
+  ion-icon { font-size: 20px; color: $gray-400; flex-shrink: 0; }
+  input {
+    flex: 1; min-width: 0; border: none; outline: none; background: transparent;
+    font-family: inherit; font-size: $font-base; color: $black;
+    &::placeholder { color: $gray-400; }
+  }
+}
+
+.ott-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: $sp-lg $sp-md; padding: 0 $sp-lg;
+}
+
+.ott-item {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  padding: 0; background: transparent; border: none;
+  cursor: pointer; font-family: inherit;
+  &:active { transform: scale(0.96); }
+  .ott-name {
+    font-size: $font-xs; font-weight: 700; color: $black;
+    text-align: center; line-height: 1.25;
+  }
+  .ott-from { font-size: 10px; color: $gray-600; }
+}
+
+.skeleton-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: $sp-md; padding: 0 $sp-lg;
+}
+.sk {
+  height: 100px; border-radius: $r-lg; background: $gray-100;
+  animation: sk-pulse 1.3s ease-in-out infinite;
+}
+@keyframes sk-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
+@media (prefers-reduced-motion: reduce) { .sk { animation: none; } }
+
+.state {
+  text-align: center; padding: $sp-xl $sp-lg;
+  p { font-size: $font-base; color: $gray-600; margin: 0 0 $sp-md; }
+}
+.retry { @include yellow-btn; height: 42px; padding: 0 $sp-xl; margin: 0 auto; }

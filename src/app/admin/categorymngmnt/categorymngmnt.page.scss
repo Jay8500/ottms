@@ -1,16 +1,59 @@
 @import '../../../global.scss';
-.page-content { --background: #{$white}; }
-.page-header { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
-.icon-btn { @include icon-btn; }
-.hdr-title { font-size: $font-base; font-weight: 700; color: $black; margin: 0; }
-.page-title { text-align: center; font-size: $font-xl; font-weight: 700; color: $black; padding: 0 $sp-lg $sp-xs; margin: 0; }
-.page-sub { font-size: $font-xs; color: $gray-600; padding: 0 $sp-lg $sp-md; margin: 0; text-align: center; }
-.list-area { padding: 0 $sp-lg $sp-md; display: flex; flex-direction: column; gap: $sp-sm; }
-.cat-item { display: flex; align-items: center; gap: $sp-md; background: $white; border-radius: $r-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm; overflow: hidden;
-  .cat-left { width: 80px; height: 64px; @include flex-center; flex-shrink: 0; .cat-emoji { font-size: 32px; } }
-  .cat-name { flex: 1; font-size: $font-base; font-weight: 700; }
-  .edit-btn, .del-btn { background: transparent; border: none; cursor: pointer; width: 40px; height: 40px; @include flex-center; }
-  .edit-btn ion-icon { font-size: 20px; color: $gray-400; }
-  .del-btn  ion-icon { font-size: 20px; color: $red; } }
-.add-btn { display: flex; align-items: center; justify-content: center; gap: $sp-sm; background: $yellow; color: $black; border: none; border-radius: $r-pill; height: 50px; width: calc(100% - #{$sp-lg} * 2); margin: 0 $sp-lg $sp-sm; font-size: $font-base; font-weight: 700; cursor: pointer; ion-icon { font-size: 20px; } }
-.save-btn { display: block; background: $yellow; color: $black; border: none; border-radius: $r-pill; height: 50px; width: calc(100% - #{$sp-lg} * 2); margin: 0 $sp-lg; font-size: $font-base; font-weight: 700; cursor: pointer; }
+
+.cm-content { --background: #{$gray-50}; }
+
+.cm-list { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-md; }
+
+.cm-row {
+  display: flex; align-items: center; gap: $sp-md;
+  background: $white; border: 1px solid $gray-200; border-radius: $r-lg;
+  padding: $sp-md; box-shadow: $shadow-sm;
+  &.off { opacity: 0.55; }
+}
+
+.cm-tile {
+  width: 62px; height: 62px; border-radius: $r-md; flex-shrink: 0;
+  @include flex-center;
+  ion-icon { font-size: 32px; color: $black; }
+}
+
+.cm-mid {
+  flex: 1; min-width: 0;
+  .cm-title {
+    display: flex; align-items: center; gap: 6px;
+    font-size: $font-xl; font-weight: 800; color: $black; margin: 0;
+    .hidden-i { font-size: 16px; color: $gray-600; }
+  }
+  .cm-sub { font-size: $font-sm; color: $gray-600; margin: 2px 0 0; }
+}
+
+.cm-edit {
+  flex-shrink: 0; height: 40px; padding: 0 $sp-md;
+  border: 1.5px solid $gray-300; border-radius: $r-sm; background: $white;
+  font-family: inherit; font-size: $font-sm; font-weight: 700; color: $black;
+  cursor: pointer; display: flex; flex-direction: column; align-items: center;
+  justify-content: center;
+  ion-icon { font-size: 16px; }
+}
+
+.cm-go {
+  flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
+  background: $yellow; border: none; @include flex-center; cursor: pointer;
+  ion-icon { font-size: 20px; color: $black; }
+}
+
+.empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }
+
+.cm-cta {
+  position: fixed; left: 0; right: 0; z-index: 20;
+  bottom: calc(64px + var(--ion-safe-area-bottom, 0px));
+  padding: $sp-sm $sp-lg $sp-md;
+  background: linear-gradient(to top, $gray-50 62%, rgba(250, 250, 250, 0));
+  pointer-events: none;
+}
+
+.add-new {
+  @include yellow-btn; width: 100%; height: 52px; font-size: $font-lg;
+  box-shadow: $shadow-md; pointer-events: all;
+  ion-icon { font-size: 24px; }
+}

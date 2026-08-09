@@ -1,0 +1,36 @@
+@import '../../../global.scss';
+
+.ah {
+  @include flex-between;
+  padding: calc(#{$sp-md} + var(--ion-safe-area-top, 0px)) $sp-lg $sp-sm;
+}
+
+.ah-btn {
+  width: 40px; height: 40px; border-radius: $r-sm; background: $white;
+  border: none; @include flex-center; box-shadow: $shadow-sm; cursor: pointer;
+  flex-shrink: 0; position: relative;
+  ion-icon { font-size: 22px; color: $black; }
+
+  &.plain { box-shadow: none; background: transparent; ion-icon { font-size: 26px; } }
+  &.dark  { background: $black; ion-icon { color: $white; } }
+
+  // Green spreadsheet glyph used for CSV export
+  &.excel {
+    background: #1D6F42;
+    .x { color: $white; font-weight: 900; font-size: 15px; line-height: 1; }
+    ion-icon {
+      color: $white; font-size: 13px;
+      position: absolute; right: 3px; bottom: 3px;
+    }
+  }
+}
+
+.ah-spacer { width: 40px; flex-shrink: 0; }
+
+.ah-mid { flex: 1; @include flex-center; }
+.logo-badge { @include logo-badge; }
+
+.ah-title {
+  font-size: $font-2xl; font-weight: 800; color: $black;
+  text-align: center; margin: $sp-xs 0 $sp-md;
+}

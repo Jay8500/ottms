@@ -1,0 +1,51 @@
+@import '../../../global.scss';
+
+.ac-content { --background: #{$gray-50}; }
+
+.ac-list { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-sm; }
+
+.ac-row {
+  display: flex; align-items: center; gap: $sp-md; width: 100%;
+  padding: $sp-md; background: $white; border: 1px solid $gray-200;
+  border-radius: $r-md; box-shadow: $shadow-sm;
+  font-family: inherit; text-align: left; cursor: pointer;
+  &:active { opacity: 0.9; }
+}
+
+.ac-avatar {
+  width: 50px; height: 50px; border-radius: 50%; flex-shrink: 0;
+  @include flex-center; background: $blue-light; color: $blue;
+  font-size: $font-xl; font-weight: 800;
+}
+
+.ac-mid {
+  flex: 1; min-width: 0;
+  .ac-title {
+    display: flex; align-items: center; gap: 5px;
+    font-size: $font-base; font-weight: 800; color: $black; margin: 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    .lock { font-size: 14px; color: $gray-600; flex-shrink: 0; }
+  }
+  .ac-seller { font-size: $font-xs; color: $gray-700; margin: 2px 0 0; font-weight: 600; }
+  .ac-last {
+    font-size: $font-sm; color: $gray-600; margin: 2px 0 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+}
+
+.ac-right {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 5px;
+  flex-shrink: 0;
+  .ac-time { font-size: 10px; color: $gray-400; }
+  .ac-unread {
+    min-width: 20px; height: 20px; padding: 0 5px; border-radius: $r-pill;
+    background: #DC2626; color: $white; font-size: 11px; font-weight: 800;
+    @include flex-center;
+  }
+  .ac-dot {
+    width: 10px; height: 10px; border-radius: 50%; background: $gray-400;
+    &.on { background: #16A34A; }
+  }
+}
+
+.empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }

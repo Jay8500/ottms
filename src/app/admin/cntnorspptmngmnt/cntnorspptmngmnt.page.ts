@@ -1,89 +1,149 @@
-import { Component } from '@angular/core';
-import { AlertController, ToastController } from '@ionic/angular';
- import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { IonContent, IonIcon, AlertController, ToastController, IonFooter } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { IonContent, IonHeader, IonTitle, IonToolbar,IonIcon,IonButton,IonLabel } from '@ionic/angular/standalone';
-import { closeCircleOutline, addCircleOutline, createOutline, trashOutline, chatbubblesOutline, logoWhatsapp, callOutline, settingsOutline, searchOutline } from 'ionicons/icons';
+import {
+  createOutline, trashOutline, addCircleOutline, saveOutline,
+  playCircleOutline, cloudUploadOutline, documentTextOutline, checkmarkOutline,
+} from 'ionicons/icons';
+import { AdminHeaderComponent } from '../shared/admin-header.component';
+import { DataService } from '../../shared/data.service';
+import { FaqItem, LangCode } from '../../shared/models';
+
+/** 14 — Support. FAQ questions and answers in English, Hindi and Telugu,
+ *  plus the explainer video for each language. */
 @Component({
   selector: 'app-cntnorspptmngmnt',
   templateUrl: './cntnorspptmngmnt.page.html',
   styleUrls: ['./cntnorspptmngmnt.page.scss'],
   standalone: true,
-  imports: [IonContent,  CommonModule, FormsModule,IonIcon]
+  imports: [CommonModule, FormsModule, IonContent, IonIcon, AdminHeaderComponent, IonFooter],
 })
-export class CntnorspptmngmntPage {
- 
-  contacts = { email: 'support@moneysaver.in', whatsapp: '+91 98765 00000', phone: '+91 98765 11111' };
- 
-  faqs = [
-    { id:'f1', question:'How to purchase a screen?',    answer:'Category → OTT → Validity → Seller → Pay'              },
-    { id:'f2', question:'When does wallet unlock?',     answer:'Proportionally daily over your validity period'         },
-    { id:'f3', question:'How to withdraw?',             answer:'Wallet tab → Withdraw Unlocked Amount'                  },
-    { id:'f4', question:'What if seller is offline?',   answer:'Purchase anyway; credentials shared once seller online' },
+export class CntnorspptmngmntPage implements OnInit {
+  lang: LangCode = 'en';
+  mode: 'text' | 'video' = 'text';
+  faqs: FaqItem[] = [];
+  dirty = false;
+
+  readonly langs: { code: LangCode; label: string }[] = [
+    { code: 'en', label: 'English' },
+    { code: 'hi', label: 'Hindi' },
+    { code: 'te', label: 'Telugu' },
   ];
- 
-  suggestedTexts = [
-    { id:'s1', text:'Credentials received ✅' },
-    { id:'s2', text:'Need help'              },
-    { id:'s3', text:'Thank you!'             },
-    { id:'s4', text:'Screen not working'     },
-    { id:'s5', text:'Payment done'           },
-  ];
- 
-  constructor(private alertCtrl: AlertController, private toastCtrl: ToastController) {
-    addIcons({ closeCircleOutline, addCircleOutline, createOutline, trashOutline, chatbubblesOutline, logoWhatsapp, callOutline, settingsOutline, searchOutline });
+
+  constructor(
+    private data: DataService,
+    private route: ActivatedRoute,
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController,
+  ) {
+    addIcons({
+      createOutline, trashOutline, addCircleOutline, saveOutline,
+      playCircleOutline, cloudUploadOutline, documentTextOutline, checkmarkOutline,
+    });
   }
- 
-  async saveContacts() {
-    // TODO: API call
-    const t = await this.toastCtrl.create({ message: 'Contact details saved!', duration: 2000, position: 'bottom', color: 'success' });
+
+  async ngOnInit() {
+    this.faqs = await this.data.getFaqs();
+    if (this.route.snapshot.queryParamMap.get('new')) this.add();
+  }
+
+  get langLabel() {
+    return this.langs.find(l => l.code === this.lang)?.label ?? 'English';
+  }
+
+  /** How many of this FAQ's three translations are filled in. */
+  filledCount(f: FaqItem) {
+    return (['en', 'hi', 'te'] as LangCode[]).filter(l => f.q[l]?.trim() && f.a[l]?.trim()).length;
+  }
+
+  async editItem(f: FaqItem) {
+    const alert = await this.alertCtrl.create({
+      header: `Edit — ${this.langs.find(l => l.code === this.lang)?.label}`,
+      inputs: [
+        { name: 'q', type: 'textarea', value: f.q[this.lang] ?? '', placeholder: 'Question' },
+        { name: 'a', type: 'textarea', value: f.a[this.lang] ?? '', placeholder: 'Answer' },
+      ],
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        {
+          text: 'Save',
+          handler: (d) => {
+            if (!d.q?.trim()) return false;
+            f.q[this.lang] = d.q.trim();
+            f.a[this.lang] = d.a?.trim() ?? '';
+            this.dirty = true;
+            return true;
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  async add() {
+    const alert = await this.alertCtrl.create({
+      header: 'New question',
+      subHeader: 'Added in English. Switch language to translate it.',
+      inputs: [
+        { name: 'q', type: 'textarea', placeholder: 'Question' },
+        { name: 'a', type: 'textarea', placeholder: 'Answer' },
+      ],
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        {
+          text: 'Add',
+          handler: (d) => {
+            if (!d.q?.trim()) return false;
+            this.faqs.push({
+              id: this.data.newId('faq'),
+              q: { en: d.q.trim(), hi: '', te: '' },
+              a: { en: d.a?.trim() ?? '', hi: '', te: '' },
+              position: this.faqs.length + 1,
+            });
+            this.dirty = true;
+            return true;
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  async remove(f: FaqItem) {
+    const alert = await this.alertCtrl.create({
+      header: 'Delete question?',
+      message: 'It is removed in all three languages.',
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        {
+          text: 'Delete', role: 'destructive',
+          handler: () => {
+            this.faqs = this.faqs.filter(x => x.id !== f.id);
+            this.dirty = true;
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  onVideo(e: Event) {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    this.toast(`“${file.name}” selected — video hosting is not connected yet`);
+  }
+
+  async save() {
+    for (const f of this.faqs) await this.data.saveFaq(f);
+    this.dirty = false;
+    this.toast('Support content saved');
+  }
+
+  private async toast(message: string) {
+    const t = await this.toastCtrl.create({ message, duration: 2600, position: 'bottom' });
     t.present();
   }
- 
-  async addFaq() {
-    const alert = await this.alertCtrl.create({
-      header: 'Add FAQ',
-      inputs: [
-        { name: 'question', type: 'text',     placeholder: 'Question'     },
-        { name: 'answer',   type: 'textarea', placeholder: 'Answer'       },
-      ],
-      buttons: [
-        { text: 'Cancel', role: 'cancel' },
-        { text: 'Add', handler: data => { this.faqs.push({ id: Date.now().toString(), ...data }); /* TODO: API */ } },
-      ],
-    });
-    await alert.present();
-  }
- 
-  async editFaq(faq: any) {
-    const alert = await this.alertCtrl.create({
-      header: 'Edit FAQ',
-      inputs: [
-        { name: 'question', type: 'text',     value: faq.question },
-        { name: 'answer',   type: 'textarea', value: faq.answer   },
-      ],
-      buttons: [
-        { text: 'Cancel', role: 'cancel' },
-        { text: 'Save', handler: data => { faq.question = data.question; faq.answer = data.answer; /* TODO: API */ } },
-      ],
-    });
-    await alert.present();
-  }
- 
-  deleteFaq(faq: any) { this.faqs = this.faqs.filter(f => f.id !== faq.id); /* TODO: API */ }
- 
-  async addSuggested() {
-    const alert = await this.alertCtrl.create({
-      header: 'Add Suggested Text',
-      inputs: [{ name: 'text', type: 'text', placeholder: 'e.g. Credentials received ✅' }],
-      buttons: [
-        { text: 'Cancel', role: 'cancel' },
-        { text: 'Add', handler: data => { this.suggestedTexts.push({ id: Date.now().toString(), text: data.text }); } },
-      ],
-    });
-    await alert.present();
-  }
- 
-  deleteSuggested(s: any) { this.suggestedTexts = this.suggestedTexts.filter(x => x.id !== s.id); }
 }

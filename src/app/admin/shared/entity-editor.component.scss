@@ -1,0 +1,113 @@
+@import '../../../global.scss';
+
+.ee-backdrop {
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.45);
+  z-index: 900;
+}
+
+.ee-sheet {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 901;
+  background: $white; border-radius: $r-xl $r-xl 0 0;
+  max-height: 88vh; display: flex; flex-direction: column;
+  box-shadow: 0 -6px 28px rgba(0, 0, 0, 0.22);
+  animation: ee-up 0.22s ease-out;
+}
+
+@keyframes ee-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.ee-head {
+  @include flex-between;
+  padding: $sp-lg $sp-lg $sp-sm;
+  h2 { flex: 1; text-align: center; font-size: $font-xl; font-weight: 800; color: $black; margin: 0; }
+}
+
+.ee-x {
+  width: 34px; height: 34px; border: none; background: transparent;
+  @include flex-center; cursor: pointer; flex-shrink: 0;
+  ion-icon { font-size: 24px; color: $black; }
+}
+
+.ee-body {
+  flex: 1; overflow-y: auto; padding: 0 $sp-lg $sp-md;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ee-lbl {
+  display: block; font-size: $font-base; font-weight: 700;
+  color: $black; margin: $sp-md 0 6px;
+}
+
+.ee-input {
+  width: 100%; height: 48px; padding: 0 $sp-md; background: $white;
+  border: 1.5px solid $gray-300; border-radius: $r-md;
+  font-family: inherit; font-size: $font-base; color: $black; outline: none;
+  &::placeholder { color: $gray-400; }
+  &:focus { border-color: $yellow; }
+}
+select.ee-input { appearance: none; background-image: none; }
+
+.ee-swatches { display: flex; gap: $sp-md; flex-wrap: wrap; }
+.sw {
+  width: 42px; height: 42px; border-radius: 50%; border: 2px solid transparent;
+  @include flex-center; cursor: pointer; flex-shrink: 0;
+  ion-icon { font-size: 22px; color: $white; }
+  &.on { border-color: $black; }
+}
+
+.ee-icons { display: flex; gap: $sp-sm; flex-wrap: wrap; }
+.ic {
+  width: 54px; height: 54px; border-radius: $r-md; background: $white;
+  border: 1.5px solid $gray-300; @include flex-center; cursor: pointer; flex-shrink: 0;
+  ion-icon { font-size: 24px; color: $black; }
+  &.on { border-color: $yellow; border-width: 2px; background: $yellow-light; }
+}
+
+.ee-upload {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px; width: 100%; min-height: 92px; padding: $sp-md;
+  border: 1.5px dashed $gray-400; border-radius: $r-md; cursor: pointer;
+  text-align: center; color: $gray-600; font-size: $font-sm;
+  ion-icon { font-size: 28px; color: $gray-400; }
+  small { color: $gray-400; font-size: $font-xs; }
+  img { max-height: 120px; max-width: 100%; border-radius: $r-sm; object-fit: contain; }
+}
+
+.ee-toggle-row {
+  @include flex-between;
+  margin-top: $sp-lg;
+  span { font-size: $font-base; font-weight: 700; color: $black; }
+}
+
+.ee-switch {
+  width: 52px; height: 30px; border-radius: $r-pill; border: none;
+  background: $gray-300; position: relative; cursor: pointer; flex-shrink: 0;
+  transition: background 0.18s;
+  i {
+    position: absolute; top: 3px; left: 3px; width: 24px; height: 24px;
+    border-radius: 50%; background: $white; transition: transform 0.18s;
+    box-shadow: $shadow-sm;
+  }
+  &.on { background: #16A34A; i { transform: translateX(22px); } }
+}
+
+.ee-actions {
+  display: flex; gap: $sp-md;
+  padding: $sp-md $sp-lg calc(#{$sp-lg} + var(--ion-safe-area-bottom, 0px));
+  border-top: 1px solid $gray-100;
+}
+
+.ee-save {
+  flex: 1; height: 50px; border: none; border-radius: $r-md;
+  background: $yellow; color: $black; font-family: inherit;
+  font-size: $font-lg; font-weight: 800; cursor: pointer;
+  @include flex-center; gap: $sp-sm;
+  ion-icon { font-size: 20px; }
+}
+
+.ee-del {
+  flex: 0 0 auto; height: 50px; padding: 0 $sp-lg; border: none; border-radius: $r-md;
+  background: #DC2626; color: $white; font-family: inherit;
+  font-size: $font-lg; font-weight: 800; cursor: pointer;
+  @include flex-center; gap: 6px;
+  ion-icon { font-size: 20px; }
+}

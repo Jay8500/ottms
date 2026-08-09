@@ -1,0 +1,63 @@
+@import '../../../global.scss';
+
+.fu-content { --background: #{$gray-50}; }
+
+.fu-note {
+  font-size: $font-sm; color: $gray-600; text-align: center;
+  margin: 0 $sp-lg $sp-lg; line-height: 1.5;
+}
+
+.fu-list { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-md; }
+
+.fu-row {
+  display: flex; align-items: center; gap: $sp-md;
+  background: $white; border: 1px solid $gray-200; border-radius: $r-md;
+  padding: $sp-md; box-shadow: $shadow-sm;
+  &.off { opacity: 0.55; }
+}
+
+.fu-ico {
+  width: 48px; height: 48px; border-radius: $r-md; flex-shrink: 0;
+  @include flex-center;
+  ion-icon { font-size: 26px; color: $white; }
+}
+
+.fu-mid {
+  flex: 1; min-width: 0;
+  .fu-title {
+    display: flex; align-items: center; gap: 5px;
+    font-size: $font-lg; font-weight: 800; color: $black; margin: 0;
+    .hid { font-size: 15px; color: $gray-600; }
+  }
+  .fu-url {
+    font-size: $font-xs; color: $gray-600; margin: 2px 0 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+}
+
+.fu-open, .fu-edit {
+  width: 38px; height: 38px; border-radius: $r-sm; flex-shrink: 0;
+  border: 1.5px solid $gray-300; background: $white;
+  @include flex-center; cursor: pointer;
+  ion-icon { font-size: 18px; }
+}
+.fu-open ion-icon { color: $blue; }
+.fu-edit ion-icon { color: $black; }
+
+.empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }
+
+// ── Editor extras ──────────────────────────────────────────────────────────
+.ee-lbl {
+  display: block; font-size: $font-base; font-weight: 700;
+  color: $black; margin: $sp-md 0 6px;
+}
+
+.ee-input {
+  width: 100%; height: 48px; padding: 0 $sp-md; background: $white;
+  border: 1.5px solid $gray-300; border-radius: $r-md;
+  font-family: inherit; font-size: $font-base; color: $black; outline: none;
+  &::placeholder { color: $gray-400; }
+  &:focus { border-color: $yellow; }
+}
+
+.hint { font-size: $font-xs; color: $gray-600; margin: 5px 0 0; }

@@ -1,0 +1,71 @@
+@import '../../../global.scss';
+
+.tx-content { --background: #{$gray-50}; }
+
+.tx-list { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-md; }
+
+.tx-card {
+  background: $white; border: 1px solid $gray-200; border-radius: $r-md;
+  overflow: hidden; box-shadow: $shadow-sm;
+}
+
+.tx-head {
+  @include flex-between;
+  background: $yellow; padding: 8px $sp-md;
+  .th-kind { font-size: $font-lg; font-weight: 800; color: $black; }
+  .th-date { font-size: $font-sm; font-weight: 700; color: $black; }
+}
+
+.tx-body { display: flex; align-items: center; gap: $sp-md; padding: $sp-md; }
+
+.pay-chip {
+  width: 52px; height: 52px; border-radius: $r-md; flex-shrink: 0;
+  @include flex-center; text-align: center;
+  background: #5F259F; color: $white; font-size: 10px; font-weight: 800;
+  padding: 4px; line-height: 1.1;
+  &.gpay { background: $white; color: #202124; border: 1.5px solid $gray-300; }
+}
+
+.tx-mid {
+  flex: 1; min-width: 0;
+  .tx-title {
+    font-size: $font-lg; font-weight: 800; color: $black; margin: 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    .tier { font-size: $font-sm; font-weight: 700; color: $gray-600; }
+  }
+  .tx-sub  { font-size: $font-sm; color: $gray-600; margin: 2px 0 0; }
+  .tx-user { font-size: $font-sm; color: $gray-700; margin: 2px 0 0; font-weight: 600; }
+}
+
+.tx-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
+
+.tx-amt {
+  font-size: $font-xl; font-weight: 800; color: #DC2626; margin: 0; white-space: nowrap;
+  &.plus { color: #16A34A; }
+}
+
+.tx-status {
+  font-size: $font-xs; font-weight: 700; padding: 3px 9px;
+  border-radius: $r-sm; border: 1.5px solid currentColor; white-space: nowrap;
+  &[data-s='pending']  { color: #DC2626; }
+  &[data-s='cleared']  { color: #16A34A; }
+  &[data-s='rejected'] { color: $gray-600; }
+}
+
+.tx-foot {
+  display: flex; align-items: center; gap: $sp-sm;
+  padding: 0 $sp-md $sp-md; flex-wrap: wrap;
+}
+
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  height: 32px; padding: 0 $sp-md; border-radius: $r-sm;
+  font-size: $font-xs; font-weight: 700; border: none; font-family: inherit;
+  ion-icon { font-size: 15px; }
+
+  &.time { background: #E0F2FE; color: #075985; }
+  &.ref  { background: #F3E8FF; color: #6B21A8; }
+  &.img  { background: #2563EB; color: $white; margin-left: auto; cursor: pointer; }
+}
+
+.empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }

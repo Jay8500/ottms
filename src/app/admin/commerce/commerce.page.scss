@@ -1,0 +1,89 @@
+@import '../../../global.scss';
+
+.cx-content { --background: #{$gray-50}; }
+
+.cx-note {
+  font-size: $font-sm; color: $gray-600; text-align: center;
+  margin: 0 $sp-lg $sp-lg; line-height: 1.5;
+}
+
+.cx-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: $sp-md; padding: 0 $sp-lg;
+}
+
+.cx-card {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  padding: $sp-lg $sp-sm $sp-md; cursor: pointer; font-family: inherit;
+  background: $white; border: 1px solid $gray-200;
+  border-radius: $r-lg; box-shadow: $shadow-sm;
+  &:active { transform: scale(0.98); }
+  &.off { opacity: 0.5; }
+}
+
+.cx-ico {
+  width: 62px; height: 62px; border-radius: 50%; flex-shrink: 0;
+  @include flex-center;
+  ion-icon { font-size: 30px; color: $black; }
+}
+
+.cx-title { font-size: $font-xl; font-weight: 800; color: $black; }
+.cx-sub   { font-size: $font-xs; color: $gray-600; text-align: center; }
+
+.cx-edit {
+  display: flex; align-items: center; gap: 4px; margin-top: 6px;
+  font-size: $font-xs; font-weight: 700; color: $blue;
+  ion-icon { font-size: 14px; }
+}
+
+.cx-hidden {
+  position: absolute; top: 8px; right: 8px;
+  font-size: 16px; color: $gray-600;
+}
+
+.cx-validity {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: calc(100% - #{$sp-lg} * 2); height: 52px;
+  margin: $sp-xl $sp-lg 0;
+  border: none; border-radius: $r-md; cursor: pointer;
+  background: $yellow-dark; color: $black; font-family: inherit;
+  font-size: $font-lg; font-weight: 800;
+  ion-icon { font-size: 22px; }
+}
+
+.empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }
+
+// ── Editor extras ──────────────────────────────────────────────────────────
+.ee-lbl {
+  display: block; font-size: $font-base; font-weight: 700;
+  color: $black; margin: $sp-md 0 6px;
+}
+
+.act-row { display: flex; gap: $sp-sm; }
+
+.act {
+  flex: 1; min-width: 0; height: 66px; padding: 0 6px;
+  border: 1.5px solid $gray-300; border-radius: $r-md; background: $white;
+  cursor: pointer; font-family: inherit;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  ion-icon { font-size: 22px; color: $black; }
+  span { font-size: $font-xs; font-weight: 700; color: $black; }
+  &.on { border-color: $yellow; border-width: 2px; background: $yellow-light; }
+}
+
+.hint { font-size: $font-xs; color: $gray-600; margin: 6px 0 0; line-height: 1.5; }
+
+.cx-cta {
+  position: fixed; left: 0; right: 0; z-index: 20;
+  bottom: calc(64px + var(--ion-safe-area-bottom, 0px));
+  padding: $sp-sm $sp-lg $sp-md;
+  background: linear-gradient(to top, $gray-50 62%, rgba(250, 250, 250, 0));
+  pointer-events: none;
+}
+
+.add-new {
+  @include yellow-btn; width: 100%; height: 52px; font-size: $font-lg;
+  box-shadow: $shadow-md; pointer-events: all;
+  ion-icon { font-size: 24px; }
+}

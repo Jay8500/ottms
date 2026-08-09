@@ -1,28 +1,81 @@
-<ion-content class="page-content" [scrollY]="true">
-  <div class="page-header">
-    <button class="icon-btn" onclick="history.back()"><ion-icon name="settings-outline"></ion-icon></button>
-    <p class="page-title-h">User Profile</p>
-    <button class="icon-btn dark"><ion-icon name="settings-outline"></ion-icon></button>
-  </div>
-  <div class="search-row">
-    <div class="search-box"><ion-icon name="search-outline"></ion-icon><input [(ngModel)]="searchTerm" (ngModelChange)="filterWallets()" placeholder="Search by name or ID..." /></div>
-  </div>
-  <div class="list-area">
-    <div class="card" *ngFor="let w of filteredWallets">
-      <div class="wallet-row">
-        <div class="wc yellow"><span>🪙</span><p class="wc-lbl">Total Wallet</p><p class="wc-amt">₹{{ w.total }}</p><button class="wc-save yellow-save" (click)="editWallet(w)">Save</button></div>
-        <div class="wc blue"><span>🔒</span><p class="wc-lbl">Locked Amount</p><p class="wc-amt">₹{{ w.locked }}</p><button class="wc-save blue-save" (click)="editWallet(w)">Save</button></div>
-        <div class="wc green"><span>🔓</span><p class="wc-lbl">Unlocked Amount</p><p class="wc-amt">₹{{ w.unlocked }}</p><button class="wc-save green-save" (click)="editWallet(w)">Save</button></div>
+<ion-content class="wa-content" [scrollY]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
+
+  <app-admin-header title="Wallet's" trailing="excel" (excel)="exportCsv()"></app-admin-header>
+
+  <app-admin-searchbar
+    placeholder="Search Transactions..."
+    [(term)]="term" (termChange)="apply()" (search)="apply()">
+  </app-admin-searchbar>
+
+  <div class="wa-list">
+    <div class="wa-card" *ngFor="let r of shown">
+      <div class="wa-top">
+        <div class="wa-avatar">{{ r.name.charAt(0) }}</div>
+        <p class="wa-name">{{ r.name }} <span class="uid">({{ r.uniqueNumber }})</span></p>
+        <p class="wa-net" [class.plus]="r.net >= 0">
+          {{ r.net >= 0 ? '+' : '−' }}₹{{ (r.net < 0 ? -r.net : r.net) | number }}
+        </p>
       </div>
-      <div class="user-row">
-        <div class="u-av">{{ w.name.charAt(0) }}</div>
-        <div><p class="u-name">{{ w.name }} <span class="uid">{{ w.uid }}</span></p><span class="role-badge" [class.seller]="w.role==='Seller'">{{ w.role }}</span></div>
+
+      <!-- Balances -->
+      <div class="wa-amounts">
+        <div class="amt total">
+          <span class="a-lbl">Amount</span>
+          <span class="a-val" *ngIf="!r.editing">₹{{ r.total | number }}</span>
+          <input class="a-in" *ngIf="r.editing" type="number" inputmode="numeric" [(ngModel)]="r.draftTotal" />
+          <span class="a-tag">Total Amount</span>
+        </div>
+        <div class="amt locked">
+          <span class="a-lbl">Amount</span>
+          <span class="a-val" *ngIf="!r.editing">₹{{ r.locked | number }}</span>
+          <input class="a-in" *ngIf="r.editing" type="number" inputmode="numeric" [(ngModel)]="r.draftLocked" />
+          <span class="a-tag">Locked Amount</span>
+        </div>
+        <div class="amt unlocked">
+          <span class="a-lbl">Amount</span>
+          <span class="a-val" *ngIf="!r.editing">₹{{ r.unlocked | number }}</span>
+          <input class="a-in" *ngIf="r.editing" type="number" inputmode="numeric" [(ngModel)]="r.draftUnlocked" />
+          <span class="a-tag">Unlocked Amount</span>
+        </div>
       </div>
-      <div class="screens-mini">
-        <p class="screens-lbl">All Recent Purchased OTT Platforms</p>
-        <p class="screen-item" *ngFor="let s of w.screens">{{ s }}</p>
+
+      <!-- Counters -->
+      <div class="wa-counts">
+        <span class="cnt blue">
+          <ion-icon name="arrow-down-circle-outline"></ion-icon>
+          <b>{{ r.withdrawCount }}</b> Withdraw
+        </span>
+        <span class="cnt red">
+          <ion-icon name="close-circle-outline"></ion-icon>
+          <b>{{ r.withdrawDeclined }}</b> Declined
+        </span>
+        <span class="cnt green">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <b>{{ r.withdrawSuccess }}</b> Success
+        </span>
+        <span class="cnt purple">
+          <ion-icon name="wallet-outline"></ion-icon>
+          <b>{{ r.fundsAdded }}</b> Funds Added
+        </span>
+      </div>
+
+      <p class="wa-hint" *ngIf="r.editing">Locked + Unlocked must add up to Total.</p>
+
+      <div class="wa-actions">
+        <button class="wa-btn edit" *ngIf="!r.editing" (click)="edit(r)">
+          <ion-icon name="create-outline"></ion-icon> Edit
+        </button>
+        <button class="wa-btn cancel" *ngIf="r.editing" (click)="cancel(r)">Cancel</button>
+        <button class="wa-btn save" [disabled]="!r.editing" (click)="save(r)">
+          <ion-icon name="save-outline"></ion-icon> Save
+        </button>
       </div>
     </div>
   </div>
-  <div style="height:80px"></div>
+
+  <p class="empty" *ngIf="!shown.length">No user matches “{{ term }}”.</p>
+  <div style="height:100px"></div>
 </ion-content>

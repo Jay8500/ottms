@@ -1,0 +1,73 @@
+@import '../../../global.scss';
+
+.cl-content { --background: #{$gray-50}; }
+
+.top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; }
+.logo-badge { @include logo-badge; }
+
+.page-title {
+  font-size: $font-2xl; font-weight: 800; color: $black;
+  text-align: center; margin: $sp-xs 0 $sp-lg;
+}
+
+.thread-list { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-sm; }
+
+.thread {
+  display: flex; align-items: center; gap: $sp-md; width: 100%;
+  padding: $sp-md; background: $white;
+  border: 1px solid $gray-200; border-radius: $r-md;
+  box-shadow: $shadow-sm; cursor: pointer; font-family: inherit; text-align: left;
+  &:active { opacity: 0.9; }
+}
+
+.t-av {
+  width: 50px; height: 50px; border-radius: 50%; flex-shrink: 0;
+  @include flex-center; background: $blue-light; color: $blue;
+  font-size: $font-xl; font-weight: 800;
+}
+
+.t-mid {
+  flex: 1; min-width: 0;
+  .t-title {
+    display: flex; align-items: center; gap: 5px;
+    font-size: $font-base; font-weight: 800; color: $black; margin: 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    .lk { font-size: 14px; color: $gray-600; flex-shrink: 0; }
+  }
+  .t-seller { font-size: $font-xs; color: $gray-700; font-weight: 600; margin: 2px 0 0; }
+  .t-last {
+    font-size: $font-sm; color: $gray-600; margin: 2px 0 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+}
+
+.t-right {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0;
+  .t-time { font-size: 10px; color: $gray-400; }
+  .t-unread {
+    min-width: 20px; height: 20px; padding: 0 5px; border-radius: $r-pill;
+    background: #DC2626; color: $white; font-size: 11px; font-weight: 800;
+    @include flex-center;
+  }
+  .t-dot {
+    width: 10px; height: 10px; border-radius: 50%; background: $gray-400;
+    &.on { background: #16A34A; }
+  }
+}
+
+.skeleton { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-sm; }
+.sk {
+  height: 78px; border-radius: $r-md; background: $gray-100;
+  animation: sk-pulse 1.3s ease-in-out infinite;
+}
+@keyframes sk-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
+@media (prefers-reduced-motion: reduce) { .sk { animation: none; } }
+
+.state {
+  text-align: center; padding: $sp-2xl $sp-lg;
+  ion-icon { font-size: 52px; color: $gray-300; margin-bottom: $sp-sm; }
+  p { font-size: $font-base; color: $gray-600; margin: 0 0 $sp-xs; }
+  .sub { font-size: $font-sm; color: $gray-400; margin-bottom: $sp-lg; }
+}
+.retry { @include yellow-btn; height: 42px; padding: 0 $sp-xl; margin: 0 auto; }

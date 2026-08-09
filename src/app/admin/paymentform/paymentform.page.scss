@@ -1,0 +1,109 @@
+@import '../../../global.scss';
+
+.pf-content { --background: #{$gray-50}; }
+
+.pf-note {
+  font-size: $font-sm; color: $gray-600; margin: 0 $sp-lg $sp-md;
+  text-align: center; line-height: 1.5;
+}
+
+.pf-card {
+  margin: 0 $sp-lg; padding: $sp-lg;
+  background: $white; border: 1px solid $gray-200;
+  border-radius: $r-lg; box-shadow: $shadow-sm;
+}
+
+// ── QR ─────────────────────────────────────────────────────────────────────
+.qr-row { display: flex; align-items: center; gap: $sp-lg; }
+
+.qr-box {
+  position: relative; width: 150px; height: 150px; flex-shrink: 0;
+  border: 2px solid $yellow; border-radius: $r-md; background: $gray-50;
+  @include flex-center; overflow: hidden;
+  ion-icon { font-size: 72px; color: $gray-400; }
+  img { width: 100%; height: 100%; object-fit: contain; }
+  &.has { background: $white; }
+}
+
+.qr-x {
+  position: absolute; top: 4px; right: 4px;
+  width: 26px; height: 26px; border-radius: 50%; border: none;
+  background: rgba(0, 0, 0, 0.6); @include flex-center; cursor: pointer;
+  ion-icon { font-size: 16px; color: $white; }
+}
+
+.qr-up {
+  flex: 1; min-height: 110px; border: 1.5px dashed $gray-400;
+  border-radius: $r-md; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px;
+  ion-icon { font-size: 30px; color: $gray-600; }
+  span { font-size: $font-base; font-weight: 700; color: $gray-700; }
+}
+
+.qr-cap {
+  text-align: center; font-size: $font-base; font-weight: 700;
+  color: $black; margin: $sp-md 0 $sp-xs;
+}
+
+// ── Fields ─────────────────────────────────────────────────────────────────
+.pf-lbl {
+  display: block; font-size: $font-sm; font-weight: 600;
+  color: $gray-600; margin: $sp-md 0 5px;
+}
+
+.pf-input {
+  width: 100%; height: 48px; padding: 0 $sp-md; background: $white;
+  border: 1.5px solid $gray-300; border-radius: $r-sm;
+  font-family: inherit; font-size: $font-lg; font-weight: 600;
+  color: $black; outline: none;
+  &::placeholder { color: $gray-400; font-weight: 400; }
+  &:focus { border-color: $yellow; }
+  &.sm { height: 42px; font-size: $font-base; }
+}
+
+.bank-row {
+  display: flex; align-items: center; gap: $sp-md; margin-top: $sp-lg;
+  padding-top: $sp-md; border-top: 1px solid $gray-100;
+  > ion-icon { font-size: 30px; color: $gray-600; flex-shrink: 0; }
+  .bank-fields { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+}
+
+// ── Preview ────────────────────────────────────────────────────────────────
+.sec-lbl {
+  font-size: $font-xs; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: $gray-600;
+  margin: $sp-xl $sp-lg $sp-sm;
+}
+
+.preview {
+  margin: 0 $sp-lg; padding: $sp-md $sp-lg;
+  background: $yellow-light; border: 1px solid $yellow;
+  border-radius: $r-md;
+}
+
+.pv-row {
+  @include flex-between; gap: $sp-md;
+  padding: 8px 0;
+  & + .pv-row { border-top: 1px solid rgba(0, 0, 0, 0.07); }
+  .k { font-size: $font-sm; color: $gray-700; flex-shrink: 0; }
+  .v {
+    font-size: $font-sm; font-weight: 700; color: $black;
+    text-align: right; overflow: hidden; text-overflow: ellipsis;
+  }
+}
+
+// ── Save ───────────────────────────────────────────────────────────────────
+.pf-cta {
+  position: fixed; left: 0; right: 0; z-index: 20;
+  bottom: calc(64px + var(--ion-safe-area-bottom, 0px));
+  padding: $sp-sm $sp-lg $sp-md;
+  background: linear-gradient(to top, $gray-50 62%, rgba(250, 250, 250, 0));
+  pointer-events: none;
+}
+
+.save-btn {
+  @include yellow-btn; width: 100%; height: 52px; font-size: $font-lg;
+  box-shadow: $shadow-md; pointer-events: all;
+  ion-icon { font-size: 22px; }
+}

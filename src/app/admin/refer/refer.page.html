@@ -1,0 +1,75 @@
+<ion-content class="rf-content" [scrollY]="true">
+  <app-admin-header title="Refer Friends" trailing="excel" (excel)="exportCsv()"></app-admin-header>
+
+  <!-- Settings -->
+  <div class="card">
+    <div class="row">
+      <div class="r-text">
+        <p class="r-title">Referral programme</p>
+        <p class="r-sub">Turn the whole feature on or off in the app.</p>
+      </div>
+      <button class="sw" [class.on]="enabled"
+              (click)="enabled = !enabled; dirty = true"
+              [attr.aria-pressed]="enabled"><i></i></button>
+    </div>
+
+    <label class="fl">Reward per successful referral (₹)</label>
+    <input class="fi" type="number" inputmode="numeric" min="0"
+           [(ngModel)]="reward" (ngModelChange)="dirty = true" />
+    <p class="hint">
+      Credited to the person who invited, once their friend completes their
+      first purchase. Set 0 to run the programme with no cash reward.
+    </p>
+  </div>
+
+  <!-- Summary -->
+  <div class="sum-row">
+    <div class="sum blue">
+      <ion-icon name="share-social-outline"></ion-icon>
+      <span class="s-val">{{ rows.length }}</span>
+      <span class="s-lbl">Invites sent</span>
+    </div>
+    <div class="sum green">
+      <ion-icon name="people-outline"></ion-icon>
+      <span class="s-val">{{ joined }}</span>
+      <span class="s-lbl">Friends joined</span>
+    </div>
+    <div class="sum amber">
+      <ion-icon name="cash-outline"></ion-icon>
+      <span class="s-val">₹{{ owed | number }}</span>
+      <span class="s-lbl">Rewards owed</span>
+    </div>
+  </div>
+
+  <!-- List -->
+  <p class="sec">Referrals</p>
+
+  <div class="list">
+    <div class="ref" *ngFor="let r of rows">
+      <div class="rf-ico" [class.done]="r.rewarded">
+        <ion-icon [name]="r.rewarded ? 'checkmark-circle' : 'time-outline'"></ion-icon>
+      </div>
+      <div class="rf-mid">
+        <p class="rf-who">{{ r.referrerName }}</p>
+        <p class="rf-sub" *ngIf="r.referredName">Invited {{ r.referredName }}</p>
+        <p class="rf-sub pending" *ngIf="!r.referredName">Not joined yet</p>
+      </div>
+      <div class="rf-right">
+        <span class="code">{{ r.code }}</span>
+        <span class="date">{{ r.createdAt }}</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="empty" *ngIf="!loading && !rows.length">
+    No referrals yet. They appear here once users start inviting friends.
+  </p>
+
+  <div style="height:120px"></div>
+</ion-content>
+
+<ion-footer class="cta-footer">
+  <button class="cta-btn" [disabled]="!dirty" (click)="save()">
+    <ion-icon name="save-outline"></ion-icon> Save Changes
+  </button>
+</ion-footer>

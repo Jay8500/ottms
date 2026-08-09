@@ -1,79 +1,112 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, ToastController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar,IonIcon,IonButton,IonButtons } from '@ionic/angular/standalone';
+import { ActivatedRoute, Router } from '@angular/router';
+import { IonContent, IonIcon, AlertController, ToastController, IonFooter, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { settingsOutline, optionsOutline, createOutline, trashOutline, addCircleOutline } from 'ionicons/icons';
+import { createOutline, chevronForwardOutline, addCircleOutline, eyeOffOutline } from 'ionicons/icons';
+import { AdminHeaderComponent } from '../shared/admin-header.component';
+import { EntityEditorComponent } from '../shared/entity-editor.component';
+import { DataService } from '../../shared/data.service';
+import { Category, CmsEntity } from '../../shared/models';
 
+/** 3 — Categories. Create, edit, reorder and hide the app's top-level categories. */
 @Component({
   selector: 'app-categorymngmnt',
   templateUrl: './categorymngmnt.page.html',
   styleUrls: ['./categorymngmnt.page.scss'],
   standalone: true,
-  imports: [IonContent, CommonModule, FormsModule,IonIcon]
+  imports: [
+    CommonModule, FormsModule, IonContent, IonIcon,
+    AdminHeaderComponent, EntityEditorComponent, IonFooter, IonRefresher, IonRefresherContent],
 })
-export class CategorymngmntPage  implements OnInit {
- 
-  categories = [
-    { id:'c1', name:'Entertainment', emoji:'🎬', bgColor:'#fff8e1', color:'#f9a825', appCount:6 },
-    { id:'c2', name:'Music',         emoji:'🎵', bgColor:'#e8f5e9', color:'#2e7d32', appCount:4 },
-    { id:'c3', name:'Gaming',        emoji:'🎮', bgColor:'#e3f2fd', color:'#1565c0', appCount:3 },
-    { id:'c4', name:'Education',     emoji:'📚', bgColor:'#fce4ec', color:'#c62828', appCount:5 },
-    { id:'c5', name:'News',          emoji:'📰', bgColor:'#f3e5f5', color:'#6a1b9a', appCount:2 },
-    { id:'c6', name:'Fitness',       emoji:'💪', bgColor:'#e0f7fa', color:'#00838f', appCount:3 },
+export class CategorymngmntPage implements OnInit {
+  items: Category[] = [];
+  editing: Category | null = null;
+  editorOpen = false;
+  isNew = false;
+
+  readonly icons = [
+    'film-outline', 'musical-notes-outline', 'game-controller-outline',
+    'book-outline', 'barbell-outline', 'pricetag-outline',
   ];
- 
-  constructor(private alertCtrl: AlertController, private toastCtrl: ToastController) {
-    addIcons({ settingsOutline, optionsOutline, createOutline, trashOutline, addCircleOutline });
+
+  constructor(
+    private data: DataService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController,
+  ) {
+    addIcons({ createOutline, chevronForwardOutline, addCircleOutline, eyeOffOutline });
   }
-  ngOnInit() {}
- 
-  async addCategory() {
+
+  async ngOnInit() {
+    await this.load();
+    if (this.route.snapshot.queryParamMap.get('new')) this.create();
+  }
+
+  private async load() { this.items = await this.data.getCategories(); }
+
+  create() {
+    this.isNew = true;
+    this.editing = {
+      id: this.data.newId('cat'), title: '', subName: '',
+      color: '#F9D54B', icon: 'film-outline',
+      position: this.items.length + 1, active: true, appCount: 0,
+    };
+    this.editorOpen = true;
+  }
+
+  edit(c: Category) {
+    this.isNew = false;
+    this.editing = { ...c };
+    this.editorOpen = true;
+  }
+
+  /** Drill into the platforms that live under this category. */
+  openApps(c: Category) {
+    this.router.navigate(['/admin/entertainment'], { queryParams: { cat: c.id } });
+  }
+
+  async onSave(e: CmsEntity) {
+    await this.data.saveCategory(e as Category);
+    await this.load();
+    this.editorOpen = false;
+    this.toast(this.isNew ? 'Category created' : 'Category updated');
+  }
+
+  async onRemove(id: string) {
+    const cat = this.items.find(c => c.id === id);
     const alert = await this.alertCtrl.create({
-      header: 'Add Category',
-      inputs: [
-        { name: 'name',  type: 'text', placeholder: 'Category Name' },
-        { name: 'emoji', type: 'text', placeholder: 'Emoji (e.g. 🏠)' },
-        { name: 'color', type: 'text', placeholder: 'Hex color (e.g. #1a73e8)' },
-      ],
+      header: 'Delete category?',
+      message: cat?.appCount
+        ? `${cat.title} has ${cat.appCount} platforms under it. They will be left without a category.`
+        : `${cat?.title} will be removed from the app.`,
       buttons: [
         { text: 'Cancel', role: 'cancel' },
-        { text: 'Add', handler: data => {
-          this.categories.push({ id: Date.now().toString(), name: data.name, emoji: data.emoji, bgColor: data.color + '33', color: data.color, appCount: 0 });
-          // TODO: API call
-        }},
+        {
+          text: 'Delete', role: 'destructive',
+          handler: async () => {
+            await this.data.deleteCategory(id);
+            await this.load();
+            this.editorOpen = false;
+            this.toast('Category deleted');
+          },
+        },
       ],
     });
     await alert.present();
   }
- 
-  async editCategory(cat: any) {
-    const alert = await this.alertCtrl.create({
-      header: `Edit ${cat.name}`,
-      inputs: [
-        { name: 'name',  type: 'text', value: cat.name,  placeholder: 'Category Name' },
-        { name: 'emoji', type: 'text', value: cat.emoji, placeholder: 'Emoji'         },
-      ],
-      buttons: [
-        { text: 'Cancel', role: 'cancel' },
-        { text: 'Save', handler: data => { cat.name = data.name; cat.emoji = data.emoji; /* TODO: API */ } },
-      ],
-    });
-    await alert.present();
+
+  private async toast(message: string) {
+    const t = await this.toastCtrl.create({ message, duration: 2000, position: 'bottom' });
+    t.present();
   }
- 
-  async deleteCategory(cat: any) {
-    const alert = await this.alertCtrl.create({
-      header: 'Delete Category',
-      message: `Delete "${cat.name}"? All apps in this category will be unlinked.`,
-      buttons: [
-        { text: 'Cancel', role: 'cancel' },
-        { text: 'Delete', role: 'destructive', handler: () => {
-          this.categories = this.categories.filter(c => c.id !== cat.id); // TODO: API
-        }},
-      ],
-    });
-    await alert.present();
+  /** Pull-to-refresh. */
+  async refresh(ev: CustomEvent) {
+    await this.ngOnInit();
+    (ev.target as HTMLIonRefresherElement).complete();
   }
+
 }

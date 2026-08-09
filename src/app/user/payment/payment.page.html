@@ -1,40 +1,89 @@
-<ion-content class="payment-content" [scrollY]="true">
+<ion-content class="pm-content" [scrollY]="true">
   <div class="top-bar">
-    <button class="icon-btn" onclick="history.back()"><ion-icon name="arrow-back-outline"></ion-icon></button>
+    <button class="icon-btn" (click)="back()" aria-label="Back">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
     <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
-    <button class="icon-btn"><ion-icon name="help-circle-outline"></ion-icon></button>
+    <button class="icon-btn" aria-label="Help">
+      <ion-icon name="help-circle-outline"></ion-icon>
+    </button>
   </div>
-  <p class="page-title">Make Payment</p>
-  <div class="qr-card">
-    <div class="qr-box"><ion-icon name="qr-code-outline"></ion-icon></div>
-    <p class="qr-label">Scan QR Code to Pay</p>
-  </div>
-  <div class="upi-info">
-    <div class="info-row"><span class="lbl">Name</span><span class="val">John Doe</span></div>
-    <div class="info-row">
-      <span class="lbl">UPI ID</span>
-      <div class="val-copy"><span class="val">moneysaver@upi</span><button class="copy-btn" (click)="copyUpi()">📋 Copy</button></div>
+
+  <h1 class="page-title">Make Payment</h1>
+
+  <div class="pay-card" *ngIf="cfg">
+    <div class="qr-box">
+      <img *ngIf="cfg.qrImageUrl" [src]="cfg.qrImageUrl" alt="Payment QR code" />
+      <ion-icon *ngIf="!cfg.qrImageUrl" name="qr-code-outline"></ion-icon>
     </div>
-    <div class="info-row">
-      <span class="lbl">UPI Mobile</span>
-      <div class="val-copy"><span class="val">+91 98765 43210</span><button class="copy-btn" (click)="copyUpi()">📋 Copy</button></div>
+    <p class="qr-cap">Scan QR Code to Pay</p>
+
+    <div class="row">
+      <span class="k">Name</span>
+      <span class="v">{{ cfg.name || '—' }}</span>
     </div>
-    <div class="info-row"><span class="lbl">Bank</span><span class="val">🏦 XYZ Bank • **** 1234</span></div>
-  </div>
-  <div class="divider-lbl">After Payment</div>
-  <div class="after-section">
-    <div class="amount-row"><label>Amount Paid</label><input type="number" placeholder="Enter amount (₹)" /></div>
-    <div class="amount-row"><label>Transaction ID</label><input type="text" placeholder="Enter UPI/Bank Transaction ID" /></div>
-    <div class="upload-area" (click)="uploadScreenshot()">
-      <ion-icon name="cloud-upload-outline"></ion-icon>
-      <p class="up-title">Upload Payment Screenshot</p>
-      <p class="up-sub">Please upload your payment receipt</p>
-      <button class="choose-btn" type="button">📎 Choose File</button>
-      <p class="file-hint">Accepted: JPG, PNG, PDF (Max 5MB)</p>
-      <p class="file-name" *ngIf="screenshotFile">✅ {{ screenshotFile.name }}</p>
+
+    <div class="row">
+      <span class="k">UPI ID</span>
+      <span class="v">{{ cfg.upiId || '—' }}</span>
+      <button class="copy" *ngIf="cfg.upiId" (click)="copy(cfg.upiId, 'UPI ID')">
+        <ion-icon name="copy-outline"></ion-icon> Copy
+      </button>
     </div>
-    <input type="file" #fileInput style="display:none" accept="image/*,.pdf" (change)="onFileSelected($event)" />
+
+    <div class="row">
+      <span class="k">UPI Mobile</span>
+      <span class="v">{{ cfg.upiMobile || '—' }}</span>
+      <button class="copy" *ngIf="cfg.upiMobile" (click)="copy(cfg.upiMobile, 'Mobile number')">
+        <ion-icon name="copy-outline"></ion-icon> Copy
+      </button>
+    </div>
+
+    <div class="row bank">
+      <ion-icon name="business-outline"></ion-icon>
+      <span class="v">{{ cfg.bankName }} <span *ngIf="cfg.bankMasked">· {{ cfg.bankMasked }}</span></span>
+    </div>
   </div>
-  <button class="submit-btn" (click)="submitPayment()"><ion-icon name="send-outline"></ion-icon> Submit Payment</button>
-  <div style="height:40px"></div>
+
+  <div class="divider"><span>After Payment</span></div>
+
+  <div class="form">
+    <label class="fl">Amount Paid</label>
+    <input class="fi" type="number" inputmode="numeric" [(ngModel)]="amount" placeholder="₹ Amount you sent" />
+
+    <label class="fl">Paid Using</label>
+    <div class="app-row">
+      <button *ngFor="let a of apps" [class.on]="paymentApp === a" (click)="paymentApp = a">{{ a }}</button>
+    </div>
+
+    <label class="fl">Transaction ID <span class="opt">optional</span></label>
+    <input class="fi" [(ngModel)]="txnRef" placeholder="UPI / Bank reference" autocapitalize="off" />
+
+    <label class="fl">Payment Screenshot</label>
+    <div class="upload" (click)="pickFile()">
+      <ion-icon [name]="screenshot ? 'checkmark-circle' : 'cloud-upload-outline'" [class.done]="screenshot"></ion-icon>
+      <p class="up-title">{{ screenshot ? screenshot.name : 'Upload Payment Screenshot' }}</p>
+      <p class="up-sub" *ngIf="!screenshot">JPG, PNG or PDF · max 5MB</p>
+      <button class="choose" type="button">Choose File</button>
+    </div>
+    <input type="file" #fileInput hidden accept="image/*,.pdf" (change)="onFile($event)" />
+
+    <p class="note">
+      Admin checks your screenshot before crediting your wallet. You will see it as
+      <b>Pending for Approval</b> in the meantime.
+    </p>
+
+    <button class="submit" [disabled]="!canSubmit" (click)="submit()">
+      <ion-icon name="send-outline"></ion-icon>
+      {{ submitting ? 'Sending…' : 'Submit Payment' }}
+    </button>
+  </div>
+
+  <div class="state" *ngIf="loading"><p>Loading…</p></div>
+  <div class="state" *ngIf="error">
+    <p>{{ error }}</p>
+    <button class="retry" (click)="load()">Try again</button>
+  </div>
+
+  <div style="height:60px"></div>
 </ion-content>

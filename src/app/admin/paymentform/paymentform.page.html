@@ -1,0 +1,71 @@
+<ion-content class="pf-content" [scrollY]="true">
+  <app-admin-header title="Admin Payment" trailing="options"></app-admin-header>
+
+  <p class="pf-note">
+    These are the details users see when they add funds. Get them wrong and money
+    goes to the wrong place.
+  </p>
+
+  <div class="pf-card">
+    <!-- QR -->
+    <div class="qr-row">
+      <div class="qr-box" [class.has]="cfg.qrImageUrl">
+        <img *ngIf="cfg.qrImageUrl" [src]="cfg.qrImageUrl" alt="Payment QR code" />
+        <ion-icon *ngIf="!cfg.qrImageUrl" name="qr-code-outline"></ion-icon>
+        <button class="qr-x" *ngIf="cfg.qrImageUrl" (click)="clearQr()" aria-label="Remove QR">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <label class="qr-up">
+        <ion-icon name="cloud-upload-outline"></ion-icon>
+        <span>Upload</span>
+        <input type="file" accept="image/*" hidden (change)="onQr($event)" />
+      </label>
+    </div>
+    <p class="qr-cap">Scan QR Code to Pay</p>
+
+    <!-- Fields -->
+    <label class="pf-lbl">Name</label>
+    <input class="pf-input" [(ngModel)]="cfg.name" (ngModelChange)="dirty = true"
+           placeholder="Account holder name" />
+
+    <label class="pf-lbl">UPI ID</label>
+    <input class="pf-input" [(ngModel)]="cfg.upiId" (ngModelChange)="dirty = true"
+           placeholder="name@bank" inputmode="email" autocapitalize="off" />
+
+    <label class="pf-lbl">UPI Mobile Number</label>
+    <input class="pf-input" [(ngModel)]="cfg.upiMobile" (ngModelChange)="dirty = true"
+           placeholder="+91 98765 43210" inputmode="tel" />
+
+    <div class="bank-row">
+      <ion-icon name="business-outline"></ion-icon>
+      <div class="bank-fields">
+        <input class="pf-input sm" [(ngModel)]="cfg.bankName" (ngModelChange)="dirty = true"
+               placeholder="Bank name" />
+        <input class="pf-input sm" [(ngModel)]="cfg.bankMasked" (ngModelChange)="dirty = true"
+               placeholder="**** 1234" />
+      </div>
+    </div>
+  </div>
+
+  <!-- What the user sees -->
+  <p class="sec-lbl">User preview</p>
+  <div class="preview">
+    <div class="pv-row"><span class="k">Name</span><span class="v">{{ cfg.name || '—' }}</span></div>
+    <div class="pv-row"><span class="k">UPI ID</span><span class="v">{{ cfg.upiId || '—' }}</span></div>
+    <div class="pv-row"><span class="k">UPI Mobile</span><span class="v">{{ cfg.upiMobile || '—' }}</span></div>
+    <div class="pv-row">
+      <span class="k">Bank</span>
+      <span class="v">{{ cfg.bankName || '—' }} <span *ngIf="cfg.bankMasked">· {{ cfg.bankMasked }}</span></span>
+    </div>
+  </div>
+
+  <div style="height:120px"></div>
+</ion-content>
+
+<ion-footer class="cta-footer">
+  <button class="cta-btn" [disabled]="!dirty" (click)="save()">
+    <ion-icon name="save-outline"></ion-icon> Save Changes
+  </button>
+</ion-footer>

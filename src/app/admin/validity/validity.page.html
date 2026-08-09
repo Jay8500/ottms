@@ -1,0 +1,62 @@
+<ion-content class="vp-content" [scrollY]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
+
+  <app-admin-header title="Select Validity" trailing="options"></app-admin-header>
+
+  <div class="vp-list">
+    <div class="vp-row" *ngFor="let v of items" [class.off]="!v.active">
+      <div class="vp-ico" [style.background]="v.color">
+        <ion-icon [name]="v.icon"></ion-icon>
+      </div>
+
+      <div class="vp-mid">
+        <p class="vp-title">
+          {{ v.title }}
+          <ion-icon name="eye-off-outline" class="hidden-i" *ngIf="!v.active"></ion-icon>
+        </p>
+        <p class="vp-sub">{{ v.months }} month{{ v.months === 1 ? '' : 's' }}<span *ngIf="v.subName"> · {{ v.subName }}</span></p>
+      </div>
+
+      <span class="vp-save" *ngIf="v.saveUpto">SAVE ₹{{ v.saveUpto }}</span>
+      <span class="vp-price">₹{{ v.amount | number }}</span>
+
+      <button class="vp-edit" (click)="edit(v)" aria-label="Edit plan">
+        <ion-icon name="create-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <p class="empty" *ngIf="!items.length">No plans yet. Tap Add Validity to create one.</p>
+  <div style="height:120px"></div>
+</ion-content>
+
+<ion-footer class="cta-footer">
+  <button class="cta-btn" (click)="create()">
+    <ion-icon name="add-circle-outline"></ion-icon> Add Validity
+  </button>
+</ion-footer>
+
+<app-entity-editor
+  [open]="editorOpen"
+  [heading]="isNew ? 'Add Validity' : 'Edit Validity'"
+  [model]="editing"
+  [icons]="icons"
+  [showDelete]="!isNew"
+  (save)="onSave($event)"
+  (remove)="onRemove($event)"
+  (close)="editorOpen = false">
+
+  <ng-container *ngIf="editing">
+    <label class="ee-lbl">Duration in months</label>
+    <input class="ee-input" type="number" inputmode="numeric" min="1" [(ngModel)]="editing.months" />
+
+    <label class="ee-lbl">Price (₹)</label>
+    <input class="ee-input" type="number" inputmode="numeric" min="0" [(ngModel)]="editing.amount" />
+
+    <label class="ee-lbl">Saving badge (₹)</label>
+    <input class="ee-input" type="number" inputmode="numeric" min="0" [(ngModel)]="editing.saveUpto" />
+    <p class="hint">Shown as a green “SAVE ₹” pill. Set 0 to hide it.</p>
+  </ng-container>
+</app-entity-editor>

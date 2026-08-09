@@ -1,21 +1,101 @@
 @import '../../../global.scss';
-.page-content { --background: #{$white}; }
-.page-header { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
-.icon-btn { @include icon-btn; }
-.page-title-h { font-size: $font-xl; font-weight: 700; color: $black; margin: 0; }
-.search-row { padding: 0 $sp-lg $sp-md; }
-.search-box { display: flex; align-items: center; gap: $sp-sm; border: 1.5px solid $gray-200; border-radius: $r-lg; padding: 0 $sp-md; height: 46px; ion-icon { color: $gray-400; } input { flex: 1; border: none; outline: none; font-size: $font-sm; } }
-.list-area { padding: 0 $sp-lg $sp-xl; display: flex; flex-direction: column; gap: $sp-md; }
-.card { background: $white; border-radius: $r-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm; padding: $sp-md $sp-lg; }
-.wallet-row { display: grid; grid-template-columns: repeat(3,1fr); gap: $sp-sm; margin-bottom: $sp-md; }
-.wc { border-radius: $r-lg; padding: $sp-sm; text-align: center; span { font-size: 22px; display: block; } .wc-lbl { font-size: $font-xs; font-weight: 700; color: $black; margin: 2px 0 0; } .wc-amt { font-size: $font-base; font-weight: 700; color: $black; margin: 2px 0 4px; }
-  &.yellow { background: $yellow; } &.blue { background: #DBEAFE; } &.green { background: #DCFCE7; } }
-.wc-save { border: none; border-radius: $r-pill; height: 28px; padding: 0 $sp-sm; font-size: $font-xs; font-weight: 700; cursor: pointer; width: 100%; }
-.yellow-save { background: $black; color: $white; }
-.blue-save { background: $blue; color: $white; }
-.green-save { background: $green; color: $white; }
-.user-row { display: flex; align-items: center; gap: $sp-md; margin-bottom: $sp-sm; }
-.u-av { width: 44px; height: 44px; border-radius: 50%; background: $yellow; @include flex-center; font-size: $font-base; font-weight: 700; color: $black; flex-shrink: 0; }
-.u-name { font-size: $font-sm; font-weight: 700; color: $black; margin: 0; .uid { color: $gray-600; font-weight: 400; margin-left: 4px; } }
-.role-badge { font-size: $font-xs; padding: 2px 8px; border-radius: $r-pill; font-weight: 600; background: $blue-light; color: $blue; &.seller { background: $yellow-light; color: $black; } }
-.screens-mini { border-top: 1px solid $gray-100; padding-top: $sp-sm; .screens-lbl { font-size: $font-xs; font-weight: 700; color: $black; margin: 0 0 4px; } .screen-item { font-size: $font-xs; color: $gray-600; margin-bottom: 2px; } }
+
+.wa-content { --background: #{$gray-50}; }
+
+.wa-list { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-md; }
+
+.wa-card {
+  background: $white; border: 1px solid $gray-200; border-radius: $r-md;
+  padding: $sp-md; box-shadow: $shadow-sm;
+}
+
+.wa-top { display: flex; align-items: center; gap: $sp-md; }
+
+.wa-avatar {
+  width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
+  @include flex-center; background: $yellow-light; color: $black;
+  font-size: $font-xl; font-weight: 800; border: 2px solid $yellow;
+}
+
+.wa-name {
+  flex: 1; min-width: 0; margin: 0;
+  font-size: $font-xl; font-weight: 800; color: $black;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  .uid { font-size: $font-base; color: $gray-600; font-weight: 700; }
+}
+
+.wa-net {
+  margin: 0; flex-shrink: 0; white-space: nowrap;
+  font-size: $font-xl; font-weight: 800; color: #DC2626;
+  &.plus { color: #16A34A; }
+}
+
+// ── Balances ───────────────────────────────────────────────────────────────
+.wa-amounts {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: $sp-sm; margin-top: $sp-md;
+}
+
+.amt {
+  display: flex; flex-direction: column; align-items: center;
+  border: 1.5px solid $gray-200; border-radius: $r-sm; overflow: hidden;
+  background: $white;
+
+  .a-lbl { font-size: 10px; color: $gray-600; padding-top: 6px; }
+  .a-val { font-size: $font-lg; font-weight: 800; color: $black; padding: 0 4px 6px; }
+  .a-in  {
+    width: 92%; margin: 0 auto 6px; text-align: center;
+    font-family: inherit; font-size: $font-base; font-weight: 800; color: $black;
+    border: 1.5px solid $yellow; border-radius: 4px; outline: none; padding: 3px 2px;
+  }
+  .a-tag {
+    width: 100%; text-align: center; font-size: 10px; font-weight: 700;
+    padding: 4px 2px;
+  }
+
+  &.total    { border-color: #86EFAC; .a-tag { background: #DCFCE7; color: #166534; } }
+  &.locked   { border-color: #FCD34D; .a-tag { background: #FEF3C7; color: #92400E; } }
+  &.unlocked { border-color: #93C5FD; .a-tag { background: #DBEAFE; color: #1E40AF; } }
+}
+
+// ── Counters ───────────────────────────────────────────────────────────────
+.wa-counts {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 6px; margin-top: $sp-sm;
+}
+
+.cnt {
+  display: flex; align-items: center; gap: 6px;
+  height: 38px; padding: 0 10px; border-radius: $r-sm;
+  border: 1.5px solid $gray-200; background: $white;
+  font-size: $font-xs; font-weight: 600; color: $gray-700;
+  ion-icon { font-size: 18px; flex-shrink: 0; }
+  b { font-size: $font-base; font-weight: 800; color: $black; }
+
+  &.blue   ion-icon { color: #2563EB; }
+  &.red    ion-icon { color: #DC2626; }
+  &.green  ion-icon { color: #16A34A; }
+  &.purple ion-icon { color: #8B5CF6; }
+}
+
+.wa-hint {
+  font-size: $font-xs; color: $orange; margin: $sp-sm 0 0; font-weight: 600;
+}
+
+// ── Actions ────────────────────────────────────────────────────────────────
+.wa-actions { display: flex; gap: $sp-sm; margin-top: $sp-md; }
+
+.wa-btn {
+  flex: 1; height: 44px; border: none; border-radius: $r-sm;
+  font-family: inherit; font-size: $font-base; font-weight: 800;
+  color: $white; cursor: pointer; @include flex-center; gap: 6px;
+  ion-icon { font-size: 18px; }
+  &:disabled { opacity: 0.4; }
+  &:active:not(:disabled) { opacity: 0.88; }
+
+  &.edit   { background: #2563EB; }
+  &.save   { background: #15803D; }
+  &.cancel { background: $gray-400; }
+}
+
+.empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }

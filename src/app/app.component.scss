@@ -1,0 +1,47 @@
+@import '../global.scss';
+
+// Indeterminate bar shown while any Supabase call is in flight.
+.load-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1100;
+  height: 3px; background: rgba(0, 0, 0, 0.06); overflow: hidden;
+
+  &::after {
+    content: ''; position: absolute; inset: 0;
+    background: $yellow;
+    transform-origin: 0 50%;
+    animation: lb-slide 1.05s ease-in-out infinite;
+  }
+}
+
+@keyframes lb-slide {
+  0%   { transform: translateX(-100%) scaleX(0.4); }
+  50%  { transform: translateX(20%)   scaleX(0.7); }
+  100% { transform: translateX(100%)  scaleX(0.4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .load-bar::after { animation: none; opacity: 0.7; }
+}
+
+// Sits above every page, below Ionic overlays, and clears the status bar.
+.net-banner {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: calc(6px + var(--ion-safe-area-top, 0px)) $sp-lg 6px;
+  font-size: $font-sm; font-weight: 600; text-align: center;
+  animation: nb-drop 0.22s ease-out;
+
+  ion-icon { font-size: 18px; flex-shrink: 0; }
+
+  &.offline { background: #B91C1C; color: $white; }
+  &.back    { background: #15803D; color: $white; }
+}
+
+@keyframes nb-drop {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .net-banner { animation: none; }
+}

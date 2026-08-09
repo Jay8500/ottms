@@ -1,32 +1,107 @@
-<ion-content class="page-content" [scrollY]="true">
-  <div class="page-header">
-    <button class="icon-btn" onclick="history.back()"><ion-icon name="arrow-back-outline"></ion-icon></button>
-    <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
-    <div style="width:40px"></div>
-  </div>
-  <p class="page-title">Admin Page</p>
-  <div class="search-row">
-    <div class="search-box"><ion-icon name="search-outline"></ion-icon><input [(ngModel)]="searchTerm" (ngModelChange)="filterUsers()" placeholder="Search..." /></div>
-    <select [(ngModel)]="roleFilter" (ngModelChange)="filterUsers()" class="role-sel">
-      <option value="all">All</option><option value="buyer">Buyer</option><option value="seller">Seller</option>
-    </select>
-  </div>
-  <div class="list-area">
-    <div class="card" *ngFor="let u of filteredUsers">
-      <div class="user-top">
-        <div class="u-av">{{ u.name.charAt(0) }}</div>
-        <div class="u-info">
-          <p class="u-name">{{ u.name }} <span class="uid">{{ u.uniqueNum }}</span></p>
-          <p class="u-mobile">{{ u.mobile }}</p>
-          <p class="u-email">{{ u.email }}</p>
+<ion-content class="um-content" [scrollY]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
+
+  <app-admin-header trailing="excel" (excel)="exportCsv()"></app-admin-header>
+
+  <app-admin-searchbar
+    placeholder="Search Users..."
+    [(term)]="term" (termChange)="apply()" (search)="apply()"
+    [chips]="chips" [activeChip]="activeChip" (chipChange)="setChip($event)">
+  </app-admin-searchbar>
+
+  <div class="um-list">
+    <div class="um-card" *ngFor="let u of shown">
+
+      <!-- Summary -->
+      <button class="um-head" (click)="toggle(u)">
+        <div class="um-avatar">{{ u.name.charAt(0) }}</div>
+        <div class="um-id">
+          <p class="um-name">{{ u.name }}</p>
+          <p class="um-sub">Nick Name : {{ u.nickName }}</p>
+          <p class="um-sub">User ID : {{ u.uniqueNumber }}</p>
         </div>
-        <span class="role-badge" [class.seller]="u.role==='seller'">{{ u.roleLabel }}</span>
+        <ion-icon class="um-caret" [name]="u.expanded ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+      </button>
+
+      <!-- Ratings + badges -->
+      <div class="um-chips">
+        <div class="rate-box">
+          <span class="rb-lbl">User Ratings</span>
+          <span class="rb-stars">
+            <span class="st on" *ngFor="let s of stars(u.rating, 'on')">★</span>
+            <span class="st" *ngFor="let s of stars(u.rating, 'off')">☆</span>
+            <b>({{ u.reviewCount }})</b>
+          </span>
+        </div>
+        <div class="rate-box">
+          <span class="rb-lbl">User Batches</span>
+          <span class="rb-badges">
+            <span class="bg" *ngFor="let b of u.badges" [style.background]="b.color"
+                  [title]="b.label">{{ b.emoji }}</span>
+          </span>
+        </div>
       </div>
-      <div class="u-actions">
-        <button class="yellow-sm" (click)="editUser(u)"><ion-icon name="create-outline"></ion-icon> Edit</button>
-        <button class="red-sm" (click)="deleteUser(u)"><ion-icon name="trash-outline"></ion-icon> Delete</button>
+
+      <!-- Detail -->
+      <div class="um-detail" *ngIf="u.expanded">
+
+        <p class="sec-head"><ion-icon name="person-outline"></ion-icon> Additional Details</p>
+        <div class="row"><span class="k"><ion-icon name="calendar-outline"></ion-icon> Registered Date</span><span class="v">{{ u.registeredDate }}</span></div>
+        <div class="row">
+          <span class="k"><ion-icon name="call-outline"></ion-icon> Mobile Number</span>
+          <span class="v">+91 {{ u.mobile }}
+            <ion-icon class="ok" name="checkmark-circle" *ngIf="u.mobileVerified"></ion-icon>
+          </span>
+        </div>
+        <div class="row">
+          <span class="k"><ion-icon name="mail-outline"></ion-icon> Mail ID</span>
+          <span class="v">{{ u.email }}
+            <ion-icon class="ok" name="checkmark-circle" *ngIf="u.emailVerified"></ion-icon>
+          </span>
+        </div>
+
+        <p class="sec-head"><ion-icon name="business-outline"></ion-icon> Bank Details</p>
+        <ng-container *ngIf="u.bank; else noBank">
+          <div class="row"><span class="k"><ion-icon name="person-outline"></ion-icon> Holder Name</span><span class="v">{{ u.bank.holderName }}</span></div>
+          <div class="row"><span class="k"><ion-icon name="cash-outline"></ion-icon> UPI ID</span><span class="v">{{ u.bank.upiId }}</span></div>
+          <div class="row"><span class="k"><ion-icon name="card-outline"></ion-icon> A/C No</span><span class="v">{{ u.bank.accountNo }}</span></div>
+          <div class="row"><span class="k"><ion-icon name="shield-outline"></ion-icon> IFSC Code</span><span class="v">{{ u.bank.ifsc }}</span></div>
+          <p class="locked-note" *ngIf="u.bank.locked">Set at signup — cannot be changed.</p>
+        </ng-container>
+        <ng-template #noBank><p class="locked-note">No bank details on file.</p></ng-template>
+
+        <!-- Counters -->
+        <div class="um-counts">
+          <span class="cnt"><ion-icon name="people-outline"></ion-icon><b>{{ u.groupsJoined }}</b>Groups Joined</span>
+          <span class="cnt"><ion-icon name="person-add-outline"></ion-icon><b>{{ u.groupsCreated }}</b>Groups Created</span>
+          <span class="cnt"><ion-icon name="cash-outline"></ion-icon><b>{{ u.txCount }}</b>Transactions</span>
+        </div>
+
+        <!-- Joined groups -->
+        <p class="sec-head plain" *ngIf="u.joined.length">
+          <ion-icon name="people-outline"></ion-icon> Groups Joined
+        </p>
+        <div class="jg" *ngFor="let g of u.joined">
+          <app-ott-logo [brand]="g.brand" [size]="40" [radius]="8"></app-ott-logo>
+          <div class="jg-mid">
+            <p class="jg-name">{{ g.sellerName }} <span class="uid">{{ g.sellerUniqueNum }}</span></p>
+            <p class="jg-sub">{{ g.ottName }} · {{ g.tierLabel }} · {{ g.months }}M</p>
+          </div>
+          <span class="jg-price">₹{{ g.price }}</span>
+        </div>
+
+        <div class="um-actions">
+          <button class="um-btn chat" (click)="chat(u)">
+            <ion-icon name="chatbubble-ellipses-outline"></ion-icon> Chat
+          </button>
+          <button class="um-btn del" (click)="removeUser(u)">Remove Account</button>
+        </div>
       </div>
     </div>
   </div>
-  <div style="height:80px"></div>
+
+  <p class="empty" *ngIf="!shown.length">No user matches this filter.</p>
+  <div style="height:100px"></div>
 </ion-content>

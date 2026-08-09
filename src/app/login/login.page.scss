@@ -14,3 +14,8 @@
 .or-row { display: flex; align-items: center; gap: $sp-md; margin: $sp-xs 0 $sp-md; &::before, &::after { content: ''; flex: 1; height: 1px; background: $gray-200; } span { font-size: $font-sm; color: $gray-400; } }
 .outline-btn { width: 100%; height: 52px; background: transparent; color: $black; border: 2px solid $yellow; border-radius: $r-pill; font-size: $font-base; font-weight: 700; cursor: pointer; font-family: inherit; margin-bottom: $sp-md; }
 .forgot { text-align: center; font-size: $font-sm; color: $blue; font-weight: 600; cursor: pointer; margin: 0; }
+.login-error {
+  background: $red-light; color: $red; border-radius: $r-sm;
+  padding: 10px $sp-md; margin: 0 0 $sp-md;
+  font-size: $font-sm; font-weight: 600; text-align: center;
+}

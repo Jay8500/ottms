@@ -1,15 +1,128 @@
 @import '../../../global.scss';
-.payment-content { --background: #{$white}; }
+
+.pm-content { --background: #{$white}; }
+
 .top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
-.icon-btn { @include icon-btn; } .logo-badge { @include logo-badge; }
-.page-title { text-align: center; font-size: $font-xl; font-weight: 700; color: $black; padding: 0 $sp-lg $sp-md; margin: 0; }
-.qr-card { margin: 0 $sp-lg $sp-md; background: $white; border-radius: $r-xl; border: 1.5px solid $gray-200; box-shadow: $shadow-sm; padding: $sp-xl $sp-lg; @include flex-center; flex-direction: column; gap: $sp-md;
-  .qr-box { border: 2px solid $yellow; border-radius: $r-lg; width: 160px; height: 160px; @include flex-center; ion-icon { font-size: 100px; color: $gray-300; } }
-  .qr-label { font-size: $font-sm; font-weight: 600; color: $black; margin: 0; } }
-.upi-info { margin: 0 $sp-lg $sp-sm;
-  .info-row { display: flex; align-items: center; justify-content: space-between; padding: $sp-sm 0; border-bottom: 1px solid $gray-100; .lbl { font-size: $font-sm; color: $gray-600; } .val { font-size: $font-sm; font-weight: 600; color: $black; } .val-copy { display: flex; align-items: center; gap: $sp-sm; } .copy-btn { background: $yellow; color: $black; border: none; padding: 4px $sp-md; border-radius: $r-pill; font-size: $font-xs; font-weight: 700; cursor: pointer; } } }
-.divider-lbl { text-align: center; font-size: $font-base; font-weight: 700; color: $black; display: flex; align-items: center; gap: $sp-md; padding: $sp-md $sp-lg; &::before, &::after { content: ''; flex: 1; height: 1.5px; background: $gray-200; } }
-.after-section { padding: 0 $sp-lg; }
-.amount-row { display: flex; align-items: center; gap: $sp-sm; border: 1.5px solid $gray-200; border-radius: $r-lg; padding: 0 $sp-md; height: 50px; margin-bottom: $sp-md; label { font-size: $font-sm; color: $gray-600; white-space: nowrap; } input { flex: 1; border: none; outline: none; font-size: $font-base; background: transparent; color: $black; } }
-.upload-area { background: $yellow-light; border-radius: $r-lg; padding: $sp-xl $sp-lg; @include flex-center; flex-direction: column; gap: $sp-sm; cursor: pointer; margin-bottom: $sp-md; ion-icon { font-size: 40px; color: $yellow-dark; } .up-title { font-size: $font-base; font-weight: 700; color: $black; margin: 0; } .up-sub { font-size: $font-xs; color: $gray-600; margin: 0; } .choose-btn { background: $yellow; color: $black; border: none; padding: 8px $sp-xl; border-radius: $r-pill; font-size: $font-sm; font-weight: 700; cursor: pointer; } .file-hint { font-size: $font-xs; color: $gray-400; margin: 0; } .file-name { font-size: $font-xs; color: $green; font-weight: 600; margin: 0; } }
-.submit-btn { display: flex; align-items: center; justify-content: center; gap: $sp-sm; background: $yellow; color: $black; border: none; border-radius: $r-pill; height: 52px; width: calc(100% - #{$sp-lg} * 2); margin: 0 $sp-lg $sp-xl; font-size: $font-lg; font-weight: 700; cursor: pointer; ion-icon { font-size: 22px; } }
+.icon-btn { @include icon-btn; }
+.logo-badge { @include logo-badge; }
+
+.page-title {
+  font-size: $font-2xl; font-weight: 800; color: $black;
+  text-align: center; margin: $sp-xs 0 $sp-md;
+  position: relative;
+  &::after {
+    content: ''; display: block; width: 120px; height: 3px;
+    background: $yellow; border-radius: 2px; margin: 6px auto 0;
+  }
+}
+
+// ── Admin payment details ──────────────────────────────────────────────────
+.pay-card {
+  margin: 0 $sp-lg $sp-lg; padding: $sp-lg;
+  background: $white; border: 1px solid $gray-200;
+  border-radius: $r-lg; box-shadow: $shadow-sm;
+}
+
+.qr-box {
+  width: 190px; height: 190px; margin: 0 auto;
+  border: 2px solid $yellow; border-radius: $r-md;
+  background: $gray-50; @include flex-center; overflow: hidden;
+  img { width: 100%; height: 100%; object-fit: contain; }
+  ion-icon { font-size: 88px; color: $gray-400; }
+}
+
+.qr-cap {
+  text-align: center; font-size: $font-base; font-weight: 700;
+  color: $black; margin: $sp-md 0 $sp-lg;
+}
+
+.row {
+  display: flex; align-items: center; gap: $sp-sm;
+  padding: 11px 0; border-bottom: 1px solid $gray-100;
+  .k { font-size: $font-sm; color: $gray-600; flex-shrink: 0; min-width: 84px; }
+  .v {
+    flex: 1; min-width: 0; font-size: $font-base; font-weight: 700; color: $black;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  &.bank {
+    border-bottom: none;
+    ion-icon { font-size: 24px; color: $gray-600; flex-shrink: 0; }
+  }
+}
+
+.copy {
+  flex-shrink: 0; display: flex; align-items: center; gap: 4px;
+  height: 32px; padding: 0 12px; border: none; border-radius: $r-sm;
+  background: $yellow; color: $black; cursor: pointer;
+  font-family: inherit; font-size: $font-xs; font-weight: 700;
+  ion-icon { font-size: 14px; }
+}
+
+// ── Divider ────────────────────────────────────────────────────────────────
+.divider {
+  display: flex; align-items: center; gap: $sp-md;
+  margin: 0 $sp-lg $sp-lg;
+  &::before, &::after { content: ''; flex: 1; height: 1px; background: $gray-300; }
+  span { font-size: $font-lg; font-weight: 800; color: $black; }
+}
+
+// ── Form ───────────────────────────────────────────────────────────────────
+.form { padding: 0 $sp-lg; }
+
+.fl {
+  display: block; font-size: $font-sm; font-weight: 700;
+  color: $gray-700; margin: $sp-md 0 6px;
+  .opt { font-weight: 500; color: $gray-400; font-size: $font-xs; }
+}
+
+.fi {
+  width: 100%; height: 48px; padding: 0 $sp-md;
+  border: 1.5px solid $gray-300; border-radius: $r-sm;
+  font-family: inherit; font-size: $font-base; color: $black;
+  outline: none; background: $white;
+  &::placeholder { color: $gray-400; }
+  &:focus { border-color: $yellow; }
+}
+
+.app-row {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  button {
+    flex: 1 1 auto; min-width: 74px; height: 40px; border-radius: $r-sm;
+    border: 1.5px solid $gray-300; background: $white; cursor: pointer;
+    font-family: inherit; font-size: $font-sm; font-weight: 700; color: $gray-700;
+    &.on { background: $yellow; border-color: $yellow; color: $black; }
+  }
+}
+
+.upload {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  padding: $sp-lg $sp-md; text-align: center; cursor: pointer;
+  border: 1.5px dashed $gray-400; border-radius: $r-md; background: $gray-50;
+  ion-icon { font-size: 34px; color: $gray-400; &.done { color: $green; } }
+  .up-title { font-size: $font-base; font-weight: 700; color: $black; margin: 0; word-break: break-all; }
+  .up-sub   { font-size: $font-xs; color: $gray-600; margin: 0; }
+}
+
+.choose {
+  @include yellow-btn; height: 38px; padding: 0 $sp-lg; margin-top: 6px;
+  font-size: $font-sm;
+}
+
+.note {
+  font-size: $font-xs; color: $gray-700; line-height: 1.55;
+  background: $yellow-light; border-radius: $r-sm;
+  padding: 10px $sp-md; margin: $sp-lg 0 0;
+}
+
+.submit {
+  @include yellow-btn; width: 100%; height: 52px;
+  font-size: $font-lg; margin: $sp-md 0 0;
+  ion-icon { font-size: 20px; }
+  &:disabled { opacity: 0.45; }
+}
+
+.state {
+  text-align: center; padding: $sp-xl $sp-lg;
+  p { font-size: $font-base; color: $gray-600; margin: 0 0 $sp-md; }
+}
+.retry { @include yellow-btn; height: 42px; padding: 0 $sp-xl; margin: 0 auto; }

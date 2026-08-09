@@ -1,0 +1,67 @@
+<ion-content class="cx-content" [scrollY]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
+
+  <app-admin-header title="Commerce" trailing="options"></app-admin-header>
+
+  <p class="cx-note">
+    What a user sees after choosing a platform. Tap a card to change its wording,
+    colour or icon.
+  </p>
+
+  <div class="cx-grid">
+    <button class="cx-card" *ngFor="let c of items" [class.off]="!c.active" (click)="edit(c)">
+      <div class="cx-ico" [style.background]="c.color"><ion-icon [name]="c.icon"></ion-icon></div>
+      <span class="cx-title">{{ c.title }}</span>
+      <span class="cx-sub">{{ c.subName }}</span>
+      <span class="cx-edit"><ion-icon name="create-outline"></ion-icon> Edit</span>
+      <ion-icon name="eye-off-outline" class="cx-hidden" *ngIf="!c.active"></ion-icon>
+    </button>
+  </div>
+
+  <p class="empty" *ngIf="!items.length">No options yet. Tap Add New to create one.</p>
+
+  <button class="cx-validity" (click)="goValidity()">
+    <ion-icon name="add-circle-outline"></ion-icon> Add Validity
+  </button>
+
+  <div style="height:120px"></div>
+</ion-content>
+
+<ion-footer class="cta-footer">
+  <button class="cta-btn" (click)="create()">
+    <ion-icon name="add-circle-outline"></ion-icon> Add New
+  </button>
+</ion-footer>
+
+<app-entity-editor
+  [open]="editorOpen"
+  [heading]="isNew ? 'Add Option' : 'Edit Sub-Category'"
+  [model]="editing"
+  [icons]="icons"
+  [showDelete]="!isNew"
+  (save)="onSave($event)"
+  (remove)="onRemove($event)"
+  (close)="editorOpen = false">
+
+  <ng-container *ngIf="editing">
+    <label class="ee-lbl">What this option does</label>
+    <div class="act-row">
+      <button class="act" [class.on]="editing.action === 'purchase'"
+              (click)="editing.action = 'purchase'">
+        <ion-icon name="cart-outline"></ion-icon>
+        <span>Buy a screen</span>
+      </button>
+      <button class="act" [class.on]="editing.action === 'share'"
+              (click)="editing.action = 'share'">
+        <ion-icon name="people-outline"></ion-icon>
+        <span>Share &amp; sell</span>
+      </button>
+    </div>
+    <p class="hint">
+      “Buy a screen” sends the user to the validity plans.
+      “Share &amp; sell” opens the Create Group form.
+    </p>
+  </ng-container>
+</app-entity-editor>

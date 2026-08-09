@@ -17,6 +17,8 @@
         <input [(ngModel)]="password" [type]="showPassword ? 'text' : 'password'" placeholder="Password" />
         <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" class="eye" (click)="showPassword=!showPassword"></ion-icon>
       </div>
+      <p class="login-error" *ngIf="error">{{ error }}</p>
+
       <button class="yellow-btn full" [disabled]="loading" (click)="login()">
         <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
         {{ loading ? 'Signing in...' : 'Sign In' }}

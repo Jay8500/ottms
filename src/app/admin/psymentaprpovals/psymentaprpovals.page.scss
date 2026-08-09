@@ -1,22 +1,68 @@
 @import '../../../global.scss';
-.page-content { --background: #{$white}; }
-.page-header { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
-.icon-btn { @include icon-btn; } .logo-badge { @include logo-badge; }
-.page-title { text-align: center; font-size: $font-xl; font-weight: 700; color: $black; padding: 0 $sp-lg $sp-md; margin: 0; }
-.wallet-summary { display: grid; grid-template-columns: repeat(3,1fr); gap: $sp-sm; padding: 0 $sp-lg $sp-md; }
-.ws-card { border-radius: $r-lg; padding: $sp-md; text-align: center; box-shadow: $shadow-sm; span { font-size: 22px; display: block; margin-bottom: 2px; } p { font-size: $font-xs; font-weight: 600; color: $black; margin: 0; } .ws-amt { font-size: $font-base; font-weight: 700; margin-top: 2px; }
-  &.yellow { background: $yellow; } &.blue { background: #DBEAFE; } &.green { background: #DCFCE7; } }
-.filter-chips { display: flex; gap: $sp-sm; padding: 0 $sp-lg $sp-md; overflow-x: auto; scrollbar-width: none; &::-webkit-scrollbar { display: none; } }
-.chip { padding: 8px $sp-lg; border-radius: $r-pill; background: $white; border: 1.5px solid $gray-200; font-size: $font-xs; font-weight: 600; color: $gray-600; cursor: pointer; flex-shrink: 0; font-family: inherit; &.active { background: $yellow; border-color: $yellow; color: $black; } }
-.list-area { padding: 0 $sp-lg $sp-xl; display: flex; flex-direction: column; gap: $sp-sm; }
-.card { background: $white; border-radius: $r-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm; padding: $sp-md $sp-lg; }
-.p-top { display: flex; align-items: center; gap: $sp-md; margin-bottom: $sp-sm; }
-.p-av { width: 44px; height: 44px; border-radius: 50%; background: $yellow; @include flex-center; font-size: $font-base; font-weight: 700; color: $black; flex-shrink: 0; }
-.p-info { flex: 1; .p-name { font-size: $font-sm; font-weight: 700; color: $black; margin: 0; } .p-meta { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; } }
-.amt-tag { background: $yellow-light; color: $black; font-size: $font-base; font-weight: 700; padding: 4px 12px; border-radius: $r-pill; border: 1px solid $yellow; }
-.remarks-input { width: 100%; border: 1.5px solid $gray-200; border-radius: $r-lg; padding: 0 $sp-md; height: 40px; font-size: $font-sm; outline: none; margin-bottom: $sp-sm; box-sizing: border-box; }
-.p-actions { display: flex; gap: $sp-sm; }
-.green-btn { background: $green; color: $white; border: none; border-radius: $r-pill; height: 38px; padding: 0 $sp-md; font-size: $font-xs; font-weight: 700; cursor: pointer; font-family: inherit; flex: 1; }
-.red-btn   { background: $red;   color: $white; border: none; border-radius: $r-pill; height: 38px; padding: 0 $sp-md; font-size: $font-xs; font-weight: 700; cursor: pointer; font-family: inherit; flex: 1; }
-.blue-btn  { background: $blue;  color: $white; border: none; border-radius: $r-pill; height: 38px; padding: 0 $sp-md; font-size: $font-xs; font-weight: 700; cursor: pointer; font-family: inherit; }
-.status-badge { font-size: $font-xs; padding: 4px 12px; border-radius: $r-pill; font-weight: 600; &.approved { background: $green-light; color: $green; } &.rejected { background: $red-light; color: $red; } }
+
+.pa-content { --background: #{$gray-50}; }
+
+.pa-list { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-md; }
+
+.pa-card {
+  background: $white; border: 1px solid $gray-200; border-radius: $r-md;
+  overflow: hidden; box-shadow: $shadow-sm;
+}
+
+.pa-head {
+  @include flex-between;
+  background: $yellow; padding: 8px $sp-md;
+  .ph-kind { font-size: $font-lg; font-weight: 800; color: $black; }
+  .ph-date { font-size: $font-sm; font-weight: 700; color: $black; }
+}
+
+.pa-body { display: flex; align-items: center; gap: $sp-md; padding: $sp-md; }
+
+.pa-avatar {
+  width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
+  @include flex-center; background: $blue-light; color: $blue;
+  font-size: $font-xl; font-weight: 800;
+}
+
+.pa-mid {
+  flex: 1; min-width: 0;
+  .pa-mobile { font-size: $font-xl; font-weight: 800; color: $black; margin: 0; }
+  .pa-user   { font-size: $font-base; color: $gray-700; margin: 2px 0 0; font-weight: 600; }
+}
+
+.pa-amt {
+  font-size: $font-xl; font-weight: 800; color: #DC2626; margin: 0;
+  white-space: nowrap; flex-shrink: 0;
+  &.plus { color: #16A34A; }
+}
+
+.pa-meta {
+  display: flex; align-items: center; gap: $sp-sm;
+  padding: 0 $sp-md $sp-md; flex-wrap: wrap;
+}
+
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  height: 32px; padding: 0 $sp-md; border-radius: $r-sm;
+  font-size: $font-xs; font-weight: 700; border: none; font-family: inherit;
+  ion-icon { font-size: 15px; }
+
+  &.time    { background: #E0F2FE; color: #075985; }
+  &.app     { background: #5F259F; color: $white; }
+  &.pending { background: $white; color: #DC2626; border: 1.5px solid #DC2626; }
+  &.img     { background: #2563EB; color: $white; margin-left: auto; cursor: pointer; }
+}
+
+.pa-actions { display: flex; gap: $sp-md; padding: 0 $sp-md $sp-md; }
+
+.pa-reject, .pa-approve {
+  flex: 1; height: 46px; border: none; border-radius: $r-sm;
+  font-family: inherit; font-size: $font-lg; font-weight: 800;
+  color: $white; cursor: pointer; @include flex-center; gap: 6px;
+  ion-icon { font-size: 20px; }
+  &:active { opacity: 0.88; }
+}
+.pa-reject  { background: #B91C1C; }
+.pa-approve { background: #15803D; }
+
+.empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }

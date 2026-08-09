@@ -1,19 +1,47 @@
 <ion-content class="cat-content" [scrollY]="true">
   <div class="top-bar">
-    <button class="icon-btn" onclick="history.back()"><ion-icon name="settings-outline"></ion-icon></button>
+    <button class="icon-btn" (click)="back()" aria-label="Back">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
     <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
-    <button class="icon-btn" ><ion-icon name="options-outline"></ion-icon></button>
-
-  </div>
-  <div class="cat-list">
-    <button class="cat-banner" *ngFor="let cat of filteredCategories" (click)="openCategory(cat)" [style.background]="cat.bgColor">
-      <span class="cat-emoji">{{ cat.emoji }}</span>
-      <div class="cat-info">
-        <p class="cat-name">{{ cat.name }}</p>
-        <p class="cat-sub">{{ cat.appCount }} Apps</p>
-      </div>
-      <div class="cat-arrow"><ion-icon name="chevron-forward-outline"></ion-icon></div>
+    <button class="icon-btn dark" aria-label="Options">
+      <ion-icon name="options-outline"></ion-icon>
     </button>
   </div>
+
+  <h1 class="page-title">Categories</h1>
+
+  <div class="cat-list">
+    <button class="cat-banner" *ngFor="let cat of categories"
+            [class.locked]="!cat.active"
+            [style.background]="cat.color"
+            (click)="openCategory(cat)">
+      <div class="cat-ico"><ion-icon [name]="cat.icon"></ion-icon></div>
+      <div class="cat-info">
+        <p class="cat-name">{{ cat.title }}</p>
+        <p class="cat-sub">
+          <ng-container *ngIf="cat.active">{{ cat.subName || (cat.appCount + ' platforms') }}</ng-container>
+          <ng-container *ngIf="!cat.active">Coming soon</ng-container>
+        </p>
+      </div>
+      <div class="cat-arrow">
+        <ion-icon [name]="cat.active ? 'chevron-forward-outline' : 'lock-closed-outline'"></ion-icon>
+      </div>
+    </button>
+  </div>
+
+  <div class="skeleton" *ngIf="loading">
+    <div class="sk" *ngFor="let i of [1,2,3,4]"></div>
+  </div>
+
+  <div class="state" *ngIf="error">
+    <p>{{ error }}</p>
+    <button class="retry" (click)="load()">Try again</button>
+  </div>
+
+  <div class="state" *ngIf="!loading && !error && !categories.length">
+    <p>No categories yet.</p>
+  </div>
+
   <div style="height:80px"></div>
 </ion-content>

@@ -1,0 +1,57 @@
+@import '../../../global.scss';
+
+.sb-row { display: flex; gap: $sp-sm; padding: 0 $sp-lg $sp-md; }
+
+.sb-input {
+  flex: 1; display: flex; align-items: center; gap: $sp-sm;
+  height: 46px; padding: 0 $sp-lg; background: $white;
+  border: 1.5px solid $gray-200; border-radius: $r-pill; box-shadow: $shadow-sm;
+  ion-icon { font-size: 20px; color: $gray-400; flex-shrink: 0; }
+  input {
+    flex: 1; min-width: 0; border: none; outline: none; background: transparent;
+    font-family: inherit; font-size: $font-base; color: $black;
+    &::placeholder { color: $gray-400; }
+  }
+}
+
+.sb-go {
+  @include yellow-btn; height: 46px; padding: 0 $sp-lg; flex-shrink: 0;
+  ion-icon { font-size: 18px; }
+  span { font-size: $font-base; }
+}
+
+.sb-sort { display: flex; gap: $sp-sm; padding: 0 $sp-lg $sp-md; }
+
+.ss-btn {
+  flex: 1; min-width: 0; height: 44px; border: none; border-radius: $r-md;
+  background: $yellow; color: $black; font-family: inherit;
+  font-size: $font-sm; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  box-shadow: $shadow-sm;
+  ion-icon { font-size: 16px; flex-shrink: 0; }
+  span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .caret { margin-left: auto; }
+  &:active { opacity: 0.85; }
+}
+
+.sb-chips {
+  display: flex; gap: $sp-sm; padding: 0 $sp-lg $sp-md;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.sc {
+  flex-shrink: 0; height: 40px; padding: 0 $sp-lg; border-radius: $r-md;
+  font-family: inherit; font-size: $font-base; font-weight: 700;
+  cursor: pointer; border: 1.5px solid $gray-300;
+  background: $white; color: $black; position: relative;
+
+  &[data-tone='green'] { background: #16A34A; color: $white; border-color: #16A34A; }
+  &[data-tone='red']   { background: #DC2626; color: $white; border-color: #DC2626; }
+  &[data-tone='yellow']{ background: $yellow;  color: $black; border-color: $yellow; }
+
+  &.active::after {
+    content: ''; position: absolute; left: 12%; right: 12%; bottom: -6px;
+    height: 3px; border-radius: 2px; background: $orange;
+  }
+}

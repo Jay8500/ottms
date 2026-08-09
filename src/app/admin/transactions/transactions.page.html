@@ -1,0 +1,58 @@
+<ion-content class="tx-content" [scrollY]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
+
+  <app-admin-header title="Transactions" trailing="excel" (excel)="exportCsv()"></app-admin-header>
+
+  <app-admin-searchbar
+    placeholder="Search Transactions..."
+    [(term)]="term" (termChange)="apply()" (search)="apply()"
+    [chips]="chips" [activeChip]="activeChip" (chipChange)="setChip($event)">
+  </app-admin-searchbar>
+
+  <div class="tx-list">
+    <div class="tx-card" *ngFor="let x of shown">
+      <div class="tx-head">
+        <span class="th-kind">{{ x.txKind === 'withdraw' ? 'Withdraw' : x.txKind === 'addfund' ? 'Add Fund' : x.txKind === 'purchase' ? 'Purchase' : 'Sale' }}</span>
+        <span class="th-date">{{ x.txDate }}</span>
+      </div>
+
+      <div class="tx-body">
+        <app-ott-logo *ngIf="isOttRow(x)" [brand]="x.brand!" [size]="52" [radius]="10"></app-ott-logo>
+        <div class="pay-chip" *ngIf="!isOttRow(x)" [class.gpay]="x.paymentApp === 'GPay'">
+          {{ x.paymentApp || 'Manual' }}
+        </div>
+
+        <div class="tx-mid">
+          <ng-container *ngIf="isOttRow(x); else moneyRow">
+            <p class="tx-title">{{ x.ottName }} <span class="tier">{{ x.tierLabel }}</span></p>
+            <p class="tx-sub">{{ x.dateFrom }} – {{ x.dateTo }} ({{ x.months }} Month{{ x.months === 1 ? '' : 's' }})</p>
+          </ng-container>
+          <ng-template #moneyRow>
+            <p class="tx-title">{{ x.partyMobile }}</p>
+          </ng-template>
+          <p class="tx-user">{{ x.partyName }} ({{ x.partyUniqueNum }})</p>
+        </div>
+
+        <div class="tx-right">
+          <p class="tx-amt" [class.plus]="x.txType === 'funded'">
+            {{ x.txType === 'funded' ? '+' : '−' }}₹{{ x.amount | number }}
+          </p>
+          <span class="tx-status" [attr.data-s]="x.status">{{ statusLabel(x) }}</span>
+        </div>
+      </div>
+
+      <div class="tx-foot">
+        <span class="chip time"><ion-icon name="time-outline"></ion-icon> {{ x.txTime }}</span>
+        <span class="chip ref" *ngIf="x.txnRef">Txn ID: {{ x.txnRef }}</span>
+        <button class="chip img" (click)="viewImage(x)">
+          <ion-icon name="image-outline"></ion-icon> Image
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <p class="empty" *ngIf="!shown.length">No transactions match this filter.</p>
+  <div style="height:100px"></div>
+</ion-content>

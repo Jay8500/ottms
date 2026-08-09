@@ -1,25 +1,86 @@
 <ion-content class="at-content" [scrollY]="true">
   <div class="top-bar">
-    <button class="icon-btn" onclick="history.back()"><ion-icon name="arrow-back-outline"></ion-icon></button>
-    <div class="tab-pills"><div class="pill active"></div><div class="pill"></div><div class="pill"></div></div>
-    <button class="icon-btn dark"><ion-icon name="options-outline"></ion-icon></button>
-  </div>
-  <div class="logo-center"><div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div></div>
-  <div class="app-banner" [style.background]="ottColor">
-    <span class="app-name">{{ ottName }}</span>
-  </div>
-  <p class="select-label">Select Option Below</p>
-  <div class="action-grid">
-    <button class="action-card purchase" (click)="navigate('purchase')">
-      <ion-icon name="cart-outline"></ion-icon>
-      <span class="ac-label">Purchase</span>
-      <span class="ac-sub">Private Screen</span>
+    <button class="icon-btn" (click)="back()" aria-label="Back">
+      <ion-icon name="arrow-back-outline"></ion-icon>
     </button>
-    <button class="action-card share" (click)="navigate('share')">
-      <ion-icon name="people-outline"></ion-icon>
-      <span class="ac-label">Share</span>
-      <span class="ac-sub">Personal Screen</span>
+    <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
+    <button class="icon-btn dark" aria-label="Options">
+      <ion-icon name="options-outline"></ion-icon>
     </button>
+  </div>
+
+  <div class="app-banner" *ngIf="app" [style.background]="app.color">
+    <app-ott-logo [brand]="app.brand" [imageUrl]="app.imageUrl" [size]="54" [radius]="10"></app-ott-logo>
+    <span class="app-name">{{ app.title }}</span>
+  </div>
+
+  <p class="select-label" *ngIf="app && !showGroupForm">Select Option Below</p>
+
+  <div class="action-grid" *ngIf="app && !showGroupForm">
+    <button class="action-card" *ngFor="let o of options"
+            [style.background]="o.color" (click)="choose(o)">
+      <ion-icon [name]="o.icon"></ion-icon>
+      <span class="ac-label">{{ o.title }}</span>
+      <span class="ac-sub">{{ o.subName }}</span>
+    </button>
+  </div>
+
+  <!-- ── Create Group, inline after Share ── -->
+  <div class="grp-card" *ngIf="showGroupForm">
+    <div class="grp-head">
+      <h2>Create Group</h2>
+      <button class="grp-x" (click)="closeGroupForm()" aria-label="Close">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <label class="fl">Select Plan</label>
+    <div class="tier-row">
+      <button class="tier" *ngFor="let t of app?.tiers"
+              [class.on]="groupForm.tierId === t.id"
+              (click)="groupForm.tierId = t.id">
+        <span class="t-name">{{ t.label }}</span>
+        <span class="t-seats">{{ t.maxScreens }} screens</span>
+      </button>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <label class="fl">Date From</label>
+        <input class="fi" type="date" [(ngModel)]="groupForm.dateFrom" />
+      </div>
+      <div>
+        <label class="fl">Date To</label>
+        <input class="fi" type="date" [(ngModel)]="groupForm.dateTo" />
+      </div>
+    </div>
+
+    <label class="fl">Upload Subscription Screenshot</label>
+    <label class="upload">
+      <ion-icon name="cloud-upload-outline"></ion-icon>
+      <span *ngIf="!groupForm.proofName">Tap to upload · JPG, PNG up to 5MB</span>
+      <span class="picked" *ngIf="groupForm.proofName">{{ groupForm.proofName }}</span>
+      <input type="file" accept="image/*" hidden (change)="onProof($event)" />
+    </label>
+
+    <label class="fl">Comments</label>
+    <textarea class="fi ta" rows="3" [(ngModel)]="groupForm.comment"
+              placeholder="Anything the buyer should know"></textarea>
+
+    <p class="grp-note" *ngIf="seatsForTier">
+      You will be able to share this with <b>{{ seatsForTier }}</b> people.
+      Admin reviews your screenshot before the group goes live.
+    </p>
+
+    <button class="grp-submit" [disabled]="submitting" (click)="submitGroup()">
+      {{ submitting ? 'Submitting…' : 'Submit for Approval' }}
+    </button>
+  </div>
+
+  <div class="state" *ngIf="loading"><p>Loading…</p></div>
+  <div class="state" *ngIf="error">
+    <p>{{ error }}</p>
+    <button class="retry" (click)="load()">Try again</button>
   </div>
 
   <div style="height:80px"></div>

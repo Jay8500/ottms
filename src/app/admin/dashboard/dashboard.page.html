@@ -1,0 +1,33 @@
+<ion-content class="dash-content" [scrollY]="true">
+  <app-admin-header leading="menu" trailing="options"
+                    (menu)="openMenu()" (options)="openMenu()"></app-admin-header>
+
+  <div class="dash-search">
+    <div class="ds-input">
+      <ion-icon name="search-outline"></ion-icon>
+      <input [(ngModel)]="term" (ngModelChange)="filter()" placeholder="Search here..." />
+    </div>
+    <button class="ds-go" (click)="filter()">
+      <ion-icon name="search-outline"></ion-icon><span>Search</span>
+    </button>
+  </div>
+
+  <div class="feat-grid">
+    <button class="feat" *ngFor="let f of filtered" (click)="open(f)">
+      <span class="feat-badge" *ngIf="f.badge">{{ f.badge }}</span>
+      <div class="feat-ico" [style.color]="f.tint"><ion-icon [name]="f.icon"></ion-icon></div>
+      <span class="feat-lbl">{{ f.n }}. {{ f.label }}</span>
+      <span class="feat-rule" [style.background]="f.accent"></span>
+    </button>
+  </div>
+
+  <p class="no-hits" *ngIf="!filtered.length">No feature matches “{{ term }}”.</p>
+
+  <div style="height:120px"></div>
+</ion-content>
+
+<ion-footer class="cta-footer">
+  <button class="cta-btn" (click)="addNew()">
+    <ion-icon name="add-circle-outline"></ion-icon> Add New
+  </button>
+</ion-footer>

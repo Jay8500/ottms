@@ -1,31 +1,49 @@
-<ion-content class="rating-content" [scrollY]="true">
-  <div class="modal-overlay">
-    <div class="modal-card">
-      <div class="modal-hdr">
-        <p class="modal-title">Leave a Review</p>
-        <button class="close-btn" (click)="skip()">✕</button>
-      </div>
-      <div class="seller-banner">
-        <div class="s-av">{{ peerName.charAt(0) }}</div>
-        <div class="s-info">
-          <p class="s-name">{{ peerName }}</p>
-          <p class="s-meta">{{ ottName }} • {{ validity }}</p>
-        </div>
-        <div class="s-rating"><span *ngFor="let i of [1,2,3,4,5]">{{ i<=selected ? '★' : '☆' }}</span></div>
-      </div>
-      <div class="stars-row">
-        <button class="star-btn" *ngFor="let i of [1,2,3,4,5]" [class.filled]="i<=selected" [class.empty]="i>selected" (click)="selected=i">
-          {{ i<=selected ? '★' : '☆' }}
-        </button>
-      </div>
-      <div class="badges-wrap">
-        <button class="badge-pill" *ngFor="let b of badges" [class.active]="activeBadges.includes(b.key)" (click)="toggleBadge(b.key)">
-          {{ b.emoji }} {{ b.label }}
-        </button>
-      </div>
-      <textarea class="review-ta" [(ngModel)]="review" placeholder="Write your review..." rows="4"></textarea>
-      <button class="submit-btn" (click)="submit()">Submit</button>
-      <p class="skip-link" (click)="skip()">Skip</p>
-    </div>
+<ion-content class="rt-content" [scrollY]="true">
+  <div class="top-bar">
+    <button class="icon-btn" (click)="back()" aria-label="Back">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
+    <div style="width:40px"></div>
   </div>
+
+  <ng-container *ngIf="thread">
+    <div class="who-card">
+      <div class="w-av">{{ who?.charAt(0) }}</div>
+      <p class="w-name">{{ who }}</p>
+      <p class="w-sub" *ngIf="thread.isGroup">{{ thread.ottName }} · {{ thread.months }} Month</p>
+    </div>
+
+    <p class="ask">How was this deal?</p>
+
+    <div class="stars">
+      <button *ngFor="let n of [1,2,3,4,5]" (click)="set(n)"
+              [attr.aria-label]="n + ' stars'" [class.on]="n <= stars">★</button>
+    </div>
+    <p class="star-label">{{ labels[stars] }}</p>
+
+    <label class="fl">Add a comment <span class="opt">optional</span></label>
+    <textarea class="fi" rows="4" [(ngModel)]="body"
+              placeholder="What went well, or what could be better?"></textarea>
+
+    <label class="fl" *ngIf="badges.length">Give a badge <span class="opt">optional</span></label>
+    <div class="badge-row">
+      <button class="badge" *ngFor="let b of badges"
+              [class.on]="chosenBadge === b.id" (click)="pickBadge(b)">
+        <span class="b-emoji">{{ b.emoji }}</span>
+        <span class="b-label">{{ b.label }}</span>
+      </button>
+    </div>
+
+    <button class="submit" [disabled]="!stars || submitting" (click)="submit()">
+      {{ submitting ? 'Saving…' : 'Submit Rating' }}
+    </button>
+
+    <p class="note">Ratings are optional and can only be left once per deal.</p>
+  </ng-container>
+
+  <div class="state" *ngIf="loading"><p>Loading…</p></div>
+  <div class="state" *ngIf="error"><p>{{ error }}</p></div>
+
+  <div style="height:60px"></div>
 </ion-content>

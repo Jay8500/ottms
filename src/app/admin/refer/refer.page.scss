@@ -1,0 +1,114 @@
+@import '../../../global.scss';
+
+.rf-content { --background: #{$gray-50}; }
+
+// ── Settings card ──────────────────────────────────────────────────────────
+.card {
+  margin: 0 $sp-lg $sp-lg; padding: $sp-lg;
+  background: $white; border: 1px solid $gray-200;
+  border-radius: $r-lg; box-shadow: $shadow-sm;
+}
+
+.row {
+  @include flex-between; gap: $sp-md;
+  padding-bottom: $sp-md; border-bottom: 1px solid $gray-100;
+  .r-text { flex: 1; min-width: 0; }
+  .r-title { font-size: $font-lg; font-weight: 800; color: $black; margin: 0; }
+  .r-sub   { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; }
+}
+
+.sw {
+  width: 52px; height: 30px; border-radius: $r-pill; border: none;
+  background: $gray-300; position: relative; cursor: pointer; flex-shrink: 0;
+  transition: background 0.18s;
+  i {
+    position: absolute; top: 3px; left: 3px; width: 24px; height: 24px;
+    border-radius: 50%; background: $white; transition: transform 0.18s;
+    box-shadow: $shadow-sm;
+  }
+  &.on { background: #16A34A; i { transform: translateX(22px); } }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sw, .sw i { transition: none; }
+}
+
+.fl {
+  display: block; font-size: $font-sm; font-weight: 700;
+  color: $gray-700; margin: $sp-md 0 6px;
+}
+
+.fi {
+  width: 100%; height: 48px; padding: 0 $sp-md;
+  border: 1.5px solid $gray-300; border-radius: $r-sm;
+  font-family: inherit; font-size: $font-xl; font-weight: 800;
+  color: $black; outline: none; background: $white;
+  &:focus { border-color: $yellow; }
+}
+
+.hint { font-size: $font-xs; color: $gray-600; margin: 8px 0 0; line-height: 1.5; }
+
+// ── Summary ────────────────────────────────────────────────────────────────
+.sum-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: $sp-sm; padding: 0 $sp-lg;
+}
+
+.sum {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: $sp-md 6px; border-radius: $r-md; border: 1.5px solid transparent;
+  ion-icon { font-size: 22px; }
+  .s-val { font-size: $font-xl; font-weight: 800; color: $black; }
+  .s-lbl { font-size: 10px; font-weight: 600; color: $gray-700; text-align: center; }
+
+  &.blue  { background: #EFF6FF; border-color: #BFDBFE; ion-icon { color: #2563EB; } }
+  &.green { background: #F0FDF4; border-color: #BBF7D0; ion-icon { color: #16A34A; } }
+  &.amber { background: #FFFBEB; border-color: #FDE68A; ion-icon { color: #D97706; } }
+}
+
+// ── List ───────────────────────────────────────────────────────────────────
+.sec {
+  font-size: $font-xs; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: $gray-600;
+  margin: $sp-xl $sp-lg $sp-sm;
+}
+
+.list { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-sm; }
+
+.ref {
+  display: flex; align-items: center; gap: $sp-md;
+  background: $white; border: 1px solid $gray-200; border-radius: $r-md;
+  padding: $sp-md; box-shadow: $shadow-sm;
+}
+
+.rf-ico {
+  width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+  @include flex-center; background: $gray-100;
+  ion-icon { font-size: 22px; color: $gray-600; }
+  &.done { background: #DCFCE7; ion-icon { color: #16A34A; } }
+}
+
+.rf-mid {
+  flex: 1; min-width: 0;
+  .rf-who { font-size: $font-base; font-weight: 800; color: $black; margin: 0; }
+  .rf-sub {
+    font-size: $font-xs; color: $gray-600; margin: 2px 0 0;
+    &.pending { color: $orange; }
+  }
+}
+
+.rf-right {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 3px;
+  flex-shrink: 0;
+  .code {
+    font-size: $font-xs; font-weight: 800; color: $black;
+    background: $yellow-light; border: 1px solid $yellow;
+    padding: 2px 8px; border-radius: $r-sm; letter-spacing: 0.5px;
+  }
+  .date { font-size: 10px; color: $gray-400; }
+}
+
+.empty {
+  text-align: center; color: $gray-600; font-size: $font-base;
+  padding: $sp-xl $sp-lg; line-height: 1.5;
+}

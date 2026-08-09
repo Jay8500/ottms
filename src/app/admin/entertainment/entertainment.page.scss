@@ -1,0 +1,103 @@
+@import '../../../global.scss';
+
+.en-content { --background: #{$gray-50}; }
+
+.en-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: $sp-md; padding: 0 $sp-lg $sp-lg;
+}
+
+.en-tile {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: $sp-md 6px $sp-sm; background: $white;
+  border: 1px solid $gray-200; border-radius: $r-lg; box-shadow: $shadow-sm;
+  &.off { opacity: 0.5; }
+
+  .en-name {
+    font-size: $font-sm; font-weight: 700; color: $black;
+    text-align: center; line-height: 1.25;
+  }
+  .en-seats {
+    display: flex; align-items: center; gap: 3px;
+    font-size: 10px; color: $gray-600;
+    ion-icon { font-size: 12px; }
+  }
+  .en-rule { width: 26px; height: 3px; border-radius: 2px; }
+  .en-hidden {
+    position: absolute; top: 6px; right: 6px;
+    font-size: 15px; color: $gray-600;
+  }
+}
+
+.en-edit {
+  width: 100%; height: 30px; margin-top: 2px;
+  border: 1.5px solid $gray-300; border-radius: $r-sm; background: $white;
+  font-family: inherit; font-size: 11px; font-weight: 700; color: $black;
+  cursor: pointer; @include flex-center; gap: 3px;
+  ion-icon { font-size: 13px; }
+}
+
+.empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }
+
+// ── Editor extras (projected into the shared sheet) ────────────────────────
+.ee-lbl {
+  display: block; font-size: $font-base; font-weight: 700;
+  color: $black; margin: $sp-md 0 6px;
+}
+
+.ee-input {
+  width: 100%; height: 48px; padding: 0 $sp-md; background: $white;
+  border: 1.5px solid $gray-300; border-radius: $r-md;
+  font-family: inherit; font-size: $font-base; color: $black; outline: none;
+  &::placeholder { color: $gray-400; }
+  &:focus { border-color: $yellow; }
+}
+
+.hint { font-size: $font-xs; color: $gray-600; margin: 5px 0 0; }
+
+.tier {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 8px;
+
+  .t-name {
+    flex: 1; min-width: 0; height: 44px; padding: 0 10px;
+    border: 1.5px solid $gray-300; border-radius: $r-sm;
+    font-family: inherit; font-size: $font-sm; outline: none;
+    &:focus { border-color: $yellow; }
+  }
+  .t-num {
+    width: 58px; height: 44px; padding: 0 8px; text-align: center;
+    border: 1.5px solid $gray-300; border-radius: $r-sm;
+    font-family: inherit; font-size: $font-sm; font-weight: 700; outline: none;
+    &:focus { border-color: $yellow; }
+  }
+  .t-unit { font-size: $font-xs; color: $gray-600; flex-shrink: 0; }
+  .t-x {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    border: none; background: $red-light; @include flex-center; cursor: pointer;
+    ion-icon { font-size: 18px; color: $red; }
+  }
+}
+
+.t-add {
+  width: 100%; height: 44px; border: 1.5px dashed $gray-400;
+  border-radius: $r-sm; background: transparent; cursor: pointer;
+  font-family: inherit; font-size: $font-sm; font-weight: 700; color: $gray-700;
+  @include flex-center; gap: 6px;
+  ion-icon { font-size: 18px; }
+}
+
+// ── Add New ────────────────────────────────────────────────────────────────
+.en-cta {
+  position: fixed; left: 0; right: 0; z-index: 20;
+  bottom: calc(64px + var(--ion-safe-area-bottom, 0px));
+  padding: $sp-sm $sp-lg $sp-md;
+  background: linear-gradient(to top, $gray-50 62%, rgba(250, 250, 250, 0));
+  pointer-events: none;
+}
+
+.add-new {
+  @include yellow-btn; width: 100%; height: 52px; font-size: $font-lg;
+  box-shadow: $shadow-md; pointer-events: all;
+  ion-icon { font-size: 24px; }
+}

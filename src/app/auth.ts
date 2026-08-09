@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Preferences } from '@capacitor/preferences';
+import { SupabaseService } from './shared/supabase.service';
 
 export interface UserProfile {
   id: string;
@@ -17,10 +17,10 @@ export interface UserProfile {
   avatarUrl?: string;
 }
 
-const STORAGE_KEY = 'ms_user';
-
 @Injectable({ providedIn: 'root' })
 export class Auth {
+  private sb = inject(SupabaseService);
+
   private _user = new BehaviorSubject<UserProfile | null>(null);
   user$ = this._user.asObservable();
 
@@ -29,41 +29,93 @@ export class Auth {
   get role(): 'user' | 'admin' | null { return this._user.getValue()?.role ?? null; }
   get isSeller(): boolean { return this._user.getValue()?.isSeller ?? false; }
 
-  setUser(profile: UserProfile): void {
-    this._user.next(profile);
-    // Save to both Capacitor Preferences (mobile) and localStorage (web)
-    Preferences.set({ key: STORAGE_KEY, value: JSON.stringify(profile) });
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+  /**
+   * Restores the session on launch. Called by an APP_INITIALIZER so the
+   * router guards never run before the answer is known.
+   */
+  async restore(): Promise<void> {
+    const session = await this.sb.getSession();
+    if (!session) { this._user.next(null); return; }
+    await this.loadProfile(session.user.id);
+
+    // Keep the app in step if the token is refreshed or revoked elsewhere.
+    this.sb.onAuthChange(async (s) => {
+      if (!s) { this._user.next(null); return; }
+      if (s.user.id !== this.currentUser?.id) await this.loadProfile(s.user.id);
+    });
   }
 
-  async loadFromStorage(): Promise<void> {
-    try {
-      // Try Capacitor Preferences first (mobile)
-      const { value } = await Preferences.get({ key: STORAGE_KEY });
-      if (value) {
-        this._user.next(JSON.parse(value));
-        return;
+  async signIn(mobile: string, password: string): Promise<UserProfile> {
+    const { user } = await this.sb.signIn(mobile, password);
+    if (!user) throw new Error('Sign in failed');
+    return this.loadProfile(user.id);
+  }
+
+  async signUp(mobile: string, password: string, name: string, email?: string) {
+    const { user, session } = await this.sb.signUp(mobile, password, name, email);
+    // With email confirmation switched on there is no session yet — the
+    // caller should send the user to the login screen rather than onward.
+    if (user && session) await this.loadProfile(user.id);
+    return { needsLogin: !session };
+  }
+
+  /**
+   * Reads the row the on_auth_user_created trigger made. Retries briefly
+   * because the trigger and the client's first read can race on sign-up.
+   */
+  private async loadProfile(id: string, attempt = 0): Promise<UserProfile> {
+    const { data, error } = await this.sb.client
+      .from('profiles')
+      .select('id, name, nick_name, unique_number, mobile, email, role, is_seller, avatar_url, wallet_locked, wallet_unlocked')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!data) {
+      if (attempt < 3) {
+        await new Promise(r => setTimeout(r, 400));
+        return this.loadProfile(id, attempt + 1);
       }
-    } catch {}
-    // Fallback to localStorage (web browser)
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) this._user.next(JSON.parse(stored));
-    } catch {
-      localStorage.removeItem(STORAGE_KEY);
+      throw new Error('Your account exists but its profile is missing. Contact support.');
     }
+
+    const profile: UserProfile = {
+      id: data.id,
+      name: data.name,
+      nickName: data.nick_name ?? '',
+      uniqueNumber: data.unique_number,
+      mobile: data.mobile,
+      email: data.email ?? '',
+      role: data.role,
+      isSeller: data.is_seller,
+      avatarUrl: data.avatar_url ?? undefined,
+      lockedAmount: Number(data.wallet_locked),
+      unlockedAmount: Number(data.wallet_unlocked),
+      walletAmount: Number(data.wallet_locked) + Number(data.wallet_unlocked),
+    };
+
+    this._user.next(profile);
+    return profile;
   }
 
-  toggleSellerMode(isSeller: boolean): void {
+  /** Re-reads balances after a purchase or withdrawal. */
+  async refresh(): Promise<void> {
+    const id = this.currentUser?.id;
+    if (id) await this.loadProfile(id);
+  }
+
+  async toggleSellerMode(isSeller: boolean): Promise<void> {
     const user = this.currentUser;
     if (!user) return;
-    const updated = { ...user, isSeller };
-    this.setUser(updated);
+    const { error } = await this.sb.client
+      .from('profiles').update({ is_seller: isSeller }).eq('id', user.id);
+    if (error) throw error;
+    this._user.next({ ...user, isSeller });
   }
 
   async logout(): Promise<void> {
+    await this.sb.signOut();
     this._user.next(null);
-    await Preferences.remove({ key: STORAGE_KEY });
-    localStorage.removeItem(STORAGE_KEY);
   }
 }

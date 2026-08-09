@@ -1,58 +1,53 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import {
-  IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton,
-  IonContent, IonItem, IonInput, IonSelect, IonSelectOption,
-  IonButton, IonIcon, ToastController
-} from '@ionic/angular/standalone';
+import { IonContent, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { informationCircleOutline, cloudUploadOutline, checkmarkCircleOutline, sendOutline, settingsOutline, optionsOutline } from 'ionicons/icons';
+import { arrowBackOutline, optionsOutline, informationCircleOutline } from 'ionicons/icons';
+import { DataService } from '../../shared/data.service';
+import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
+import { OttApp } from '../../shared/models';
 
+/**
+ * "Share a screen" entry point — pick a platform, then continue into the
+ * Create Group form on the account-type page. The form lives in one place
+ * rather than being duplicated here.
+ */
 @Component({
   selector: 'app-creategroup',
   templateUrl: './creategroup.page.html',
   styleUrls: ['./creategroup.page.scss'],
   standalone: true,
-  imports: [
-    CommonModule, FormsModule,
- 
-    IonContent,  IonIcon
-  ]
+  imports: [IonContent, CommonModule, FormsModule, IonIcon, OttLogoComponent],
 })
-export class CreategroupPage {
-  @ViewChild('proofInput') proofInput!: ElementRef<HTMLInputElement>;
-  proofFile: File | null = null;
+export class CreategroupPage implements OnInit {
+  apps: OttApp[] = [];
+  loading = true;
+  error = '';
 
-  form = { ottId:'', validity:'', plan:'', screenCount: null as any, price: null as any };
-
-  ottApps = [
-    { id:'netflix', name:'Netflix' }, { id:'prime',   name:'Prime Video' },
-    { id:'hotstar', name:'Hotstar' }, { id:'sony',    name:'SonyLIV'     },
-    { id:'spotify', name:'Spotify' }, { id:'zee5',    name:'ZEE5'        },
-  ];
-
-  constructor(private router: Router, private toastCtrl: ToastController) {
-    addIcons({ informationCircleOutline, cloudUploadOutline, checkmarkCircleOutline, sendOutline, settingsOutline, optionsOutline });
+  constructor(private router: Router, private data: DataService) {
+    addIcons({ arrowBackOutline, optionsOutline, informationCircleOutline });
   }
 
-  uploadProof() { this.proofInput.nativeElement.click(); }
+  async ngOnInit() { await this.load(); }
 
-  onProofSelected(e: Event) {
-    const f = (e.target as HTMLInputElement).files;
-    if (f?.length) this.proofFile = f[0];
+  async load() {
+    this.loading = true;
+    this.error = '';
+    try {
+      this.apps = (await this.data.getOttApps()).filter(a => a.active);
+    } catch (e) {
+      this.error = 'Could not load platforms.';
+      console.error(e);
+    } finally {
+      this.loading = false;
+    }
   }
 
-  isFormValid() {
-    return !!(this.form.ottId && this.form.validity && this.form.plan && this.form.screenCount && this.form.price && this.proofFile);
-  }
+  back() { this.router.navigate(['/user/home']); }
 
-  async submitGroup() {
-    if (!this.isFormValid()) return;
-    // TODO: upload proof + POST group to API
-    const t = await this.toastCtrl.create({ message:'Group submitted for admin approval!', duration:2500, position:'bottom', color:'success' });
-    t.present();
-    this.router.navigate(['/user/home']);
+  pick(app: OttApp) {
+    this.router.navigate(['/user/accnttype'], { queryParams: { id: app.id, share: 1 } });
   }
 }

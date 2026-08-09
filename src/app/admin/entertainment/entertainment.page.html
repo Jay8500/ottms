@@ -1,0 +1,73 @@
+<ion-content class="en-content" [scrollY]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
+
+  <app-admin-header title="OTT Platforms" trailing="options"></app-admin-header>
+
+  <app-admin-searchbar
+    placeholder="Search platforms..."
+    [showSort]="false"
+    [(term)]="term" (termChange)="apply()" (search)="apply()">
+  </app-admin-searchbar>
+
+  <div class="en-grid">
+    <div class="en-tile" *ngFor="let a of shown" [class.off]="!a.active">
+      <app-ott-logo [brand]="a.brand" [imageUrl]="a.imageUrl" [size]="82" [radius]="14"></app-ott-logo>
+      <span class="en-name">{{ a.title }}</span>
+      <span class="en-seats">
+        <ion-icon name="desktop-outline"></ion-icon>
+        {{ a.tiers.length }} plan{{ a.tiers.length === 1 ? '' : 's' }}
+      </span>
+      <button class="en-edit" (click)="edit(a)">
+        <ion-icon name="create-outline"></ion-icon> Edit
+      </button>
+      <span class="en-rule" [style.background]="a.color"></span>
+      <ion-icon name="eye-off-outline" class="en-hidden" *ngIf="!a.active"></ion-icon>
+    </div>
+  </div>
+
+  <p class="empty" *ngIf="!shown.length">No platform matches “{{ term }}”.</p>
+  <div style="height:120px"></div>
+</ion-content>
+
+<ion-footer class="cta-footer">
+  <button class="cta-btn" (click)="create()">
+    <ion-icon name="add-circle-outline"></ion-icon> Add New
+  </button>
+</ion-footer>
+
+<app-entity-editor
+  [open]="editorOpen"
+  [heading]="isNew ? 'Add Platform' : 'Edit Sub-Category'"
+  [model]="editing"
+  [icons]="icons"
+  [showDelete]="!isNew"
+  (save)="onSave($event)"
+  (remove)="onRemove($event)"
+  (close)="editorOpen = false">
+
+  <!-- platform-specific fields -->
+  <ng-container *ngIf="editing">
+    <label class="ee-lbl">Logo key</label>
+    <input class="ee-input" [(ngModel)]="editing.brand"
+           placeholder="netflix, prime, hotstar…" />
+    <p class="hint">Picks the built-in logo. Leave blank to use the uploaded image instead.</p>
+
+    <label class="ee-lbl">Starting price (₹)</label>
+    <input class="ee-input" type="number" inputmode="numeric" [(ngModel)]="editing.startingPrice" />
+
+    <label class="ee-lbl">Plans &amp; screen limits</label>
+    <div class="tier" *ngFor="let t of editing.tiers">
+      <input class="t-name" [(ngModel)]="t.label" placeholder="Plan name e.g. Premium" />
+      <input class="t-num" type="number" inputmode="numeric" min="1" [(ngModel)]="t.maxScreens" />
+      <span class="t-unit">screens</span>
+      <button class="t-x" (click)="removeTier(t)" aria-label="Remove plan">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+    <button class="t-add" (click)="addTier()">
+      <ion-icon name="add-circle-outline"></ion-icon> Add plan
+    </button>
+  </ng-container>
+</app-entity-editor>

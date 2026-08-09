@@ -2,108 +2,191 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonContent, IonIcon, AlertController, ToastController } from '@ionic/angular/standalone';
-import { Auth } from '../../auth';
+import { IonContent, IonIcon, ToastController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
-  arrowUpCircleOutline, addCircleOutline, lockClosedOutline, lockOpenOutline,
-  walletOutline, chatbubbleOutline, settingsOutline, optionsOutline, arrowBackOutline
+  addCircleOutline, arrowUpCircleOutline, downloadOutline, arrowBackOutline,
+  optionsOutline, lockClosedOutline, lockOpenOutline, chatbubbleOutline,
+  businessOutline, phonePortraitOutline, timeOutline, closeOutline,
 } from 'ionicons/icons';
+import { Auth } from '../../auth';
+import { DataService } from '../../shared/data.service';
+import { ExportService } from '../../shared/export.service';
+import { NetworkService } from '../../shared/network.service';
+import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
+import { humanError } from '../../shared/errors';
+import { AppUser, WalletTx } from '../../shared/models';
 
 @Component({
   selector: 'app-wallet',
   templateUrl: './wallet.page.html',
   styleUrls: ['./wallet.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonContent, IonIcon]
+  imports: [CommonModule, FormsModule, IonContent, IonIcon, OttLogoComponent],
 })
 export class WalletPage implements OnInit {
-  totalAmount    = 1240;
-  lockedAmount   = 840;
-  unlockedAmount = 400;
-  activeTab      = 'all';
+  locked = 0;
+  unlocked = 0;
 
-  // txType: 'funded' = amount added / OTT sold, 'expense' = withdraw / purchased OTT
-  allScreens = [
-    { id:'sc1', ottName:'Netflix', validity:'1M', txType:'expense', dateFrom:'01 May 2026', dateTo:'31 May 2026', txDate:'01 May 2026, 10:00 AM', status:'active',    statusLabel:'Active',    color:'#e50914', initial:'N', amount:149 },
-    { id:'sc2', ottName:'Prime',   validity:'3M', txType:'funded',  dateFrom:'28 Apr 2026', dateTo:'28 Jul 2026', txDate:'28 Apr 2026, 03:00 PM', status:'completed', statusLabel:'Completed', color:'#00a8e0', initial:'P', amount:99  },
-    { id:'sc3', ottName:'Hotstar', validity:'1M', txType:'expense', dateFrom:'10 May 2026', dateTo:'10 Jun 2026', txDate:'10 May 2026, 09:30 AM', status:'pending',   statusLabel:'Pending',   color:'#1565c0', initial:'H', amount:399 },
-  ];
+  tab: 'all' | 'funded' | 'expense' = 'all';
+  private all: WalletTx[] = [];
+  shown: WalletTx[] = [];
 
-  displayScreens: any[] = [];
+  me: AppUser | null = null;
+  loading = true;
+  error = '';
+
+  // Withdraw panel — inline, matching the mockup rather than an alert
+  showWithdraw = false;
+  amount: number | null = null;
+  method: 'bank' | 'upi' = 'bank';
+  submitting = false;
+
+  feePct = 0;
+  minWithdraw = 0;
+  slaHours = 24;
 
   constructor(
     private router: Router,
     private auth: Auth,
-    private alertCtrl: AlertController,
-    private toastCtrl: ToastController
+    private data: DataService,
+    private exporter: ExportService,
+    public net: NetworkService,
+    private toastCtrl: ToastController,
   ) {
     addIcons({
-      arrowUpCircleOutline, addCircleOutline, lockClosedOutline, lockOpenOutline,
-      walletOutline, chatbubbleOutline, settingsOutline, optionsOutline, arrowBackOutline
+      addCircleOutline, arrowUpCircleOutline, downloadOutline, arrowBackOutline,
+      optionsOutline, lockClosedOutline, lockOpenOutline, chatbubbleOutline,
+      businessOutline, phonePortraitOutline, timeOutline, closeOutline,
     });
   }
 
-  ngOnInit() {
-    const u = this.auth.currentUser;
-    if (u) {
-      this.totalAmount    = u.walletAmount;
-      this.lockedAmount   = u.lockedAmount;
-      this.unlockedAmount = u.unlockedAmount;
+  async ngOnInit() { await this.load(); }
+
+  async load() {
+    this.loading = true;
+    this.error = '';
+    try {
+      const uid = this.auth.currentUser?.id;
+      if (!uid) { this.error = 'Please sign in again.'; return; }
+
+      const [me, txs, settings] = await Promise.all([
+        this.data.getUser(uid),
+        this.data.getTransactions(uid),
+        this.data.getSettings(),
+      ]);
+
+      this.me = me;
+      this.locked = me?.lockedAmount ?? 0;
+      this.unlocked = me?.unlockedAmount ?? 0;
+      this.all = txs;
+
+      this.feePct      = Number(settings['withdraw_fee_pct'] ?? 0);
+      this.minWithdraw = Number(settings['withdraw_min'] ?? 0);
+      this.slaHours    = Number(settings['withdraw_sla_hours'] ?? 24);
+
+      this.applyFilter();
+    } catch (e) {
+      this.error = 'Could not load your wallet.';
+      console.error(e);
+    } finally {
+      this.loading = false;
     }
-    this.applyFilter();
   }
 
   applyFilter() {
-    if (this.activeTab === 'all')     this.displayScreens = [...this.allScreens];
-    else if (this.activeTab === 'funded')  this.displayScreens = this.allScreens.filter(s => s.txType === 'funded');
-    else if (this.activeTab === 'expense') this.displayScreens = this.allScreens.filter(s => s.txType === 'expense');
+    this.shown = this.tab === 'all'
+      ? [...this.all]
+      : this.all.filter(t => t.txType === this.tab);
+  }
+
+  setTab(t: 'all' | 'funded' | 'expense') { this.tab = t; this.applyFilter(); }
+
+  back() { this.router.navigate(['/user/home']); }
+
+  // ── Withdraw ────────────────────────────────────────────────────────────
+
+  get fee() {
+    return this.amount ? Math.round(this.amount * this.feePct) / 100 : 0;
+  }
+
+  get payout() {
+    return this.amount ? Math.round((this.amount - this.fee) * 100) / 100 : 0;
+  }
+
+  toggleWithdraw() {
+    if (!this.net.canTransact) { this.toast('You are offline — payments are paused'); return; }
+    this.showWithdraw = !this.showWithdraw;
+  }
+
+  async sendWithdraw() {
+    if (!this.amount || this.amount <= 0) { this.toast('Enter an amount'); return; }
+    if (this.amount > this.unlocked)      { this.toast('That is more than your unlocked balance'); return; }
+    if (this.minWithdraw && this.amount < this.minWithdraw) {
+      this.toast(`Minimum withdrawal is ₹${this.minWithdraw}`); return;
+    }
+    if (!this.me?.bank) { this.toast('Add your bank details before withdrawing'); return; }
+
+    this.submitting = true;
+    try {
+      await this.data.requestWithdraw(this.amount, this.method === 'upi' ? 'UPI' : 'Bank');
+      await this.auth.refresh();
+      this.toast(`Request sent. Admin pays out within ${this.slaHours} hours.`);
+      this.showWithdraw = false;
+      this.amount = null;
+      await this.load();
+    } catch (e: any) {
+      const raw = String(e?.message ?? e);
+      this.toast(
+        /INSUFFICIENT_FUNDS/.test(raw)
+          ? 'Not enough unlocked balance'
+          : humanError(e, 'Could not send the request'),
+      );
+    } finally {
+      this.submitting = false;
+    }
   }
 
   addFund() {
-    // Navigate to payment page for adding funds
+    if (!this.net.canTransact) { this.toast('You are offline — payments are paused'); return; }
     this.router.navigate(['/user/payment'], { queryParams: { mode: 'addFund' } });
   }
 
-  async withdraw() {
-    const alert = await this.alertCtrl.create({
-      header: '💸 Withdraw Amount',
-      subHeader: `Available: ₹${this.unlockedAmount}`,
-      cssClass: 'withdraw-alert',
-      inputs: [
-        { name: 'amount',   type: 'number', placeholder: 'Amount to Withdraw (₹)' },
-        { name: 'method',   type: 'radio',  label: '📱 UPI Transfer', value: 'upi',  checked: true },
-        { name: 'method',   type: 'radio',  label: '🏦 Bank Transfer', value: 'bank' },
-        { name: 'upiId',    type: 'text',   placeholder: 'UPI ID (e.g. name@upi)' },
-        { name: 'mobile',   type: 'tel',    placeholder: 'Registered Mobile Number' },
-        { name: 'accName',  type: 'text',   placeholder: 'Account Holder Name' },
-      ],
-      buttons: [
-        { text: 'Cancel', role: 'cancel', cssClass: 'cancel-btn' },
-        {
-          text: '✅ Submit Request',
-          cssClass: 'submit-btn',
-          handler: async (data) => {
-            if (!data.amount) {
-              this.showToast('Please enter amount'); return false;
-            }
-            if (data.amount > this.unlockedAmount) {
-              this.showToast('Amount exceeds unlocked balance'); return false;
-            }
-            // TODO: Supabase — submit withdraw request
-            this.showToast('Withdraw request submitted! Pending for Admin Approval. 🎉');
-            return true;
-          }
-        }
-      ]
-    });
-    await alert.present();
+  openChat(t: WalletTx) {
+    this.router.navigate(['/user/chat'], { queryParams: { tx: t.id } });
   }
 
-  private async showToast(msg: string) {
-    const t = await this.toastCtrl.create({ message: msg, duration: 3000, position: 'bottom' });
+  statusLabel(t: WalletTx) {
+    return t.status === 'pending' ? 'Pending for Approval'
+         : t.status === 'rejected' ? (t.rejectReason || 'Rejected')
+         : 'Cleared';
+  }
+
+  kindLabel(t: WalletTx) {
+    switch (t.txKind) {
+      case 'withdraw': return 'Withdraw';
+      case 'addfund':  return 'Add Fund';
+      case 'purchase': return 'Purchase';
+      case 'sale':     return 'Sale';
+      case 'refund':   return 'Refund';
+      case 'penalty':  return 'Penalty';
+      default:         return 'Service Fee';
+    }
+  }
+
+  exportCsv() {
+    if (!this.shown.length) { this.toast('Nothing to export'); return; }
+    this.exporter.download<WalletTx>('my-transactions', [
+      ['txDate', 'Date'], ['txTime', 'Time'], ['txKind', 'Type'],
+      ['ottName', 'OTT'], ['months', 'Months'], ['dateFrom', 'From'], ['dateTo', 'To'],
+      ['paymentApp', 'Payment App'], ['amount', 'Amount'], ['status', 'Status'],
+      ['txnRef', 'Reference'],
+    ], this.shown);
+    this.toast(`Exported ${this.shown.length} rows`);
+  }
+
+  private async toast(message: string) {
+    const t = await this.toastCtrl.create({ message, duration: 2800, position: 'bottom' });
     t.present();
   }
-
-  openChat(s: any) { this.router.navigate(['/user/chat'], { queryParams: { screenId: s.id } }); }
 }

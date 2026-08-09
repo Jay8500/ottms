@@ -1,0 +1,64 @@
+@import '../../../global.scss';
+
+.tc-content { --background: #{$gray-50}; }
+
+.mode-row { display: flex; gap: $sp-sm; padding: 0 $sp-lg $sp-md; }
+
+.mode {
+  flex: 1; height: 44px; border-radius: $r-md; cursor: pointer;
+  border: 1.5px solid $gray-300; background: $white;
+  font-family: inherit; font-size: $font-base; font-weight: 700; color: $gray-700;
+  @include flex-center; gap: 6px;
+  ion-icon { font-size: 18px; }
+  &.on { background: $yellow; border-color: $yellow; color: $black; }
+}
+
+.tc-card {
+  margin: 0 $sp-lg; padding: $sp-lg;
+  background: $white; border: 1px solid $gray-200;
+  border-radius: $r-lg; box-shadow: $shadow-sm;
+}
+
+.tc-lbl {
+  display: block; font-size: $font-sm; font-weight: 700;
+  color: $gray-600; margin-bottom: 6px;
+}
+
+.tc-area {
+  width: 100%; padding: $sp-md; resize: vertical;
+  border: 1.5px solid $gray-300; border-radius: $r-md; outline: none;
+  font-family: inherit; font-size: $font-base; line-height: 1.6; color: $black;
+  &:focus { border-color: $yellow; }
+}
+
+.tc-hint { font-size: $font-xs; color: $gray-600; margin: 8px 0 0; }
+
+.tc-head {
+  display: flex; align-items: center; gap: 8px;
+  padding-bottom: $sp-md; margin-bottom: $sp-md;
+  border-bottom: 2px solid $yellow;
+  ion-icon { font-size: 24px; color: $blue; }
+  span { font-size: $font-xl; font-weight: 800; color: $black; }
+}
+
+.tc-line {
+  font-size: $font-base; color: $gray-700; line-height: 1.65;
+  margin: 0 0 $sp-md; padding-left: $sp-md;
+  border-left: 3px solid $gray-200;
+}
+
+.tc-empty { font-size: $font-base; color: $gray-400; margin: 0; font-style: italic; }
+
+.tc-cta {
+  position: fixed; left: 0; right: 0; z-index: 20;
+  bottom: calc(64px + var(--ion-safe-area-bottom, 0px));
+  padding: $sp-sm $sp-lg $sp-md;
+  background: linear-gradient(to top, $gray-50 62%, rgba(250, 250, 250, 0));
+  pointer-events: none;
+}
+
+.save-btn {
+  @include yellow-btn; width: 100%; height: 52px; font-size: $font-lg;
+  box-shadow: $shadow-md; pointer-events: all;
+  ion-icon { font-size: 22px; }
+}

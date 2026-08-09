@@ -1,0 +1,111 @@
+<ion-content class="rt-content" [scrollY]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
+
+  <app-admin-header trailing="excel" (excel)="exportCsv()"></app-admin-header>
+
+  <app-admin-searchbar
+    placeholder="Search users..."
+    [showSort]="false"
+    [(term)]="term" (termChange)="apply()" (search)="apply()"
+    [chips]="chips" [activeChip]="mode" (chipChange)="setChip($event)">
+  </app-admin-searchbar>
+
+  <!-- ══ Ratings ══ -->
+  <ng-container *ngIf="mode === 'ratings'">
+    <div class="band"><ion-icon name="star"></ion-icon> User Ratings</div>
+
+    <div class="thresh">
+      <span class="th-lbl">Star Ratings — Above {{ threshold }} Stars</span>
+      <div class="th-pick">
+        <button *ngFor="let n of [0,1,2,3,4]" [class.on]="threshold === n"
+                (click)="setThreshold(n)">{{ n }}+</button>
+      </div>
+    </div>
+
+    <div class="rt-list">
+      <div class="rt-card" *ngFor="let r of ratings">
+        <div class="rt-who">
+          <div class="rt-av">{{ r.userName.charAt(0) }}</div>
+          <span class="rt-uid">{{ r.userUniqueNum }}</span>
+        </div>
+
+        <div class="rt-body">
+          <div class="rt-stars">
+            <span class="st on" *ngFor="let s of stars(r.stars, 'on')">★</span>
+            <span class="st" *ngFor="let s of stars(r.stars, 'off')">☆</span>
+          </div>
+          <p class="rt-text">{{ r.text }}</p>
+          <div class="rt-meta">
+            <span><ion-icon name="calendar-outline"></ion-icon> {{ r.date }}</span>
+            <app-ott-logo *ngIf="r.brand" [brand]="r.brand" [size]="26" [radius]="5"></app-ott-logo>
+          </div>
+        </div>
+
+        <div class="rt-tools">
+          <button class="tl del" (click)="deleteRating(r)"><ion-icon name="trash-outline"></ion-icon></button>
+          <button class="tl edit" (click)="editRating(r)"><ion-icon name="create-outline"></ion-icon></button>
+        </div>
+      </div>
+    </div>
+
+    <p class="empty" *ngIf="!ratings.length">No reviews match this filter.</p>
+
+    <div class="band sum"><ion-icon name="trending-up-outline"></ion-icon> Ratings Summary</div>
+    <div class="sum-row">
+      <div class="sum-box blue"><ion-icon name="people-outline"></ion-icon>
+        <span class="s-lbl">Total Ratings</span><span class="s-val">{{ totalRatings }}</span></div>
+      <div class="sum-box red"><ion-icon name="remove-circle"></ion-icon>
+        <span class="s-lbl">Below 2 Stars</span><span class="s-val">{{ belowTwo }}</span></div>
+      <div class="sum-box green"><ion-icon name="star"></ion-icon>
+        <span class="s-lbl">Above 2 Stars</span><span class="s-val">{{ aboveTwo }}</span></div>
+    </div>
+  </ng-container>
+
+  <!-- ══ Batches ══ -->
+  <ng-container *ngIf="mode === 'batches'">
+    <div class="band"><ion-icon name="people-outline"></ion-icon> User Batches</div>
+
+    <div class="rt-list">
+      <div class="rt-card" *ngFor="let a of awards">
+        <div class="rt-who">
+          <div class="rt-av">{{ a.userName.charAt(0) }}</div>
+          <span class="rt-uid">{{ a.userUniqueNum }}</span>
+        </div>
+
+        <div class="rt-body">
+          <p class="ba-name">{{ a.userName }}</p>
+          <div class="rt-meta">
+            <span><ion-icon name="calendar-outline"></ion-icon> {{ a.date }}</span>
+            <app-ott-logo *ngIf="a.brand" [brand]="a.brand" [size]="26" [radius]="5"></app-ott-logo>
+          </div>
+          <div class="ba-given">
+            <ion-icon name="pricetag-outline"></ion-icon>
+            <span class="bg-lbl">Batch Given</span>
+            <span class="bg-pill" [class.neg]="!a.positive">{{ a.emoji }} {{ a.label }}</span>
+          </div>
+        </div>
+
+        <div class="rt-tools">
+          <button class="tl del" (click)="deleteAward(a)"><ion-icon name="trash-outline"></ion-icon></button>
+          <button class="tl edit" (click)="editAward(a)"><ion-icon name="create-outline"></ion-icon></button>
+        </div>
+      </div>
+    </div>
+
+    <p class="empty" *ngIf="!awards.length">No badges match this filter.</p>
+
+    <div class="band sum"><ion-icon name="trending-up-outline"></ion-icon> Total Batches Summary</div>
+    <div class="sum-row">
+      <div class="sum-box blue"><ion-icon name="people-outline"></ion-icon>
+        <span class="s-lbl">Total Batches</span><span class="s-val">{{ totalAwards }}</span></div>
+      <div class="sum-box red"><ion-icon name="remove-circle"></ion-icon>
+        <span class="s-lbl">Negative</span><span class="s-val">{{ negativeAwards }}</span></div>
+      <div class="sum-box amber"><ion-icon name="add-circle"></ion-icon>
+        <span class="s-lbl">Positive</span><span class="s-val">{{ positiveAwards }}</span></div>
+    </div>
+  </ng-container>
+
+  <div style="height:100px"></div>
+</ion-content>

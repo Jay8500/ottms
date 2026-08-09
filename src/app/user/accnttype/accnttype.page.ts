@@ -3,84 +3,153 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonContent, IonIcon, ToastController } from '@ionic/angular/standalone';
-import { Auth } from '../../auth';
 import { addIcons } from 'ionicons';
 import {
-  cartOutline, shareSocialOutline, chevronForwardOutline,
-  informationCircleOutline, peopleOutline, settingsOutline,
-  optionsOutline, arrowBackOutline, cloudUploadOutline, addCircleOutline
+  cartOutline, peopleOutline, arrowBackOutline, optionsOutline,
+  cloudUploadOutline, calendarOutline, chatboxEllipsesOutline, closeOutline,
 } from 'ionicons/icons';
+import { Auth } from '../../auth';
+import { DataService } from '../../shared/data.service';
+import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
+import { humanError } from '../../shared/errors';
+import { CommerceOption, OttApp } from '../../shared/models';
 
 @Component({
   selector: 'app-accnttype',
   templateUrl: './accnttype.page.html',
   styleUrls: ['./accnttype.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonContent, IonIcon]
+  imports: [CommonModule, FormsModule, IonContent, IonIcon, OttLogoComponent],
 })
 export class AccnttypePage implements OnInit {
-  ottId = ''; ottName = ''; ottColor = '#1a73e8'; ottInitial = 'A'; isSeller = false;
+  ottId = '';
+  app: OttApp | null = null;
+  options: CommerceOption[] = [];
+  loading = true;
+  error = '';
 
-  groupForm = {
-    dateFrom: '',
-    dateTo: '',
-    plan: '',
-    proofFile: '',
-    comment: '',
-  };
-
-  private ottMap: any = {
-    netflix: { name:'Netflix',  color:'#e50914', initial:'N' },
-    prime:   { name:'Prime',    color:'#00a8e0', initial:'P' },
-    hotstar: { name:'Hotstar',  color:'#1565c0', initial:'H' },
-    sony:    { name:'SonyLIV', color:'#e91e63', initial:'S' },
-    spotify: { name:'Spotify',  color:'#1db954', initial:'S' },
-    zee5:    { name:'ZEE5',    color:'#8e24aa', initial:'Z' },
-  };
+  /** Create Group form — opens inline once Share is tapped. */
+  showGroupForm = false;
+  submitting = false;
+  groupForm = { tierId: '', dateFrom: '', dateTo: '', proofName: '', comment: '' };
+  private proofFile: File | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private auth: Auth,
-    private toastCtrl: ToastController
+    private data: DataService,
+    private toastCtrl: ToastController,
   ) {
     addIcons({
-      cartOutline, shareSocialOutline, chevronForwardOutline,
-      informationCircleOutline, peopleOutline, settingsOutline,
-      optionsOutline, arrowBackOutline, cloudUploadOutline, addCircleOutline
+      cartOutline, peopleOutline, arrowBackOutline, optionsOutline,
+      cloudUploadOutline, calendarOutline, chatboxEllipsesOutline, closeOutline,
     });
   }
 
-  ngOnInit() {
-    this.ottId = this.route.snapshot.queryParamMap.get('id') || 'netflix';
-    const info = this.ottMap[this.ottId] || { name: this.ottId, color: '#1a73e8', initial: this.ottId[0]?.toUpperCase() || 'A' };
-    this.ottName = info.name; this.ottColor = info.color; this.ottInitial = info.initial;
-    this.isSeller = this.auth.isSeller;
-  }
+  async ngOnInit() {
+    this.ottId = this.route.snapshot.queryParamMap.get('id') ?? '';
+    await this.load();
 
-  navigate(action: 'purchase' | 'share') {
-    if (action === 'share' && this.isSeller) {
-      // Seller → go to Create Group directly
-      this.router.navigate(['/user/creategroup'], { queryParams: { id: this.ottId } });
-    } else {
-      // Buyer → go to Validity/Sellers flow
-      this.router.navigate(['/user/validity'], { queryParams: { id: this.ottId, action } });
+    // Arriving from "Share a Screen" skips the Purchase/Share choice.
+    if (this.route.snapshot.queryParamMap.get('share')) {
+      const share = this.options.find(o => o.action === 'share');
+      if (share) this.choose(share);
     }
   }
 
-  uploadProof() {
-    // TODO: file picker
-    this.groupForm.proofFile = 'screenshot.jpg';
+  async load() {
+    this.loading = true;
+    this.error = '';
+    try {
+      const [app, options] = await Promise.all([
+        this.data.getOttApp(this.ottId),
+        this.data.getCommerceOptions(),
+      ]);
+      this.app = app;
+      this.options = options.filter(o => o.active);
+      if (!app) this.error = 'That platform is no longer available.';
+    } catch (e) {
+      this.error = 'Could not load this platform.';
+      console.error(e);
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  back() { this.router.navigate(['/user/ottplatforms']); }
+
+  choose(o: CommerceOption) {
+    if (o.action === 'share') {
+      this.showGroupForm = true;
+      // seed the tier so the form is valid with one tap when there is only one
+      if (this.app?.tiers.length === 1) this.groupForm.tierId = this.app.tiers[0].id;
+      return;
+    }
+    this.router.navigate(['/user/validity'], { queryParams: { id: this.ottId } });
+  }
+
+  closeGroupForm() { this.showGroupForm = false; }
+
+  onProof(e: Event) {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { this.toast('Screenshot must be under 5MB'); return; }
+    this.proofFile = file;
+    this.groupForm.proofName = file.name;
+  }
+
+  get seatsForTier() {
+    return this.app?.tiers.find(t => t.id === this.groupForm.tierId)?.maxScreens ?? 0;
+  }
+
+  private validate(): string | null {
+    const f = this.groupForm;
+    if (!f.tierId)   return 'Choose which plan you are sharing';
+    if (!f.dateFrom) return 'Enter the start date';
+    if (!f.dateTo)   return 'Enter the end date';
+    if (new Date(f.dateTo) <= new Date(f.dateFrom)) return 'The end date must be after the start date';
+    if (!this.proofFile) return 'Upload a screenshot of your subscription';
+    return null;
   }
 
   async submitGroup() {
-    if (!this.groupForm.dateFrom || !this.groupForm.dateTo || !this.groupForm.plan) {
-      const t = await this.toastCtrl.create({ message: 'Please fill all required fields', duration: 2000, position: 'bottom' });
-      t.present(); return;
+    const problem = this.validate();
+    if (problem) { this.toast(problem); return; }
+
+    this.submitting = true;
+    try {
+      // Storage upload lands with the buckets; the group row records the name
+      // so admin can chase the seller if the proof is missing.
+      await this.data.createGroup({
+        ottAppId: this.ottId,
+        tierId: this.groupForm.tierId,
+        dateFrom: this.groupForm.dateFrom,
+        dateTo: this.groupForm.dateTo,
+        comment: this.groupForm.comment,
+        proofName: this.groupForm.proofName,
+        proofFile: this.proofFile ?? undefined,
+      });
+
+      this.toast('Group submitted for approval');
+      this.showGroupForm = false;
+      this.groupForm = { tierId: '', dateFrom: '', dateTo: '', proofName: '', comment: '' };
+      this.proofFile = null;
+    } catch (e: any) {
+      // Test the raw error; humanError() has already replaced the text.
+      const raw = String(e?.message ?? e);
+      this.toast(
+        /one_active_group|duplicate key/i.test(raw)
+          ? `You already have an active ${this.app?.title} group`
+          : humanError(e, 'Could not submit the group'),
+      );
+    } finally {
+      this.submitting = false;
     }
-    // TODO: Supabase — submit group
-    const t = await this.toastCtrl.create({ message: 'Group submitted for approval!', duration: 2000, position: 'bottom' });
+  }
+
+  private async toast(message: string) {
+    const t = await this.toastCtrl.create({ message, duration: 2800, position: 'bottom' });
     t.present();
-    this.groupForm = { dateFrom: '', dateTo: '', plan: '', proofFile: '', comment: '' };
   }
 }

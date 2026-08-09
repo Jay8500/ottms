@@ -1,34 +1,70 @@
-<ion-content class="page-content" [scrollY]="true">
-  <div class="page-header">
-    <button class="icon-btn" onclick="history.back()"><ion-icon name="settings-outline"></ion-icon></button>
-    <p class="hdr-title">Admin - Manage Instructions</p>
-    <button class="icon-btn"><ion-icon name="search-outline"></ion-icon></button>
+<ion-content class="sp-content" [scrollY]="true">
+  <app-admin-header title="Support" trailing="options"></app-admin-header>
+
+  <!-- Language -->
+  <div class="lang-row">
+    <button class="lang" *ngFor="let l of langs" [class.on]="lang === l.code"
+            (click)="lang = l.code">
+      {{ l.label }}
+      <ion-icon name="checkmark-outline" *ngIf="lang === l.code"></ion-icon>
+    </button>
   </div>
-  <div class="logo-center"><div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div></div>
-  <div class="notice-section">
-    <div class="notice-hdr"><p class="n-title">NOTICE</p><button class="yellow-sm" (click)="addFaq()">Edit Notice</button></div>
-    <div class="n-content">
-      <p *ngFor="let faq of faqs; let i=index" class="n-item">{{ i+1 }}). {{ faq.question }}</p>
-    </div>
+
+  <!-- Text / video -->
+  <div class="mode-row">
+    <button class="mode" [class.on]="mode === 'text'" (click)="mode = 'text'">
+      <ion-icon name="document-text-outline"></ion-icon> Read Text
+    </button>
+    <button class="mode" [class.on]="mode === 'video'" (click)="mode = 'video'">
+      <ion-icon name="play-circle-outline"></ion-icon> Watch Video
+    </button>
   </div>
-  <div class="sug-section">
-    <div class="sug-hdr"><p class="sug-title">SUGGESTIONS</p><button class="yellow-sm" (click)="addSuggested()">Edit Suggestions</button></div>
-    <button class="add-sug-btn" (click)="addSuggested()"><ion-icon name="add-circle-outline"></ion-icon> Add Suggestion</button>
-    <div class="sug-list">
-      <div class="sug-item" *ngFor="let s of suggestedTexts; let i=index">
-        <span class="sug-num">{{ i+1 }}</span>
-        <span class="sug-text">{{ s.text }}</span>
-        <button class="yellow-sm" (click)="addSuggested()">Edit</button>
-        <button class="del-btn" (click)="deleteSuggested(s)"><ion-icon name="trash-outline"></ion-icon></button>
+
+  <!-- FAQ -->
+  <div class="faq-card" *ngIf="mode === 'text'">
+    <p class="faq-h">What Is Money Saver?</p>
+
+    <div class="faq" *ngFor="let f of faqs; let i = index">
+      <span class="faq-n">{{ i + 1 }}</span>
+      <div class="faq-body">
+        <p class="faq-q"><b>Q:</b> {{ f.q[lang] || '— not translated —' }}</p>
+        <p class="faq-a"><b>A:</b> {{ f.a[lang] || '— not translated —' }}</p>
+        <span class="faq-cov" [class.done]="filledCount(f) === 3">
+          {{ filledCount(f) }}/3 languages
+        </span>
+      </div>
+      <div class="faq-tools">
+        <button class="ft edit" (click)="editItem(f)"><ion-icon name="create-outline"></ion-icon></button>
+        <button class="ft del" (click)="remove(f)"><ion-icon name="trash-outline"></ion-icon></button>
       </div>
     </div>
+
+    <button class="faq-add" (click)="add()">
+      <ion-icon name="add-circle-outline"></ion-icon> Add Question
+    </button>
   </div>
-  <div class="contact-section">
-    <p class="section-title">Support Contacts</p>
-    <div class="c-row"><label>WhatsApp</label><input [(ngModel)]="contacts.whatsapp" type="text" /></div>
-    <div class="c-row"><label>Phone</label><input [(ngModel)]="contacts.phone" type="text" /></div>
-    <div class="c-row"><label>Email</label><input [(ngModel)]="contacts.email" type="email" /></div>
-    <button class="save-btn" (click)="saveContacts()">Save Changes</button>
+
+  <!-- Video -->
+  <div class="vid-card" *ngIf="mode === 'video'">
+    <div class="vid-box">
+      <ion-icon name="play-circle-outline"></ion-icon>
+      <p>No video uploaded for {{ langLabel }}</p>
+    </div>
+    <label class="vid-up">
+      <ion-icon name="cloud-upload-outline"></ion-icon> Upload Video
+      <input type="file" accept="video/*" hidden (change)="onVideo($event)" />
+    </label>
+    <p class="vid-note">
+      Video hosting is not connected yet — the picker works, but files are not stored.
+      This lands with the database work.
+    </p>
   </div>
-  <div style="height:80px"></div>
+
+  <div style="height:120px"></div>
 </ion-content>
+
+<ion-footer class="cta-footer">
+  <button class="cta-btn" [disabled]="!dirty" (click)="save()">
+    <ion-icon name="save-outline"></ion-icon> Save Changes
+  </button>
+</ion-footer>

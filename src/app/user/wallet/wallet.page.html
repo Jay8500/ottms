@@ -1,65 +1,141 @@
-<ion-content class="wallet-content" [scrollY]="true">
+<ion-content class="wl-content" [scrollY]="true">
   <div class="top-bar">
-    <button class="icon-btn" onclick="history.back()"><ion-icon name="arrow-back-outline"></ion-icon></button>
-    <p class="page-title">Wallet</p>
-    <div style="width:40px"></div>
-  </div>
-
-  <!-- 2 Wallet Cards: Locked + Unlocked only -->
-  <div class="wallet-cards">
-    <div class="wc locked">
-      <span class="wc-icon">🔒</span>
-      <p class="wc-lbl">Locked Amount</p>
-      <p class="wc-amt">₹{{ lockedAmount | number }}</p>
-    </div>
-    <div class="wc unlocked">
-      <span class="wc-icon">🔓</span>
-      <p class="wc-lbl">Unlocked Amount</p>
-      <p class="wc-amt">₹{{ unlockedAmount | number }}</p>
-    </div>
-  </div>
-
-  <!-- Add Fund + Withdraw -->
-  <div class="wallet-actions">
-    <button class="wa-btn fund" (click)="addFund()">
-      <ion-icon name="add-circle-outline"></ion-icon> Add Fund
+    <button class="icon-btn" (click)="back()" aria-label="Back">
+      <ion-icon name="arrow-back-outline"></ion-icon>
     </button>
-    <button class="wa-btn withdraw" (click)="withdraw()">
-      <ion-icon name="arrow-up-circle-outline"></ion-icon> Withdraw
+    <p class="page-title">Wallet</p>
+    <button class="icon-btn dark" aria-label="Options">
+      <ion-icon name="options-outline"></ion-icon>
+    </button>
+  </div>
+
+  <!-- Balances -->
+  <div class="bal-row">
+    <div class="bal locked">
+      <div class="b-ico"><ion-icon name="lock-closed-outline"></ion-icon></div>
+      <p class="b-lbl">Locked Amount</p>
+      <p class="b-amt">₹{{ locked | number }}</p>
+    </div>
+    <div class="bal unlocked">
+      <div class="b-ico"><ion-icon name="lock-open-outline"></ion-icon></div>
+      <p class="b-lbl">Unlocked Amount</p>
+      <p class="b-amt">₹{{ unlocked | number }}</p>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="act-row">
+    <button class="act fund" (click)="addFund()">Add Funds</button>
+    <button class="act excel" (click)="exportCsv()">
+      <ion-icon name="download-outline"></ion-icon> Excel
+    </button>
+    <button class="act draw" (click)="toggleWithdraw()">Withdraw</button>
+  </div>
+
+  <!-- Withdraw panel -->
+  <div class="wd-card" *ngIf="showWithdraw">
+    <div class="wd-head">
+      <span>Amount Withdraw</span>
+      <button class="wd-x" (click)="toggleWithdraw()" aria-label="Close">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <ol class="wd-terms">
+      <li>Withdraw requests are approved within {{ slaHours }} Hrs.</li>
+      <li *ngIf="feePct">{{ feePct }}% service charge will be applied.</li>
+      <li *ngIf="minWithdraw">Minimum withdrawal is ₹{{ minWithdraw }}.</li>
+    </ol>
+
+    <div class="wd-amt">
+      <input type="number" inputmode="numeric" [(ngModel)]="amount" placeholder="₹ Amount" />
+      <span class="final">Final ₹{{ payout | number }}</span>
+    </div>
+
+    <div class="wd-method">
+      <button [class.on]="method === 'bank'" (click)="method = 'bank'">
+        <ion-icon name="business-outline"></ion-icon> Bank Transfer
+      </button>
+      <button [class.on]="method === 'upi'" (click)="method = 'upi'">
+        <ion-icon name="phone-portrait-outline"></ion-icon> UPI Transfer
+      </button>
+    </div>
+
+    <div class="wd-bank" *ngIf="me?.bank">
+      <div class="wb"><span class="k">Full Name</span><span class="v">{{ me?.bank?.holderName }}</span></div>
+      <div class="wb" *ngIf="method === 'upi'"><span class="k">UPI ID</span><span class="v">{{ me?.bank?.upiId }}</span></div>
+      <div class="wb" *ngIf="method === 'bank'"><span class="k">A/C No</span><span class="v">{{ me?.bank?.accountNo }}</span></div>
+      <div class="wb" *ngIf="method === 'bank'"><span class="k">IFSC</span><span class="v">{{ me?.bank?.ifsc }}</span></div>
+      <p class="wb-note">Set at sign-up and cannot be changed.</p>
+    </div>
+
+    <p class="wd-nobank" *ngIf="!me?.bank">
+      No bank details on file. Contact support to add them.
+    </p>
+
+    <button class="wd-send" [disabled]="submitting || !me?.bank" (click)="sendWithdraw()">
+      {{ submitting ? 'Sending…' : 'Send Request' }}
     </button>
   </div>
 
   <!-- Filter -->
-  <div class="filter-row">
-    <button class="f-tab" [class.active]="activeTab==='all'"     (click)="activeTab='all';applyFilter()">All</button>
-    <button class="f-tab" [class.active]="activeTab==='funded'"  (click)="activeTab='funded';applyFilter()">Funded</button>
-    <button class="f-tab" [class.active]="activeTab==='expense'" (click)="activeTab='expense';applyFilter()">Expense</button>
+  <div class="tabs">
+    <button [class.on]="tab === 'all'" (click)="setTab('all')">All</button>
+    <button [class.on]="tab === 'funded'" (click)="setTab('funded')">Funded</button>
+    <button [class.on]="tab === 'expense'" (click)="setTab('expense')">Expense</button>
   </div>
 
   <!-- Transactions -->
-  <div class="screens-list">
-    <div class="sc-card" *ngFor="let s of displayScreens">
-      <div class="sc-left">
-        <div class="sc-logo" [style.background]="s.color"><span>{{ s.initial }}</span></div>
-        <div class="sc-info">
-          <div class="tx-tag" [class.funded]="s.txType==='funded'" [class.expense]="s.txType==='expense'">
-            {{ s.txType === 'funded' ? '↑ Funded' : '↓ Expense' }}
-          </div>
-          <h3>{{ s.ottName }}</h3>
-          <p class="sc-date">{{ s.dateFrom }} → {{ s.dateTo }} ({{ s.validity }})</p>
-          <p class="sc-status" [class.active]="s.status==='active'" [class.expired]="s.status==='completed'" [class.pending]="s.status==='pending'">
-            {{ s.status === 'active' ? '● Plan Active' : s.status === 'pending' ? '● Pending' : '● Completed' }}
+  <div class="tx-list">
+    <div class="tx" *ngFor="let t of shown">
+      <div class="tx-head">
+        <span class="th-kind">{{ kindLabel(t) }}</span>
+        <span class="th-date">{{ t.txDate }}</span>
+      </div>
+
+      <div class="tx-body">
+        <app-ott-logo *ngIf="t.brand" [brand]="t.brand" [size]="46" [radius]="9"></app-ott-logo>
+        <div class="pay-chip" *ngIf="!t.brand">{{ t.paymentApp || 'Wallet' }}</div>
+
+        <div class="tx-mid">
+          <p class="t-title" *ngIf="t.ottName">{{ t.ottName }} <span class="tier">{{ t.tierLabel }}</span></p>
+          <p class="t-title" *ngIf="!t.ottName">{{ t.partyMobile || me?.name }}</p>
+          <p class="t-span" *ngIf="t.dateFrom">
+            {{ t.dateFrom }} – {{ t.dateTo }} ({{ t.months }} Month{{ t.months === 1 ? '' : 's' }})
           </p>
+          <p class="t-who">{{ me?.name }} ({{ me?.uniqueNumber }})</p>
+        </div>
+
+        <div class="tx-right">
+          <p class="t-amt" [class.plus]="t.txType === 'funded'">
+            {{ t.txType === 'funded' ? '+' : '−' }}₹{{ t.amount | number }}
+          </p>
+          <span class="t-status" [attr.data-s]="t.status">{{ statusLabel(t) }}</span>
         </div>
       </div>
-      <div class="sc-right">
-        <p class="sc-amount" [class.funded]="s.txType==='funded'" [class.expense]="s.txType==='expense'">
-          {{ s.txType === 'funded' ? '+' : '-' }}₹{{ s.amount }}
-        </p>
-        <p class="sc-tx-date">{{ s.txDate }}</p>
-        <button class="sc-btn" (click)="openChat(s)"><ion-icon name="chatbubble-outline"></ion-icon></button>
+
+      <div class="tx-foot">
+        <span class="chip"><ion-icon name="time-outline"></ion-icon> {{ t.txTime }}</span>
+        <span class="chip ref" *ngIf="t.txnRef">{{ t.txnRef }}</span>
+        <button class="chip chat" *ngIf="t.ottName" (click)="openChat(t)">
+          <ion-icon name="chatbubble-outline"></ion-icon> Chat
+        </button>
       </div>
     </div>
+  </div>
+
+  <div class="skeleton" *ngIf="loading">
+    <div class="sk" *ngFor="let i of [1,2,3]"></div>
+  </div>
+
+  <div class="state" *ngIf="error">
+    <p>{{ error }}</p>
+    <button class="retry" (click)="load()">Try again</button>
+  </div>
+
+  <div class="state" *ngIf="!loading && !error && !shown.length">
+    <p>No transactions yet.</p>
+    <p class="sub">Add funds to get started.</p>
   </div>
 
   <div style="height:80px"></div>

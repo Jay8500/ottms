@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "17778649130",
+    "project_id": "ottmoneysaver-19e75",
+    "storage_bucket": "ottmoneysaver-19e75.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17778649130:android:9bb932164508342e907b53",
+        "android_client_info": {
+          "package_name": "com.jay.ottmoneysaver"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCG5eEjTdWNVJukaRGuabdRteJtvP1sGDY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

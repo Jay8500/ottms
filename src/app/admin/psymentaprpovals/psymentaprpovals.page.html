@@ -1,38 +1,56 @@
-<ion-content class="page-content" [scrollY]="true">
-  <div class="page-header">
-    <button class="icon-btn" onclick="history.back()"><ion-icon name="arrow-back-outline"></ion-icon></button>
-    <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
-    <div style="width:40px"></div>
-  </div>
-  <p class="page-title">Pending Payment Approvals</p>
-  <div class="wallet-summary">
-    <div class="ws-card yellow"><span>🪙</span><p>Total Wallet</p><p class="ws-amt">₹6,945</p></div>
-    <div class="ws-card blue"><span>🔒</span><p>Locked Amount</p><p class="ws-amt">₹2,800</p></div>
-    <div class="ws-card green"><span>🔓</span><p>Unlocked Amount</p><p class="ws-amt">₹4,145</p></div>
-  </div>
-  <div class="filter-chips">
-    <button class="chip" [class.active]="activeFilter==='pending'" (click)="activeFilter='pending';filterPayments()">Pending</button>
-    <button class="chip" [class.active]="activeFilter==='approved'" (click)="activeFilter='approved';filterPayments()">Approved</button>
-    <button class="chip" [class.active]="activeFilter==='rejected'" (click)="activeFilter='rejected';filterPayments()">Rejected</button>
-  </div>
-  <div class="list-area">
-    <div class="card" *ngFor="let p of filteredPayments">
-      <div class="p-top">
-        <div class="p-av">{{ p.userName.charAt(0) }}</div>
-        <div class="p-info">
-          <p class="p-name">{{ p.userName }}</p>
-          <p class="p-meta">{{ p.ottName }} • {{ p.validity }} • {{ p.date }}</p>
+<ion-content class="pa-content" [scrollY]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
+
+  <app-admin-header title="Payments" trailing="excel" (excel)="exportCsv()"></app-admin-header>
+
+  <app-admin-searchbar
+    placeholder="Search Transactions..."
+    [(term)]="term" (termChange)="apply()" (search)="apply()"
+    [chips]="chips" [activeChip]="activeChip" (chipChange)="setChip($event)">
+  </app-admin-searchbar>
+
+  <div class="pa-list">
+    <div class="pa-card" *ngFor="let x of shown">
+      <div class="pa-head">
+        <span class="ph-kind">{{ x.txKind === 'withdraw' ? 'Withdraw Request' : 'Payment Request' }}</span>
+        <span class="ph-date">{{ x.txDate }}</span>
+      </div>
+
+      <div class="pa-body">
+        <div class="pa-avatar">{{ x.partyName?.charAt(0) }}</div>
+        <div class="pa-mid">
+          <p class="pa-mobile">{{ x.partyMobile }}</p>
+          <p class="pa-user">{{ x.partyName }} ({{ x.partyUniqueNum }})</p>
         </div>
-        <span class="amt-tag">₹{{ p.amount }}</span>
+        <p class="pa-amt" [class.plus]="x.txType === 'funded'">
+          {{ x.txType === 'funded' ? '+' : '−' }}₹{{ x.amount | number }}
+        </p>
       </div>
-      <input type="text" placeholder="Remarks (optional)" class="remarks-input" />
-      <div class="p-actions" *ngIf="p.status==='pending'">
-        <button class="green-btn" (click)="approve(p)">✓ Approve</button>
-        <button class="red-btn" (click)="reject(p)">✕ Reject</button>
-        <button class="blue-btn" (click)="viewScreenshot(p)">View Image</button>
+
+      <div class="pa-meta">
+        <span class="chip time"><ion-icon name="time-outline"></ion-icon> {{ x.txTime }}</span>
+        <span class="chip app" *ngIf="x.paymentApp">{{ x.paymentApp }}</span>
+        <span class="chip pending">Pending for Approval</span>
+        <button class="chip img" (click)="viewImage(x)">
+          <ion-icon name="image-outline"></ion-icon> Image
+        </button>
       </div>
-      <span class="status-badge" *ngIf="p.status!=='pending'" [class.approved]="p.status==='approved'" [class.rejected]="p.status==='rejected'">{{ p.statusLabel }}</span>
+
+      <div class="pa-actions">
+        <button class="pa-reject" (click)="reject(x)">
+          <ion-icon name="close-circle-outline"></ion-icon> Reject
+        </button>
+        <button class="pa-approve" (click)="approve(x)">
+          <ion-icon name="checkmark-circle-outline"></ion-icon> Approve
+        </button>
+      </div>
     </div>
   </div>
-  <div style="height:80px"></div>
+
+  <p class="empty" *ngIf="!shown.length">
+    No pending {{ activeChip === 'withdraw' ? 'withdraw' : 'payment' }} requests.
+  </p>
+  <div style="height:100px"></div>
 </ion-content>

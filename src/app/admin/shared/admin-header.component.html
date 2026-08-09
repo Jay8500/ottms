@@ -1,0 +1,23 @@
+<div class="ah">
+  <button class="ah-btn" *ngIf="leading === 'back'" (click)="back()" aria-label="Back">
+    <ion-icon name="arrow-back-outline"></ion-icon>
+  </button>
+  <button class="ah-btn plain" *ngIf="leading === 'menu'" (click)="menu.emit()" aria-label="Menu">
+    <ion-icon name="menu-outline"></ion-icon>
+  </button>
+
+  <div class="ah-mid">
+    <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
+  </div>
+
+  <button class="ah-btn excel" *ngIf="trailing === 'excel'" (click)="excel.emit()" aria-label="Export to Excel">
+    <span class="x">X</span>
+    <ion-icon name="download-outline"></ion-icon>
+  </button>
+  <button class="ah-btn dark" *ngIf="trailing === 'options'" (click)="options.emit()" aria-label="Options">
+    <ion-icon name="options-outline"></ion-icon>
+  </button>
+  <div class="ah-spacer" *ngIf="trailing === 'none'"></div>
+</div>
+
+<h1 class="ah-title" *ngIf="title">{{ title }}</h1>

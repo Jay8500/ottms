@@ -1,53 +1,91 @@
-<div class="chat-page-wrap">
-  <!-- Frozen Header -->
-  <div class="chat-header">
-    <button class="icon-btn" onclick="history.back()"><ion-icon name="arrow-back-outline"></ion-icon></button>
-    <div class="seller-banner">
-      <div class="s-av">{{ peerName.charAt(0) }}</div>
-      <div class="s-info">
-        <p class="s-name">{{ peerName }}</p>
-        <div class="online-row"><span class="dot" [class.on]="peerOnline"></span><span>{{ peerOnline ? 'Online' : 'Offline' }}</span></div>
-      </div>
+<div class="chat-wrap">
+  <!-- Frozen header -->
+  <div class="chat-top">
+    <button class="icon-btn" (click)="back()" aria-label="Back">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
+    <button class="icon-btn dark" (click)="openMore()" aria-label="More">
+      <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+    </button>
+  </div>
+
+  <ng-container *ngIf="thread">
+    <!-- Group: OTT brand banner + validity -->
+    <div class="ott-banner" *ngIf="thread.isGroup">
+      <app-ott-logo [brand]="thread.brand || ''" [size]="40" [radius]="8"></app-ott-logo>
+      <span class="ob-name">{{ thread.ottName }}</span>
+      <span class="ob-tag">{{ thread.months }}-Month</span>
     </div>
-    <button class="icon-btn dark" (click)="openMore()"><ion-icon name="ellipsis-vertical-outline"></ion-icon></button>
-  </div>
 
-  <!-- Frozen Notice -->
-  <div class="notice-card">
-    <p class="notice-title">NOTICE</p>
-    <p class="n-item">1). Do Not Share any personal details like Mobile No, WhatsApp No, Mail Id or any social media details.</p>
-    <p class="n-item">2). Do not involve into any arguments.</p>
-    <p class="n-item">3). Do not use unprofessional / vulgarity language.</p>
-    <p class="n-item">4). Sharing details may lead to fraudulent activities.</p>
-  </div>
+    <!-- Who you are talking to -->
+    <div class="peer-card">
+      <div class="p-av">{{ (thread.isGroup ? thread.sellerName : thread.peerName)?.charAt(0) }}</div>
+      <div class="p-info">
+        <p class="p-name">
+          {{ thread.isGroup ? thread.sellerName : thread.peerName }}
+          <span class="uid">({{ thread.isGroup ? thread.sellerUniqueNum : thread.peerUniqueNum }})</span>
+        </p>
+        <div class="p-state">
+          <span class="dot" [class.on]="thread.isOnline"></span>
+          <span>{{ thread.isOnline ? 'Online' : 'Offline' }}</span>
+          <ion-icon name="lock-closed-outline" *ngIf="thread.locked" class="lk"></ion-icon>
+        </div>
+      </div>
+      <button class="p-rate" (click)="openRating()">
+        <ion-icon name="star-outline"></ion-icon>
+      </button>
+    </div>
 
-  <!-- Scrollable Messages -->
-  <ion-content class="chat-content" #scrollArea [scrollY]="true">
-    <div class="msg-list">
-      <div class="msg-wrap" *ngFor="let m of messages" [class.mine]="m.isMine" [class.theirs]="!m.isMine">
-        <div class="bubble" [class.mine]="m.isMine" [class.theirs]="!m.isMine">
-          <p class="b-text">{{ m.text }}</p>
+    <!-- Frozen notice -->
+    <div class="notice">
+      <p class="n-title">NOTICE</p>
+      <p>1). Do not share personal details like Mobile No, WhatsApp No, Mail Id or social media.</p>
+      <p>2). Do not involve into any arguments.</p>
+      <p>3). Do not use unprofessional / vulgar language.</p>
+      <p>4). Sharing details may lead to fraudulent activities.</p>
+    </div>
+  </ng-container>
+
+  <!-- Messages -->
+  <ion-content class="chat-body" #scrollArea [scrollY]="true">
+    <div class="msgs">
+      <div class="m-wrap" *ngFor="let m of messages" [class.mine]="m.isMine">
+        <div class="bubble" [class.mine]="m.isMine">
+          <img class="b-img" *ngIf="m.imageUrl" [src]="m.imageUrl" alt="Shared photo" />
+          <p class="b-text" *ngIf="m.text">{{ m.text }}</p>
           <span class="b-time">{{ m.time }}</span>
         </div>
       </div>
     </div>
-    <div style="height:16px"></div>
+
+    <div class="state" *ngIf="loading"><p>Loading…</p></div>
+    <div class="state" *ngIf="error"><p>{{ error }}</p></div>
+    <div class="state" *ngIf="!loading && !error && !messages.length">
+      <p>No messages yet. Say hello.</p>
+    </div>
+
+    <div style="height:12px"></div>
   </ion-content>
 
-  <!-- Frozen Suggestions + Input -->
-  <div class="chat-bottom">
-    <p class="acct-label">Account details</p>
-    <div class="sug-row">
-      <button class="sug-chip" *ngFor="let t of suggestedTexts" (click)="sendSuggested(t)">{{ t }}</button>
+  <!-- Frozen composer -->
+  <div class="chat-bottom" *ngIf="thread">
+    <div class="quick">
+      <button *ngFor="let q of quickReplies" (click)="send(q)" [disabled]="thread.locked">{{ q }}</button>
     </div>
-    <button class="rating-row" (click)="openRating()" *ngIf="showRating">
-      <ion-icon name="star-outline"></ion-icon>
-      <span>Rate this Seller</span>
-    </button>
-    <div class="input-row">
-      <input class="msg-input" [(ngModel)]="draft" placeholder="Message" (keyup.enter)="send()" />
-      <span class="auto-lbl">AUTO</span>
-      <button class="send-btn" (click)="send()" [disabled]="!draft.trim()">
+
+    <div class="composer">
+      <button class="c-img" (click)="pickImage()" [disabled]="thread.locked" aria-label="Send a photo">
+        <ion-icon name="image-outline"></ion-icon>
+      </button>
+      <input type="file" #imgInput hidden accept="image/*" (change)="onImage($event)" />
+
+      <input class="c-input" [(ngModel)]="draft"
+             [placeholder]="thread.locked ? 'This conversation is closed' : 'Message'"
+             [disabled]="thread.locked" (keyup.enter)="send()" />
+
+      <button class="c-send" (click)="send()" [disabled]="!draft.trim() || sending || thread.locked"
+              aria-label="Send">
         <ion-icon name="send-outline"></ion-icon>
       </button>
     </div>

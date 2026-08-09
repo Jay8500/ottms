@@ -1,20 +1,94 @@
 @import '../../../global.scss';
-.admin-home-content { --background: #{$white}; }
-.top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
-.icon-btn { @include icon-btn; } .logo-badge { @include logo-badge; }
-.section-title { font-size: $font-lg; font-weight: 700; color: $black; padding: 0 $sp-lg $sp-xs; margin: 0; }
-.section-sub { font-size: $font-xs; color: $gray-600; padding: 0 $sp-lg $sp-md; margin: 0; }
-.items-list { padding: 0 $sp-lg $sp-md; display: flex; flex-direction: column; gap: $sp-sm; }
-.item-card { background: $white; border-radius: $r-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm; padding: $sp-md $sp-lg; display: flex; align-items: center; gap: $sp-md;
-  .item-icon { width: 52px; height: 52px; border-radius: 50%; background: $yellow-light; @include flex-center; flex-shrink: 0; ion-icon { font-size: 24px; color: $black; } }
-  .item-lbl { flex: 1; font-size: $font-base; font-weight: 600; color: $black; }
-  .edit-btn, .del-btn { background: transparent; border: none; cursor: pointer; }
-  .edit-btn ion-icon { font-size: 20px; color: $gray-400; }
-  .del-btn ion-icon { font-size: 20px; color: $red; } }
-.add-btn { display: flex; align-items: center; justify-content: center; gap: $sp-sm; background: $yellow; color: $black; border: none; border-radius: $r-pill; height: 50px; width: calc(100% - #{$sp-lg} * 2); margin: 0 $sp-lg $sp-md; font-size: $font-base; font-weight: 700; cursor: pointer; ion-icon { font-size: 20px; } }
-.nav-cards { padding: 0 $sp-lg $sp-md; display: flex; flex-direction: column; gap: $sp-sm; }
-button.nav-card { display: flex; align-items: center; gap: $sp-md; background: $white; border-radius: $r-lg; padding: $sp-md $sp-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm; cursor: pointer; width: 100%; font-family: inherit; text-align: left; &:active { opacity: 0.85; }
-  .nav-icon { width: 48px; height: 48px; border-radius: $r-sm; flex-shrink: 0; @include flex-center; ion-icon { font-size: 22px; } }
-  .nav-info { flex: 1; h3 { font-size: $font-sm; font-weight: 700; color: $black; margin: 0; } p { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; } }
-  .nav-arr { color: $gray-400; } }
-.logout-btn { display: flex; align-items: center; justify-content: center; gap: $sp-sm; background: $red-light; color: $red; border: 1.5px solid $red; border-radius: $r-pill; height: 46px; width: calc(100% - #{$sp-lg} * 2); margin: 0 $sp-lg; font-size: $font-base; font-weight: 700; cursor: pointer; ion-icon { font-size: 20px; } }
+
+.hm-content { --background: #{$gray-50}; }
+
+.hm-note {
+  font-size: $font-sm; color: $gray-600; text-align: center;
+  margin: 0 $sp-lg $sp-md;
+}
+
+.hm-list { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-md; }
+
+.hm-item {
+  display: flex; align-items: center; gap: $sp-sm;
+  &.off { opacity: 0.5; }
+}
+
+// Mirrors how the button renders on the user's home screen
+.hm-preview {
+  flex: 1; min-width: 0; display: flex; align-items: center; gap: $sp-md;
+  height: 74px; padding: 0 $sp-lg; border-radius: $r-md; box-shadow: $shadow-sm;
+
+  .hp-ico {
+    width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+    border: 2.5px solid $black; @include flex-center;
+    ion-icon { font-size: 26px; color: $black; }
+  }
+  .hp-label {
+    font-size: $font-2xl; font-weight: 900; color: $black;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+
+  &.icon-top {
+    flex-direction: column; justify-content: center; gap: 2px;
+    height: 96px; padding: $sp-sm;
+    .hp-ico { width: 34px; height: 34px; ion-icon { font-size: 19px; } }
+    .hp-label { font-size: $font-lg; }
+  }
+  &.icon-right { flex-direction: row-reverse; justify-content: flex-end; }
+}
+
+.hm-edit {
+  flex-shrink: 0; height: 44px; padding: 0 $sp-md;
+  border: 1.5px solid $gray-300; border-radius: $r-sm; background: $white;
+  font-family: inherit; font-size: $font-sm; font-weight: 700; color: $black;
+  cursor: pointer; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  ion-icon { font-size: 16px; }
+}
+
+.empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }
+
+// ── Editor extras ──────────────────────────────────────────────────────────
+.ee-lbl {
+  display: block; font-size: $font-base; font-weight: 700;
+  color: $black; margin: $sp-md 0 6px;
+}
+
+.ee-input {
+  width: 100%; height: 48px; padding: 0 $sp-md; background: $white;
+  border: 1.5px solid $gray-300; border-radius: $r-md;
+  font-family: inherit; font-size: $font-base; color: $black; outline: none;
+  appearance: none;
+  &:focus { border-color: $yellow; }
+}
+
+.pos-row { display: flex; gap: $sp-sm; }
+
+.pos {
+  flex: 1; min-width: 0; height: 60px; padding: 0 6px;
+  border: 1.5px solid $gray-300; border-radius: $r-md; background: $white;
+  cursor: pointer; font-family: inherit;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  ion-icon { font-size: 20px; color: $black; flex-shrink: 0; }
+  span {
+    font-size: $font-xs; font-weight: 700; color: $black;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  &.col { flex-direction: column; gap: 2px; }
+  &.on { border-color: $yellow; border-width: 2px; background: $yellow-light; }
+}
+
+.hm-cta {
+  position: fixed; left: 0; right: 0; z-index: 20;
+  bottom: calc(64px + var(--ion-safe-area-bottom, 0px));
+  padding: $sp-sm $sp-lg $sp-md;
+  background: linear-gradient(to top, $gray-50 62%, rgba(250, 250, 250, 0));
+  pointer-events: none;
+}
+
+.add-new {
+  @include yellow-btn; width: 100%; height: 52px; font-size: $font-lg;
+  box-shadow: $shadow-md; pointer-events: all;
+  ion-icon { font-size: 24px; }
+}

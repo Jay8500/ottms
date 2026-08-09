@@ -1,61 +1,134 @@
 @import '../../../global.scss';
 
-// Full page wrapper
-.chat-page-wrap {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
+// Header, peer card, notice and composer stay put; only messages scroll.
+.chat-wrap {
+  display: flex; flex-direction: column;
+  height: 100%; background: $white;
 }
 
-// Frozen header
-.chat-header {
-  display: flex; align-items: center; gap: $sp-sm;
-  padding: calc(#{$sp-sm} + var(--ion-safe-area-top,0px)) $sp-md $sp-sm;
-  background: $white; border-bottom: 1px solid $gray-100;
-  flex-shrink: 0;
+.chat-top {
+  @include flex-between; flex-shrink: 0;
+  padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm;
 }
-.icon-btn { @include icon-btn; flex-shrink: 0; }
-.seller-banner {
-  flex: 1; display: flex; align-items: center; gap: $sp-sm;
-  background: $yellow; border-radius: $r-lg; padding: $sp-sm $sp-md;
-  .s-av { width: 38px; height: 38px; border-radius: 50%; background: $white; @include flex-center; font-size: $font-base; font-weight: 700; color: $black; flex-shrink: 0; }
-  .s-info { flex: 1; .s-name { font-size: $font-sm; font-weight: 700; color: $black; margin: 0; } }
-  .online-row { display: flex; align-items: center; gap: 4px; font-size: $font-xs; color: $black;
-    .dot { width: 7px; height: 7px; border-radius: 50%; background: $gray-400; &.on { background: $green; } } }
+.icon-btn { @include icon-btn; }
+.logo-badge { @include logo-badge; }
+
+// ── Group brand banner ─────────────────────────────────────────────────────
+.ott-banner {
+  display: flex; align-items: center; gap: $sp-md; flex-shrink: 0;
+  margin: 0 $sp-lg $sp-sm; padding: $sp-sm $sp-md;
+  background: #0C1B33; border-radius: $r-md;
+  .ob-name { flex: 1; font-size: $font-xl; font-weight: 800; color: $white; }
+  .ob-tag {
+    flex-shrink: 0; background: $yellow; color: $black;
+    font-size: $font-sm; font-weight: 800; padding: 4px 11px; border-radius: $r-sm;
+  }
 }
 
-// Frozen notice
-.notice-card {
-  background: $gray-50; padding: $sp-md $sp-lg;
-  border-bottom: 1px solid $gray-100; flex-shrink: 0;
-  .notice-title { font-size: $font-xs; font-weight: 700; color: $gray-600; text-align: center; margin-bottom: $sp-xs; }
-  .n-item { font-size: $font-xs; color: $gray-700; margin-bottom: 2px; line-height: 1.4; }
+// ── Peer ───────────────────────────────────────────────────────────────────
+.peer-card {
+  display: flex; align-items: center; gap: $sp-md; flex-shrink: 0;
+  margin: 0 $sp-lg $sp-sm; padding: $sp-sm $sp-md;
+  background: $yellow; border-radius: $r-md;
+
+  .p-av {
+    width: 44px; height: 44px; border-radius: $r-sm; flex-shrink: 0;
+    @include flex-center; background: $white; color: $black;
+    font-size: $font-xl; font-weight: 800;
+  }
+  .p-info {
+    flex: 1; min-width: 0;
+    .p-name {
+      font-size: $font-xl; font-weight: 800; color: $black; margin: 0;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      .uid { font-size: $font-base; font-weight: 700; }
+    }
+    .p-state {
+      display: flex; align-items: center; gap: 5px; margin-top: 2px;
+      font-size: $font-xs; font-weight: 600; color: rgba(0,0,0,0.7);
+      .dot { width: 9px; height: 9px; border-radius: 50%; background: #9CA3AF;
+             &.on { background: #16A34A; } }
+      .lk { font-size: 13px; }
+    }
+  }
+  .p-rate {
+    width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+    border: none; background: $white; @include flex-center; cursor: pointer;
+    ion-icon { font-size: 20px; color: $black; }
+  }
 }
 
-// Scrollable messages
-.chat-content { --background: #{$white}; flex: 1; min-height: 0; }
-.msg-list { padding: $sp-md $sp-lg; display: flex; flex-direction: column; gap: $sp-sm; }
-.msg-wrap { display: flex; &.mine { justify-content: flex-end; } &.theirs { justify-content: flex-start; } }
+// ── Notice ─────────────────────────────────────────────────────────────────
+.notice {
+  flex-shrink: 0; margin: 0 $sp-lg $sp-sm; padding: $sp-md;
+  background: $gray-100; border-radius: $r-md;
+  .n-title {
+    text-align: center; font-size: $font-sm; font-weight: 800;
+    color: $gray-700; text-decoration: underline; margin: 0 0 6px;
+  }
+  p { font-size: $font-xs; color: $gray-700; line-height: 1.5; margin: 0 0 3px; text-align: center; }
+}
+
+// ── Messages ───────────────────────────────────────────────────────────────
+.chat-body { flex: 1; min-height: 0; --background: #{$gray-50}; }
+
+.msgs { display: flex; flex-direction: column; gap: $sp-sm; padding: $sp-md $sp-lg; }
+
+.m-wrap { display: flex; &.mine { justify-content: flex-end; } }
+
 .bubble {
-  max-width: 76%; padding: $sp-sm $sp-md; border-radius: $r-lg;
-  .b-text { font-size: $font-sm; margin: 0 0 2px; color: $black; }
-  .b-time { font-size: 10px; color: $gray-600; display: block; text-align: right; }
-  &.mine   { background: $yellow; border-radius: $r-lg $r-lg 4px $r-lg; }
-  &.theirs { background: $gray-100; border-radius: 4px $r-lg $r-lg $r-lg; }
+  max-width: 78%; padding: 8px 12px; border-radius: $r-md;
+  background: $white; border: 1px solid $gray-200; box-shadow: $shadow-sm;
+  &.mine { background: $yellow-light; border-color: $yellow; }
+
+  .b-img {
+    display: block; max-width: 100%; border-radius: $r-sm;
+    margin-bottom: 5px;
+  }
+  .b-text { font-size: $font-base; color: $black; margin: 0; line-height: 1.45; word-break: break-word; }
+  .b-time { display: block; font-size: 10px; color: $gray-400; text-align: right; margin-top: 3px; }
 }
 
-// Frozen bottom
-.chat-bottom {
-  background: $white; border-top: 1px solid $gray-100; flex-shrink: 0;
-  padding-bottom: calc(#{$sp-sm} + var(--ion-safe-area-bottom,0px));
+.state {
+  text-align: center; padding: $sp-xl $sp-lg;
+  p { font-size: $font-base; color: $gray-600; margin: 0; }
 }
-.acct-label { font-size: $font-xs; color: $gray-600; font-weight: 600; padding: $sp-sm $sp-lg $sp-xs; margin: 0; }
-.sug-row { display: flex; gap: $sp-sm; overflow-x: auto; padding: 0 $sp-lg $sp-sm; scrollbar-width: none; &::-webkit-scrollbar { display: none; } }
-.sug-chip { flex-shrink: 0; padding: 6px $sp-md; background: $white; border: 1.5px solid $yellow; border-radius: $r-pill; font-size: $font-xs; font-weight: 600; color: $black; cursor: pointer; font-family: inherit; white-space: nowrap; }
-.rating-row { display: flex; align-items: center; gap: $sp-sm; background: $yellow-light; border: 1.5px solid $yellow; border-radius: $r-lg; margin: 0 $sp-lg $sp-sm; padding: $sp-sm $sp-md; cursor: pointer; font-family: inherit; width: calc(100% - #{$sp-lg} * 2);
-  ion-icon { font-size: 18px; color: $yellow-dark; } span { font-size: $font-sm; font-weight: 600; color: $black; } }
-.input-row { display: flex; align-items: center; gap: $sp-sm; padding: 0 $sp-md $sp-sm; }
-.msg-input { flex: 1; border: 1.5px solid $gray-200; border-radius: $r-pill; padding: 0 $sp-md; height: 42px; font-size: $font-sm; outline: none; background: $white; font-family: inherit; color: $black; }
-.auto-lbl { font-size: $font-xs; color: $gray-400; white-space: nowrap; }
-.send-btn { width: 42px; height: 42px; border-radius: 50%; background: $yellow; border: none; @include flex-center; cursor: pointer; ion-icon { font-size: 20px; color: $black; } &[disabled] { opacity: 0.4; } }
+
+// ── Composer ───────────────────────────────────────────────────────────────
+.chat-bottom {
+  flex-shrink: 0; background: $white; border-top: 1px solid $gray-200;
+  padding: $sp-sm $sp-lg calc(#{$sp-sm} + var(--ion-safe-area-bottom, 0px));
+}
+
+.quick {
+  display: flex; gap: 6px; overflow-x: auto; padding-bottom: $sp-sm;
+  &::-webkit-scrollbar { display: none; }
+  button {
+    flex-shrink: 0; height: 34px; padding: 0 14px; border-radius: $r-pill;
+    border: 1.5px solid $gray-300; background: $white; cursor: pointer;
+    font-family: inherit; font-size: $font-sm; font-weight: 700; color: $black;
+    &:disabled { opacity: 0.45; }
+  }
+}
+
+.composer { display: flex; align-items: center; gap: $sp-sm; }
+
+.c-img, .c-send {
+  width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+  border: none; @include flex-center; cursor: pointer;
+  ion-icon { font-size: 22px; }
+  &:disabled { opacity: 0.4; }
+}
+
+.c-img  { background: $black; ion-icon { color: $white; } }
+.c-send { background: $yellow; ion-icon { color: $black; } }
+
+.c-input {
+  flex: 1; min-width: 0; height: 44px; padding: 0 $sp-md;
+  border: 1.5px solid $gray-300; border-radius: $r-pill;
+  font-family: inherit; font-size: $font-base; color: $black;
+  outline: none; background: $white;
+  &::placeholder { color: $gray-400; }
+  &:focus { border-color: $yellow; }
+  &:disabled { background: $gray-100; }
+}

@@ -1,0 +1,75 @@
+<ion-content class="fb-content" [scrollY]="true">
+  <app-admin-header title="Create Account" trailing="options"></app-admin-header>
+
+  <div class="fb-avatar-row">
+    <div class="fb-avatar"><ion-icon name="person-outline"></ion-icon></div>
+    <div class="fb-brand">
+      <p class="fb-title">Money <span>Saver</span></p>
+      <button class="fb-photo"><ion-icon name="camera-outline"></ion-icon> Add Photo</button>
+    </div>
+  </div>
+
+  <div class="fb-card">
+    <p class="fb-h">Manage Form Fields</p>
+    <p class="fb-sub">Add, edit, enable or disable the fields</p>
+
+    <div class="fld" *ngFor="let f of fields; let i = index" [class.off]="!f.enabled">
+      <div class="fld-top">
+        <div class="fld-order">
+          <button (click)="move(f, -1)" [disabled]="i === 0" aria-label="Move up">
+            <ion-icon name="arrow-up-outline"></ion-icon>
+          </button>
+          <button (click)="move(f, 1)" [disabled]="i === fields.length - 1" aria-label="Move down">
+            <ion-icon name="arrow-down-outline"></ion-icon>
+          </button>
+        </div>
+
+        <div class="fld-ico" [style.background]="f.iconBg"><ion-icon [name]="f.icon"></ion-icon></div>
+
+        <div class="fld-name">
+          <p class="fn-label">{{ f.label }}</p>
+          <button class="fn-req" [class.on]="f.required" (click)="toggleRequired(f)">
+            {{ f.required ? 'Required' : 'Optional' }}
+          </button>
+        </div>
+
+        <button class="sw" [class.on]="f.enabled" (click)="toggleEnabled(f)"
+                [attr.aria-pressed]="f.enabled" aria-label="Show this field"><i></i></button>
+      </div>
+
+      <div class="fld-preview">{{ f.placeholder }}</div>
+
+      <div class="fld-tools">
+        <button class="ft edit" (click)="rename(f)"><ion-icon name="create-outline"></ion-icon></button>
+        <button class="ft del" (click)="remove(f)"><ion-icon name="trash-outline"></ion-icon></button>
+      </div>
+
+      <div class="fld-otp" *ngIf="f.otpCapable">
+        <span>Require OTP for {{ f.label }}</span>
+        <button class="sw sm" [class.on]="f.requireOtp" (click)="toggleOtp(f)"
+                [attr.aria-pressed]="f.requireOtp"><i></i></button>
+      </div>
+    </div>
+
+    <button class="fb-add" (click)="addField()">
+      <ion-icon name="add-outline"></ion-icon> Add More Option
+    </button>
+
+    <div class="fb-tip">
+      <ion-icon name="information-circle-outline"></ion-icon>
+      <div>
+        <p class="tip-h">Tips</p>
+        <p>Use the arrows to change the order fields appear in.</p>
+        <p>Switch a field off to hide it without losing what people already entered.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:120px"></div>
+</ion-content>
+
+<ion-footer class="cta-footer">
+  <button class="cta-btn" [disabled]="!dirty" (click)="save()">
+    <ion-icon name="save-outline"></ion-icon> Save Changes
+  </button>
+</ion-footer>

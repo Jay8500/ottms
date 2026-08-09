@@ -1,3 +1,14 @@
 <ion-app>
+  <div class="load-bar" *ngIf="loading.active()" role="progressbar" aria-label="Loading"></div>
+
+  <div class="net-banner offline" *ngIf="!net.online()">
+    <ion-icon name="cloud-offline-outline"></ion-icon>
+    <span>No internet. You can still browse and chat — payments are paused.</span>
+  </div>
+  <div class="net-banner back" *ngIf="net.online() && net.justReconnected()">
+    <ion-icon name="cloud-done-outline"></ion-icon>
+    <span>Back online</span>
+  </div>
+
   <ion-router-outlet></ion-router-outlet>
 </ion-app>

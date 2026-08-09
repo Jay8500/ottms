@@ -1,0 +1,157 @@
+@import '../../../global.scss';
+
+.fb-content { --background: #{$gray-50}; }
+
+// ── Avatar / brand row ─────────────────────────────────────────────────────
+.fb-avatar-row {
+  display: flex; align-items: center; gap: $sp-lg;
+  padding: 0 $sp-lg $sp-lg;
+}
+
+.fb-avatar {
+  width: 88px; height: 88px; border-radius: 50%; flex-shrink: 0;
+  border: 2px dashed $gray-400; background: $gray-100;
+  @include flex-center;
+  ion-icon { font-size: 44px; color: $gray-400; }
+}
+
+.fb-brand {
+  flex: 1; min-width: 0;
+  .fb-title {
+    font-size: $font-2xl; font-weight: 800; color: $black; margin: 0 0 8px;
+    span { color: $blue; }
+  }
+}
+
+.fb-photo {
+  @include yellow-btn; height: 42px; padding: 0 $sp-lg;
+  ion-icon { font-size: 18px; }
+}
+
+// ── Card ───────────────────────────────────────────────────────────────────
+.fb-card {
+  margin: 0 $sp-lg; padding: $sp-lg;
+  background: $white; border: 1px solid $gray-200;
+  border-radius: $r-lg; box-shadow: $shadow-sm;
+}
+
+.fb-h   { font-size: $font-xl; font-weight: 800; color: $black; margin: 0; }
+.fb-sub { font-size: $font-sm; color: $gray-600; margin: 4px 0 $sp-lg; }
+
+// ── Field row ──────────────────────────────────────────────────────────────
+.fld {
+  border: 1.5px solid $gray-200; border-radius: $r-md;
+  padding: $sp-md; margin-bottom: $sp-md; position: relative;
+  &.off { opacity: 0.55; background: $gray-50; }
+}
+
+.fld-top { display: flex; align-items: center; gap: $sp-sm; }
+
+.fld-order {
+  display: flex; flex-direction: column; gap: 2px; flex-shrink: 0;
+  button {
+    width: 24px; height: 20px; border: none; background: $gray-100;
+    border-radius: 4px; @include flex-center; cursor: pointer; padding: 0;
+    ion-icon { font-size: 13px; color: $gray-700; }
+    &:disabled { opacity: 0.3; }
+  }
+}
+
+.fld-ico {
+  width: 42px; height: 42px; border-radius: $r-sm; flex-shrink: 0;
+  @include flex-center;
+  ion-icon { font-size: 22px; color: $black; }
+}
+
+.fld-name {
+  flex: 1; min-width: 0;
+  .fn-label {
+    font-size: $font-lg; font-weight: 700; color: $black; margin: 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+}
+
+.fn-req {
+  margin-top: 3px; border: none; border-radius: $r-sm; cursor: pointer;
+  font-family: inherit; font-size: 10px; font-weight: 700; padding: 3px 9px;
+  background: $gray-100; color: $gray-600;
+  &.on { background: $blue-light; color: $blue; }
+}
+
+// Toggle switch
+.sw {
+  width: 50px; height: 28px; border-radius: $r-pill; border: none;
+  background: $gray-300; position: relative; cursor: pointer; flex-shrink: 0;
+  transition: background 0.18s;
+  i {
+    position: absolute; top: 3px; left: 3px; width: 22px; height: 22px;
+    border-radius: 50%; background: $white; transition: transform 0.18s;
+    box-shadow: $shadow-sm;
+  }
+  &.on { background: #16A34A; i { transform: translateX(22px); } }
+
+  &.sm {
+    width: 42px; height: 24px;
+    i { width: 18px; height: 18px; }
+    &.on { background: #2563EB; i { transform: translateX(18px); } }
+  }
+}
+
+.fld-preview {
+  margin-top: $sp-sm; padding: 11px $sp-md;
+  border: 1.5px solid $gray-200; border-radius: $r-sm;
+  font-size: $font-base; color: $gray-400; background: $white;
+}
+
+.fld-tools {
+  position: absolute; right: $sp-md; bottom: 62px;
+  display: flex; gap: 6px;
+}
+
+.ft {
+  width: 34px; height: 34px; border-radius: $r-sm; cursor: pointer;
+  border: 1.5px solid currentColor; background: $white;
+  @include flex-center;
+  ion-icon { font-size: 17px; }
+  &.edit { color: #2563EB; }
+  &.del  { color: #DC2626; }
+}
+
+.fld-otp {
+  @include flex-between;
+  margin-top: $sp-sm; padding: 9px $sp-md;
+  background: $yellow-light; border-radius: $r-sm;
+  span { font-size: $font-sm; font-weight: 600; color: $black; }
+}
+
+// ── Add / tips ─────────────────────────────────────────────────────────────
+.fb-add {
+  width: 100%; height: 48px; margin-top: $sp-xs;
+  border: 1.5px dashed $blue; border-radius: $r-md; background: transparent;
+  color: $blue; font-family: inherit; font-size: $font-base; font-weight: 700;
+  cursor: pointer; @include flex-center; gap: 6px;
+  ion-icon { font-size: 20px; }
+}
+
+.fb-tip {
+  display: flex; gap: $sp-sm; margin-top: $sp-lg;
+  padding: $sp-md; background: #EFF6FF; border-radius: $r-md;
+  ion-icon { font-size: 20px; color: #2563EB; flex-shrink: 0; }
+  .tip-h { font-size: $font-base; font-weight: 700; color: #1E3A8A; margin: 0 0 4px; }
+  p { font-size: $font-sm; color: #1E40AF; margin: 0 0 2px; line-height: 1.45; }
+}
+
+// ── Save ───────────────────────────────────────────────────────────────────
+.fb-cta {
+  position: fixed; left: 0; right: 0; z-index: 20;
+  bottom: calc(64px + var(--ion-safe-area-bottom, 0px));
+  padding: $sp-sm $sp-lg $sp-md;
+  background: linear-gradient(to top, $gray-50 62%, rgba(250, 250, 250, 0));
+  pointer-events: none;
+}
+
+.save-btn {
+  @include yellow-btn; width: 100%; height: 52px; font-size: $font-lg;
+  box-shadow: $shadow-md; pointer-events: all;
+  ion-icon { font-size: 22px; }
+}

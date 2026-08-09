@@ -1,29 +1,68 @@
-<ion-content class="admin-home-content" [scrollY]="true">
-  <div class="top-bar">
-    <button class="icon-btn" onclick="history.back()"><ion-icon name="settings-outline"></ion-icon></button>
-    <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
-    <button class="icon-btn dark"><ion-icon name="options-outline"></ion-icon></button>
-  </div>
-  <p class="section-title">Edit Home Page</p>
-  <p class="section-sub">Edit or change options for the home page.</p>
-  <div class="items-list">
-    <div class="item-card" *ngFor="let a of actions">
-      <div class="item-icon"><ion-icon [name]="a.icon"></ion-icon></div>
-      <span class="item-lbl">{{ a.label }}</span>
-      <button class="edit-btn" (click)="a.action()"><ion-icon name="create-outline"></ion-icon></button>
-      <button class="del-btn"><ion-icon name="trash-outline"></ion-icon></button>
+<ion-content class="hm-content" [scrollY]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
+
+  <app-admin-header title="Home Screen" trailing="options"></app-admin-header>
+
+  <p class="hm-note">This is what the buttons look like on the user's home screen.</p>
+
+  <div class="hm-list">
+    <div class="hm-item" *ngFor="let b of items" [class.off]="!b.active">
+      <div class="hm-preview" [style.background]="b.color"
+           [class.icon-top]="b.iconPosition === 'top'"
+           [class.icon-right]="b.iconPosition === 'right'">
+        <div class="hp-ico"><ion-icon [name]="b.icon"></ion-icon></div>
+        <span class="hp-label">{{ b.title }}</span>
+      </div>
+      <button class="hm-edit" (click)="edit(b)">
+        <ion-icon name="create-outline"></ion-icon> Edit
+      </button>
     </div>
   </div>
-  <button class="add-btn" (click)="navigate('categorymngmnt')"><ion-icon name="add-circle-outline"></ion-icon> Add New Option</button>
-  <p class="section-title" style="margin-top:8px">Admin Sections</p>
-  <div class="nav-cards">
-    <button class="nav-card" *ngFor="let n of navItems" (click)="navigate(n.route)">
-      <div class="nav-icon" [style.background]="n.bg"><ion-icon [name]="n.icon" [style.color]="n.color"></ion-icon></div>
-      <div class="nav-info"><h3>{{ n.label }}</h3><p>{{ n.desc }}</p></div>
-      <ion-badge *ngIf="n.badge" color="danger">{{ n.badge }}</ion-badge>
-      <ion-icon name="chevron-forward-outline" class="nav-arr"></ion-icon>
-    </button>
-  </div>
-  <button class="logout-btn" (click)="logout()"><ion-icon name="log-out-outline"></ion-icon> Logout</button>
-  <div style="height:80px"></div>
+
+  <p class="empty" *ngIf="!items.length">No buttons yet. Tap Add New to create one.</p>
+  <div style="height:120px"></div>
 </ion-content>
+
+<ion-footer class="cta-footer">
+  <button class="cta-btn" (click)="create()">
+    <ion-icon name="add-circle-outline"></ion-icon> Add New
+  </button>
+</ion-footer>
+
+<app-entity-editor
+  [open]="editorOpen"
+  [heading]="isNew ? 'Add Button' : 'Edit ' + (editing?.title || '') + ' Button'"
+  [model]="editing"
+  [icons]="icons"
+  [showSubName]="false"
+  [showImage]="false"
+  [showDelete]="!isNew"
+  (save)="onSave($event)"
+  (remove)="onRemove($event)"
+  (close)="editorOpen = false">
+
+  <ng-container *ngIf="editing">
+    <label class="ee-lbl">Icon Position</label>
+    <div class="pos-row">
+      <button class="pos" [class.on]="editing.iconPosition === 'left'"
+              (click)="editing.iconPosition = 'left'">
+        <ion-icon [name]="editing.icon"></ion-icon><span>{{ editing.title || 'Button' }}</span>
+      </button>
+      <button class="pos col" [class.on]="editing.iconPosition === 'top'"
+              (click)="editing.iconPosition = 'top'">
+        <ion-icon [name]="editing.icon"></ion-icon><span>{{ editing.title || 'Button' }}</span>
+      </button>
+      <button class="pos" [class.on]="editing.iconPosition === 'right'"
+              (click)="editing.iconPosition = 'right'">
+        <span>{{ editing.title || 'Button' }}</span><ion-icon [name]="editing.icon"></ion-icon>
+      </button>
+    </div>
+
+    <label class="ee-lbl">Opens</label>
+    <select class="ee-input" [(ngModel)]="editing.route">
+      <option *ngFor="let r of routes" [value]="r.value">{{ r.label }}</option>
+    </select>
+  </ng-container>
+</app-entity-editor>

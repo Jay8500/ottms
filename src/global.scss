@@ -116,6 +116,25 @@ ion-tab-bar {
   }
 }
 
+// ─── STICKY BOTTOM CTA ────────────────────────────────────────────────────
+// Must be an <ion-footer> sibling of <ion-content>, never `position: fixed`
+// inside the page: Ionic transforms .ion-page during transitions, and a
+// transformed ancestor makes `fixed` resolve against it rather than the
+// viewport — the button then floats mid-screen and stacks under the content.
+ion-footer.cta-footer {
+  background: $white;
+  border-top: 1px solid $gray-200;
+  padding: $sp-md $sp-lg calc(#{$sp-md} + var(--ion-safe-area-bottom, 0px));
+  &::before { display: none; }        // kill Ionic's iOS hairline
+
+  .cta-btn {
+    @include yellow-btn;
+    width: 100%; height: 52px; font-size: $font-lg;
+    ion-icon { font-size: 24px; }
+  }
+  .cta-btn.save { background: $yellow; }
+}
+
 // ─── TOUCH FIXES ──────────────────────────────────────────────────────────
 * { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; }
 a, button, ion-button, ion-tab-button, ion-item { touch-action: manipulation; cursor: pointer; }

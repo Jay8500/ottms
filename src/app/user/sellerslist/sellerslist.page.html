@@ -1,48 +1,91 @@
-<ion-content class="sellers-content" [scrollY]="true">
+<ion-content class="sl-content" [scrollY]="true">
   <div class="top-bar">
-    <button class="icon-btn" onclick="history.back()"><ion-icon name="arrow-back-outline"></ion-icon></button>
+    <button class="icon-btn" (click)="back()" aria-label="Back">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
     <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
-    <button class="icon-btn dark"><ion-icon name="options-outline"></ion-icon></button>
-  </div>
-
-  <!-- OTT + Validity banner -->
-  <div class="app-banner" [style.background]="ottColor">
-    <span class="banner-name">{{ ottName }}</span>
-    <span class="validity-tag" *ngIf="selectedValidity">{{ selectedValidity }}</span>
-  </div>
-
-  <!-- Filter chips -->
-  <div class="filter-row">
-    <button class="f-chip" *ngFor="let f of filters" [class.active]="activeFilter===f.key" (click)="setFilter(f.key)">
-      <ion-icon [name]="f.icon" *ngIf="f.icon"></ion-icon> {{ f.label }}
+    <button class="icon-btn dark" aria-label="Options">
+      <ion-icon name="options-outline"></ion-icon>
     </button>
   </div>
 
-  <!-- Sellers list -->
-  <div class="sellers-list">
-    <div class="seller-card" *ngFor="let s of filteredSellers" (click)="selectSeller(s)">
-      <div class="s-av">{{ s.name.charAt(0) }}</div>
-      <div class="s-info">
-        <p class="s-name">{{ s.name }} <span class="uid">{{ s.uniqueNum }}</span>
-          <ion-icon name="shield-checkmark-outline" class="verified" *ngIf="s.isVerified"></ion-icon>
-        </p>
-        <div class="stars">
-          <span *ngFor="let x of getStars(s.rating,'filled')" class="star">★</span>
-          <span *ngFor="let x of getStars(s.rating,'empty')" class="star empty">☆</span>
-          <span class="rc">{{ s.reviewCount }}</span>
-        </div>
-        <div class="online-row">
-          <span class="dot" [class.online]="s.isOnline"></span>
-          <span class="status-txt" [class.online-txt]="s.isOnline">{{ s.isOnline ? 'Online' : 'Offline' }}</span>
-        </div>
-        <div class="batches-row" *ngIf="s.batches.length > 0">
-          <span class="batch-pill" *ngFor="let b of s.batches">{{ b }}</span>
-        </div>
-        <!-- OTT + Validity info -->
-        <p class="s-ott-info">{{ ottName }} • {{ selectedValidity }}</p>
-      </div>
-      <button class="price-btn">₹{{ s.price }} ›</button>
-    </div>
+  <!-- Sort by stars / batch / verified -->
+  <div class="sort-row">
+    <button class="sort" *ngFor="let s of sorts" [class.on]="sort === s.key" (click)="setSort(s.key)">
+      <ion-icon *ngIf="s.icon" [name]="s.icon"></ion-icon>
+      <span>{{ s.label }}</span>
+    </button>
   </div>
+
+  <!-- Platform + validity -->
+  <div class="app-banner" *ngIf="app" [style.background]="app.color">
+    <app-ott-logo [brand]="app.brand" [imageUrl]="app.imageUrl" [size]="42" [radius]="8"></app-ott-logo>
+    <span class="banner-name">{{ app.title }}</span>
+    <span class="validity-tag" *ngIf="plan">{{ plan.title }}</span>
+  </div>
+
+  <div class="seller-list">
+    <button class="seller" *ngFor="let g of shown" (click)="open(g)">
+      <div class="s-av">{{ g.sellerName.charAt(0) }}</div>
+      <div class="s-info">
+        <p class="s-name">{{ g.sellerName }} <span class="uid">{{ g.sellerUniqueNum }}</span></p>
+        <p class="s-plan">{{ app?.title }} · {{ g.tierLabel }} · {{ g.months }}M</p>
+        <div class="s-seats">
+          <span class="dot"></span>
+          {{ g.seatsTotal - g.seatsFilled }} of {{ g.seatsTotal }} seats left
+        </div>
+      </div>
+      <span class="s-price">₹{{ g.price | number }} ›</span>
+    </button>
+  </div>
+
+  <div class="skeleton" *ngIf="loading">
+    <div class="sk" *ngFor="let i of [1,2,3]"></div>
+  </div>
+
+  <div class="state" *ngIf="error">
+    <p>{{ error }}</p>
+    <button class="retry" (click)="load()">Try again</button>
+  </div>
+
+  <div class="state" *ngIf="!loading && !error && !shown.length">
+    <p>No one is sharing {{ app?.title }} for this duration yet.</p>
+    <p class="sub">Check back soon, or share your own screen and earn.</p>
+  </div>
+
   <div style="height:80px"></div>
 </ion-content>
+
+<!-- ── Payments sheet ── -->
+<div class="pay-backdrop" *ngIf="picked" (click)="close()"></div>
+
+<div class="pay-sheet" *ngIf="picked" role="dialog" aria-modal="true">
+  <div class="pay-head">
+    <h2>Payments</h2>
+    <button class="pay-x" (click)="close()" aria-label="Close">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+  </div>
+
+  <div class="pay-rows">
+    <div class="pr">
+      <span class="k">Available Funds</span>
+      <span class="v">{{ available | number }} <b>₹</b></span>
+    </div>
+    <div class="pr">
+      <span class="k">Pay</span>
+      <span class="v pay">{{ picked.price | number }} <b>₹</b></span>
+    </div>
+  </div>
+
+  <p class="pay-short" *ngIf="shortfall > 0">
+    You are ₹{{ shortfall | number }} short. Add funds to continue.
+  </p>
+
+  <div class="pay-actions">
+    <button class="pa buy" [disabled]="buying || shortfall > 0" (click)="purchase()">
+      {{ buying ? 'Please wait…' : 'Purchase' }}
+    </button>
+    <button class="pa wallet" (click)="goWallet()">Wallet</button>
+  </div>
+</div>

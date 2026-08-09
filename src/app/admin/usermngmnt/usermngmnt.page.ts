@@ -1,78 +1,141 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar,IonButton,IonIcon,IonButtons,IonSelectOption } from '@ionic/angular/standalone';
-import { AlertController, ToastController } from '@ionic/angular/standalone';
+import { Router } from '@angular/router';
+import { IonContent, IonIcon, AlertController, ToastController, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { arrowBackOutline, createOutline, trashOutline, searchOutline } from 'ionicons/icons';
- 
+import {
+  personOutline, calendarOutline, callOutline, mailOutline,
+  checkmarkCircle, businessOutline, cardOutline, shieldOutline,
+  chevronUpOutline, chevronDownOutline, chatbubbleEllipsesOutline,
+  peopleOutline, personAddOutline, cashOutline, starOutline,
+} from 'ionicons/icons';
+import { AdminHeaderComponent } from '../shared/admin-header.component';
+import { AdminSearchbarComponent, FilterChip } from '../shared/admin-searchbar.component';
+import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
+import { DataService } from '../../shared/data.service';
+import { ExportService } from '../../shared/export.service';
+import { AppUser, GroupScreen } from '../../shared/models';
+
+interface UserRow extends AppUser {
+  expanded: boolean;
+  joined: GroupScreen[];
+}
+
+/** 7 — User's Data. Profile, ratings, badges, bank details and activity. */
 @Component({
   selector: 'app-usermngmnt',
   templateUrl: './usermngmnt.page.html',
   styleUrls: ['./usermngmnt.page.scss'],
   standalone: true,
-  imports: [IonContent, CommonModule, FormsModule,IonIcon,
-  ]
+  imports: [
+    CommonModule, FormsModule, IonContent, IonIcon,
+    AdminHeaderComponent, AdminSearchbarComponent, OttLogoComponent, IonRefresher, IonRefresherContent
+  ],
 })
 export class UsermngmntPage implements OnInit {
-  searchTerm = ''; roleFilter = 'all';
- 
-  allUsers = [
-    { id:'u1', name:'Bharath', uniqueNum:322, mobile:'+91 98765 43210', email:'b@mail.com', role:'buyer',  roleLabel:'Buyer',  status:'active',   wallet:'1,240' },
-    { id:'u2', name:'Meera',   uniqueNum:58,  mobile:'+91 87654 32109', email:'m@mail.com', role:'seller', roleLabel:'Seller', status:'active',   wallet:'3,800' },
-    { id:'u3', name:'Arjun',   uniqueNum:88,  mobile:'+91 76543 21098', email:'a@mail.com', role:'buyer',  roleLabel:'Buyer',  status:'active',   wallet:'540'   },
-    { id:'u4', name:'Deepa',   uniqueNum:201, mobile:'+91 65432 10987', email:'d@mail.com', role:'seller', roleLabel:'Seller', status:'inactive', wallet:'900'   },
-    { id:'u5', name:'Rajan',   uniqueNum:91,  mobile:'+91 54321 09876', email:'r@mail.com', role:'seller', roleLabel:'Seller', status:'active',   wallet:'2,100' },
-  ];
- 
-  filteredUsers = [...this.allUsers];
- 
-  constructor(private alertCtrl: AlertController, private toastCtrl: ToastController) {
-    addIcons({ arrowBackOutline, createOutline, trashOutline, searchOutline });
-  }
-  ngOnInit() {}
- 
-  filterUsers() {
-    const t = this.searchTerm.toLowerCase();
-    this.filteredUsers = this.allUsers.filter(u => {
-      const matchRole = this.roleFilter === 'all' || u.role === this.roleFilter;
-      const matchSearch = !t || u.name.toLowerCase().includes(t) || u.mobile.includes(t) || u.email.includes(t) || String(u.uniqueNum).includes(t);
-      return matchRole && matchSearch;
-    });
-  }
- 
-  async editUser(u: any) {
-    const alert = await this.alertCtrl.create({
-      header: `Edit ${u.name}`,
-      inputs: [
-        { name: 'name',  type: 'text',  value: u.name,   placeholder: 'Full Name'   },
-        { name: 'mobile',type: 'text',  value: u.mobile,  placeholder: 'Mobile'     },
-        { name: 'email', type: 'email', value: u.email,   placeholder: 'Email'      },
-      ],
-      buttons: [
-        { text: 'Cancel', role: 'cancel' },
-        { text: 'Save', handler: data => { Object.assign(u, data); /* TODO: API call */ } },
-      ],
-    });
-    await alert.present();
-  }
- 
-  async deleteUser(u: any) {
-    const alert = await this.alertCtrl.create({
-      header: 'Delete User',
-      message: `Are you sure you want to delete ${u.name} (${u.uniqueNum})?`,
-      buttons: [
-        { text: 'Cancel', role: 'cancel' },
-        { text: 'Delete', role: 'destructive', handler: () => {
-          this.allUsers.splice(this.allUsers.indexOf(u), 1);
-          this.filterUsers(); // TODO: API call
-        }},
-      ],
-    });
-    await alert.present();
-  }
- 
-  addUser() { /* TODO: navigate to add user form */ }
-}
- 
+  term = '';
+  activeChip = 'all';
+  rows: UserRow[] = [];
+  shown: UserRow[] = [];
 
+  chips: FilterChip[] = [
+    { key: 'all',      label: 'All',      tone: 'plain' },
+    { key: 'stars',    label: 'Ratings',  tone: 'yellow' },
+    { key: 'badges',   label: 'Batches',  tone: 'green' },
+    { key: 'sellers',  label: 'Sellers',  tone: 'red' },
+  ];
+
+  constructor(
+    private data: DataService,
+    private exporter: ExportService,
+    private router: Router,
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController,
+  ) {
+    addIcons({
+      personOutline, calendarOutline, callOutline, mailOutline,
+      checkmarkCircle, businessOutline, cardOutline, shieldOutline,
+      chevronUpOutline, chevronDownOutline, chatbubbleEllipsesOutline,
+      peopleOutline, personAddOutline, cashOutline, starOutline,
+    });
+  }
+
+  async ngOnInit() {
+    const users = await this.data.getUsers();
+    const groups = await this.data.getGroups();
+    this.rows = users.map(u => ({
+      ...u, expanded: false,
+      joined: groups.filter(g => g.sellerId !== u.id).slice(0, 2),
+    }));
+    this.apply();
+  }
+
+  apply() {
+    const t = this.term.trim().toLowerCase();
+    let list = this.rows.filter(u =>
+      !t || u.name.toLowerCase().includes(t) || String(u.uniqueNumber).includes(t)
+        || u.mobile.includes(t));
+
+    if (this.activeChip === 'sellers') list = list.filter(u => u.isSeller);
+    if (this.activeChip === 'stars')   list = [...list].sort((a, b) => b.rating - a.rating || b.reviewCount - a.reviewCount);
+    if (this.activeChip === 'badges')  list = [...list].sort((a, b) => b.badges.length - a.badges.length);
+
+    this.shown = list;
+  }
+
+  setChip(k: string) { this.activeChip = k; this.apply(); }
+
+  toggle(u: UserRow) { u.expanded = !u.expanded; }
+
+  stars(n: number, kind: 'on' | 'off') {
+    return Array(kind === 'on' ? n : Math.max(0, 5 - n)).fill(0);
+  }
+
+  chat(u: UserRow) {
+    this.router.navigate(['/admin/chats'], { queryParams: { user: u.id } });
+  }
+
+  async removeUser(u: UserRow) {
+    const alert = await this.alertCtrl.create({
+      header: 'Remove account?',
+      message: `${u.name} (${u.uniqueNumber}) will lose access. Wallet balance of ` +
+               `₹${u.walletAmount.toLocaleString('en-IN')} must be settled first.`,
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        {
+          text: 'Remove', role: 'destructive',
+          handler: () => {
+            this.rows = this.rows.filter(x => x.id !== u.id);
+            this.apply();
+            this.toast(`${u.name} removed`);
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  exportCsv() {
+    if (!this.shown.length) { this.toast('Nothing to export'); return; }
+    this.exporter.download<UserRow>('users', [
+      ['name', 'Name'], ['nickName', 'Nick Name'], ['uniqueNumber', 'User ID'],
+      ['mobile', 'Mobile'], ['email', 'Email'], ['registeredDate', 'Registered'],
+      ['rating', 'Rating'], ['reviewCount', 'Reviews'],
+      ['walletAmount', 'Wallet'], ['lockedAmount', 'Locked'], ['unlockedAmount', 'Unlocked'],
+      ['groupsJoined', 'Groups Joined'], ['groupsCreated', 'Groups Created'], ['txCount', 'Transactions'],
+    ], this.shown);
+    this.toast(`Exported ${this.shown.length} users`);
+  }
+
+  private async toast(message: string) {
+    const t = await this.toastCtrl.create({ message, duration: 2200, position: 'bottom' });
+    t.present();
+  }
+  /** Pull-to-refresh. */
+  async refresh(ev: CustomEvent) {
+    await this.ngOnInit();
+    (ev.target as HTMLIonRefresherElement).complete();
+  }
+
+}

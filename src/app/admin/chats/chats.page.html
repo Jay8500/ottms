@@ -1,0 +1,39 @@
+<ion-content class="ac-content" [scrollY]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
+
+  <app-admin-header title="Chat's" trailing="options"></app-admin-header>
+
+  <app-admin-searchbar
+    placeholder="Search Chats..."
+    [showSort]="false"
+    [(term)]="term" (termChange)="apply()" (search)="apply()"
+    [chips]="chips" [activeChip]="activeChip" (chipChange)="setChip($event)">
+  </app-admin-searchbar>
+
+  <div class="ac-list">
+    <button class="ac-row" *ngFor="let c of shown" (click)="openThread(c)">
+      <app-ott-logo *ngIf="c.isGroup" [brand]="c.brand!" [size]="50" [radius]="10"></app-ott-logo>
+      <div class="ac-avatar" *ngIf="!c.isGroup">{{ c.peerName?.charAt(0) }}</div>
+
+      <div class="ac-mid">
+        <p class="ac-title">
+          {{ title(c) }}
+          <ion-icon name="lock-closed-outline" class="lock" *ngIf="c.locked"></ion-icon>
+        </p>
+        <p class="ac-seller" *ngIf="c.isGroup">{{ c.sellerName }} ({{ c.sellerUniqueNum }})</p>
+        <p class="ac-last">{{ c.lastMessage }}</p>
+      </div>
+
+      <div class="ac-right">
+        <span class="ac-time">{{ c.lastTime }}</span>
+        <span class="ac-unread" *ngIf="c.unread">{{ c.unread }}</span>
+        <span class="ac-dot" [class.on]="c.isOnline"></span>
+      </div>
+    </button>
+  </div>
+
+  <p class="empty" *ngIf="!shown.length">No chats match this filter.</p>
+  <div style="height:100px"></div>
+</ion-content>

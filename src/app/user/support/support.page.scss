@@ -1,16 +1,104 @@
 @import '../../../global.scss';
-.support-content { --background: #{$white}; }
+
+.sp-content { --background: #{$white}; }
+
 .top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
-.icon-btn { @include icon-btn; } .logo-badge { @include logo-badge; }
-.contact-list { padding: $sp-md $sp-lg $sp-lg; display: flex; flex-direction: column; gap: $sp-md; }
-.contact-btn { display: flex; align-items: center; gap: $sp-md; background: $yellow; border: none; border-radius: $r-pill; padding: $sp-md $sp-xl; cursor: pointer; width: 100%; font-family: inherit; box-shadow: $shadow-md; &:active { opacity: 0.88; }
-  .c-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(0,0,0,0.12); @include flex-center; ion-icon { font-size: 24px; color: $black; } }
-  span { font-size: $font-xl; font-weight: 700; color: $black; } }
-.faq-section { padding: 0 $sp-lg $sp-xl; }
-.faq-title { font-size: $font-lg; font-weight: 700; color: $black; margin-bottom: $sp-md; }
-.faq-item { background: $white; border-radius: $r-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm; margin-bottom: $sp-sm; overflow: hidden;
-  .faq-q { display: flex; justify-content: space-between; align-items: center; padding: $sp-md $sp-lg; cursor: pointer; font-size: $font-sm; font-weight: 600; color: $black; ion-icon { color: $yellow-dark; font-size: 20px; flex-shrink: 0; } }
-  .faq-a { padding: 0 $sp-lg $sp-md; border-top: 1px solid $gray-100; p { font-size: $font-xs; color: $gray-600; line-height: 1.6; margin: $sp-sm 0 0; } } }
-.faq-header { @include flex-between; margin-bottom: $sp-md; }
-.lang-tabs { display: flex; gap: 4px; }
-.lang-btn { padding: 4px 10px; border-radius: $r-pill; border: 1.5px solid $gray-200; background: $white; font-size: $font-xs; font-weight: 700; cursor: pointer; font-family: inherit; &.active { background: $yellow; border-color: $yellow; color: $black; } }
+.icon-btn { @include icon-btn; }
+.logo-badge { @include logo-badge; }
+
+.page-title {
+  font-size: $font-2xl; font-weight: 800; color: $black;
+  text-align: center; margin: $sp-xs 0 $sp-lg;
+}
+
+// ── Contact ────────────────────────────────────────────────────────────────
+.contact-row {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: $sp-sm; padding: 0 $sp-lg $sp-lg;
+}
+
+.contact {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  background: transparent; border: none; cursor: pointer; font-family: inherit;
+  padding: 0;
+  &:active { transform: scale(0.95); }
+  .c-ico {
+    width: 52px; height: 52px; border-radius: $r-md;
+    background: $yellow-light; @include flex-center;
+    ion-icon { font-size: 26px; color: $black; }
+  }
+  span {
+    font-size: 10px; font-weight: 700; color: $black;
+    text-align: center; line-height: 1.2;
+  }
+}
+
+// ── Language ───────────────────────────────────────────────────────────────
+.lang-row {
+  display: flex; gap: $sp-sm; padding: 0 $sp-lg $sp-lg;
+  button {
+    flex: 1; height: 44px; border-radius: $r-md; cursor: pointer;
+    border: 1.5px solid $gray-300; background: $white;
+    font-family: inherit; font-size: $font-base; font-weight: 700; color: $gray-700;
+    &.on { background: $yellow; border-color: $yellow; color: $black; }
+  }
+}
+
+// ── FAQ ────────────────────────────────────────────────────────────────────
+.faq-card {
+  margin: 0 $sp-lg; padding: $sp-lg;
+  background: linear-gradient(180deg, #FFF6D6 0%, #FFFDF5 100%);
+  border: 1px solid $yellow; border-radius: $r-lg;
+}
+
+.faq-h {
+  font-size: $font-xl; font-weight: 800; color: $black;
+  text-align: center; margin: 0 0 $sp-md;
+}
+
+.faq {
+  background: $white; border-radius: $r-md; margin-bottom: $sp-sm;
+  border: 1px solid rgba(0,0,0,0.06); overflow: hidden;
+}
+
+.faq-q {
+  display: flex; align-items: center; gap: $sp-sm; width: 100%;
+  padding: $sp-md; background: transparent; border: none;
+  cursor: pointer; font-family: inherit; text-align: left;
+
+  .n {
+    width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+    background: $yellow; color: $black; @include flex-center;
+    font-size: $font-sm; font-weight: 800;
+  }
+  .q { flex: 1; font-size: $font-base; font-weight: 700; color: $black; line-height: 1.4; }
+  ion-icon { font-size: 18px; color: $gray-600; flex-shrink: 0; }
+}
+
+.faq-a {
+  // line the answer up under the question text, past the number bubble
+  padding: 0 $sp-md $sp-md calc(#{$sp-md} + 26px + #{$sp-sm});
+  p { font-size: $font-sm; color: $gray-700; line-height: 1.6; margin: 0; }
+  .fallback { font-size: $font-xs; color: $gray-400; font-style: italic; margin-top: 6px; }
+}
+
+.watch {
+  display: inline-flex; align-items: center; gap: 5px; margin-top: $sp-sm;
+  font-size: $font-sm; font-weight: 700; color: $blue; text-decoration: none;
+  ion-icon { font-size: 18px; }
+}
+
+// ── States ─────────────────────────────────────────────────────────────────
+.skeleton { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-sm; }
+.sk {
+  height: 58px; border-radius: $r-md; background: $gray-100;
+  animation: sk-pulse 1.3s ease-in-out infinite;
+}
+@keyframes sk-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
+@media (prefers-reduced-motion: reduce) { .sk { animation: none; } }
+
+.state {
+  text-align: center; padding: $sp-xl $sp-lg;
+  p { font-size: $font-base; color: $gray-600; margin: 0 0 $sp-md; }
+}
+.retry { @include yellow-btn; height: 42px; padding: 0 $sp-xl; margin: 0 auto; }

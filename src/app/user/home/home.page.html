@@ -1,33 +1,51 @@
 <ion-content class="home-content" [scrollY]="true">
   <div class="top-bar">
     <div class="top-left"></div>
-    <div class="tab-pills">
-      <div class="pill active"></div>
-      <div class="pill"></div>
-      <div class="pill"></div>
-    </div>
-    <div class="top-right"></div>
-  </div>
-
-  <div class="logo-center">
     <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
+    <button class="icon-btn dark" aria-label="Options">
+      <ion-icon name="options-outline"></ion-icon>
+    </button>
   </div>
 
+  <div class="greet" *ngIf="userName">
+    <p class="hi">Hi, {{ userName }}</p>
+    <span class="uid">{{ uniqueNumber }}</span>
+  </div>
+
+  <!-- Admin-configured action buttons -->
   <div class="home-actions">
-    <button class="action-btn" (click)="goSupport()">
-      <div class="btn-circle"><ion-icon name="headset-outline"></ion-icon></div>
-      <span>Support</span>
-    </button>
-    <button class="action-btn" (click)="goCategory()">
-      <div class="btn-circle"><ion-icon name="pricetag-outline"></ion-icon></div>
-      <span>New Offer</span>
+    <button class="action-btn" *ngFor="let b of buttons"
+            [style.background]="b.color"
+            [class.icon-top]="b.iconPosition === 'top'"
+            [class.icon-right]="b.iconPosition === 'right'"
+            (click)="tapButton(b)">
+      <div class="btn-circle"><ion-icon [name]="b.icon"></ion-icon></div>
+      <span>{{ b.title }}</span>
     </button>
   </div>
+
+  <!-- Platforms -->
+  <p class="sec-label" *ngIf="ottApps.length">Choose a platform</p>
 
   <div class="ott-grid">
     <button class="ott-item" *ngFor="let app of ottApps" (click)="selectApp(app)">
-      <div class="ott-logo" [style.background]="app.color"><span>{{ app.initial }}</span></div>
+      <app-ott-logo [brand]="app.brand" [imageUrl]="app.imageUrl" [size]="66" [radius]="14"></app-ott-logo>
+      <span class="ott-name">{{ app.title }}</span>
     </button>
+  </div>
+
+  <!-- States -->
+  <div class="skeleton-grid" *ngIf="loading">
+    <div class="sk" *ngFor="let i of [1,2,3,4,5,6]"></div>
+  </div>
+
+  <div class="state" *ngIf="error">
+    <p>{{ error }}</p>
+    <button class="retry" (click)="retry()">Try again</button>
+  </div>
+
+  <div class="state" *ngIf="!loading && !error && !ottApps.length">
+    <p>No platforms available yet.</p>
   </div>
 
   <p class="logout-link" (click)="logout()">Logout</p>

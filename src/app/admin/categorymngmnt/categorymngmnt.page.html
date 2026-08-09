@@ -1,20 +1,50 @@
-<ion-content class="page-content" [scrollY]="true">
-  <div class="page-header">
-    <button class="icon-btn" onclick="history.back()"><ion-icon name="settings-outline"></ion-icon></button>
-    <p class="hdr-title">Admin Page</p>
-    <button class="icon-btn dark"><ion-icon name="options-outline"></ion-icon></button>
-  </div>
-  <p class="page-title">Edit Entertainment Page</p>
-  <p class="page-sub">Edit or change options for the page.</p>
-  <div class="list-area">
-    <div class="cat-item" *ngFor="let cat of categories">
-      <div class="cat-left" [style.background]="cat.bgColor"><span class="cat-emoji">{{ cat.emoji }}</span></div>
-      <span class="cat-name" [style.color]="cat.color">{{ cat.name }}</span>
-      <button class="edit-btn" (click)="editCategory(cat)"><ion-icon name="create-outline"></ion-icon></button>
-      <button class="del-btn" (click)="deleteCategory(cat)"><ion-icon name="trash-outline"></ion-icon></button>
+<ion-content class="cm-content" [scrollY]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
+
+  <app-admin-header title="Categories" trailing="options"></app-admin-header>
+
+  <div class="cm-list">
+    <div class="cm-row" *ngFor="let c of items" [class.off]="!c.active">
+      <div class="cm-tile" [style.background]="c.color">
+        <ion-icon [name]="c.icon"></ion-icon>
+      </div>
+
+      <div class="cm-mid">
+        <p class="cm-title">
+          {{ c.title }}
+          <ion-icon name="eye-off-outline" class="hidden-i" *ngIf="!c.active" title="Hidden in the app"></ion-icon>
+        </p>
+        <p class="cm-sub">{{ c.subName || (c.appCount + ' platforms') }}</p>
+      </div>
+
+      <button class="cm-edit" (click)="edit(c)">
+        <ion-icon name="create-outline"></ion-icon><span>Edit</span>
+      </button>
+      <button class="cm-go" (click)="openApps(c)" aria-label="Open platforms">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </button>
     </div>
   </div>
-  <button class="add-btn" (click)="addCategory()"><ion-icon name="add-circle-outline"></ion-icon> Add New Category</button>
-  <button class="save-btn">Save Changes</button>
-  <div style="height:80px"></div>
+
+  <p class="empty" *ngIf="!items.length">No categories yet. Tap Add New to create one.</p>
+  <div style="height:120px"></div>
 </ion-content>
+
+<ion-footer class="cta-footer">
+  <button class="cta-btn" (click)="create()">
+    <ion-icon name="add-circle-outline"></ion-icon> Add New
+  </button>
+</ion-footer>
+
+<app-entity-editor
+  [open]="editorOpen"
+  [heading]="isNew ? 'Create New' : 'Edit Category'"
+  [model]="editing"
+  [icons]="icons"
+  [showDelete]="!isNew"
+  (save)="onSave($event)"
+  (remove)="onRemove($event)"
+  (close)="editorOpen = false">
+</app-entity-editor>

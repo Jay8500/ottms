@@ -1,0 +1,31 @@
+<div class="sb-row">
+  <div class="sb-input">
+    <ion-icon name="search-outline"></ion-icon>
+    <input [ngModel]="term" (ngModelChange)="onTerm($event)"
+           [placeholder]="placeholder" (keyup.enter)="search.emit(term)" />
+  </div>
+  <button class="sb-go" (click)="search.emit(term)">
+    <ion-icon name="search-outline"></ion-icon><span>Search</span>
+  </button>
+</div>
+
+<div class="sb-sort" *ngIf="showSort">
+  <button class="ss-btn" (click)="sort.emit()">
+    <ion-icon name="swap-vertical-outline"></ion-icon>
+    <span>{{ sortLabel }}</span>
+    <ion-icon name="chevron-down-outline" class="caret"></ion-icon>
+  </button>
+  <button class="ss-btn" (click)="dateFrom.emit()">
+    <ion-icon name="calendar-outline"></ion-icon><span>Date From</span>
+  </button>
+  <button class="ss-btn" (click)="dateTo.emit()">
+    <ion-icon name="calendar-outline"></ion-icon><span>Date To</span>
+  </button>
+</div>
+
+<div class="sb-chips" *ngIf="chips.length">
+  <button class="sc" *ngFor="let c of chips"
+          [class.active]="activeChip === c.key"
+          [attr.data-tone]="c.tone || 'plain'"
+          (click)="chipChange.emit(c.key)">{{ c.label }}</button>
+</div>

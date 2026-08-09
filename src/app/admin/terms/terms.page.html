@@ -1,0 +1,36 @@
+<ion-content class="tc-content" [scrollY]="true">
+  <app-admin-header title="Terms & Conditions" trailing="options"></app-admin-header>
+
+  <div class="mode-row">
+    <button class="mode" [class.on]="mode === 'edit'" (click)="mode = 'edit'">
+      <ion-icon name="create-outline"></ion-icon> Edit
+    </button>
+    <button class="mode" [class.on]="mode === 'preview'" (click)="mode = 'preview'">
+      <ion-icon name="eye-outline"></ion-icon> Preview
+    </button>
+  </div>
+
+  <div class="tc-card" *ngIf="mode === 'edit'">
+    <label class="tc-lbl">One rule per line</label>
+    <textarea class="tc-area" [(ngModel)]="text" (ngModelChange)="dirty = true"
+              rows="18" placeholder="1. …"></textarea>
+    <p class="tc-hint">{{ lines.length }} clause{{ lines.length === 1 ? '' : 's' }} · {{ text.length }} characters</p>
+  </div>
+
+  <div class="tc-card" *ngIf="mode === 'preview'">
+    <div class="tc-head">
+      <ion-icon name="shield-checkmark-outline"></ion-icon>
+      <span>Terms &amp; Conditions</span>
+    </div>
+    <p class="tc-line" *ngFor="let l of lines">{{ l }}</p>
+    <p class="tc-empty" *ngIf="!lines.length">Nothing written yet.</p>
+  </div>
+
+  <div style="height:120px"></div>
+</ion-content>
+
+<ion-footer class="cta-footer">
+  <button class="cta-btn" [disabled]="!dirty" (click)="save()">
+    <ion-icon name="save-outline"></ion-icon> Save Changes
+  </button>
+</ion-footer>

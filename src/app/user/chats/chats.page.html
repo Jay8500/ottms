@@ -1,0 +1,55 @@
+<ion-content class="cl-content" [scrollY]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="top-bar">
+    <div style="width:40px"></div>
+    <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
+    <button class="icon-btn dark" aria-label="Options">
+      <ion-icon name="options-outline"></ion-icon>
+    </button>
+  </div>
+
+  <h1 class="page-title">Chat's</h1>
+
+  <div class="thread-list">
+    <button class="thread" *ngFor="let c of threads" (click)="open(c)">
+      <app-ott-logo *ngIf="c.isGroup" [brand]="c.brand || ''" [size]="50" [radius]="10"></app-ott-logo>
+      <div class="t-av" *ngIf="!c.isGroup">{{ c.peerName?.charAt(0) }}</div>
+
+      <div class="t-mid">
+        <p class="t-title">
+          {{ title(c) }}
+          <ion-icon name="lock-closed-outline" class="lk" *ngIf="c.locked"></ion-icon>
+        </p>
+        <p class="t-seller" *ngIf="c.isGroup">{{ c.sellerName }} ({{ c.sellerUniqueNum }})</p>
+        <p class="t-last">{{ c.lastMessage }}</p>
+      </div>
+
+      <div class="t-right">
+        <span class="t-time">{{ c.lastTime }}</span>
+        <span class="t-unread" *ngIf="c.unread">{{ c.unread }}</span>
+        <span class="t-dot" [class.on]="c.isOnline"></span>
+      </div>
+    </button>
+  </div>
+
+  <div class="skeleton" *ngIf="loading">
+    <div class="sk" *ngFor="let i of [1,2,3]"></div>
+  </div>
+
+  <div class="state" *ngIf="error">
+    <p>{{ error }}</p>
+    <button class="retry" (click)="load()">Try again</button>
+  </div>
+
+  <div class="state" *ngIf="!loading && !error && !threads.length">
+    <ion-icon name="chatbubbles-outline"></ion-icon>
+    <p>No conversations yet.</p>
+    <p class="sub">A chat opens automatically when you buy or sell a screen.</p>
+    <button class="retry" (click)="browse()">Browse platforms</button>
+  </div>
+
+  <div style="height:80px"></div>
+</ion-content>

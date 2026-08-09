@@ -1,35 +1,75 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { IonContent, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { headsetOutline, chatbubblesOutline, logoWhatsapp, callOutline, chevronForwardOutline, chevronUpOutline, chevronDownOutline } from 'ionicons/icons';
+import {
+  headsetOutline, chatbubblesOutline, logoWhatsapp, callOutline,
+  chevronUpOutline, chevronDownOutline, arrowBackOutline, optionsOutline,
+  playCircleOutline, documentTextOutline,
+} from 'ionicons/icons';
+import { DataService } from '../../shared/data.service';
+import { FaqItem, LangCode, SocialLink } from '../../shared/models';
 
 @Component({
   selector: 'app-support',
   templateUrl: './support.page.html',
   styleUrls: ['./support.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonContent, IonIcon]
+  imports: [CommonModule, IonContent, IonIcon],
 })
-export class SupportPage {
-  faqLang = 'en';
+export class SupportPage implements OnInit {
+  lang: LangCode = 'en';
+  faqs: FaqItem[] = [];
+  links: SocialLink[] = [];
+  loading = true;
+  error = '';
 
-  faqs = [
-    { q:'How do I purchase a screen?',    a:'Go to Category → Select OTT → Choose Validity → Pick a Seller → Pay via UPI and upload screenshot.', open:false },
-    { q:'When does my wallet unlock?',    a:'Your wallet unlocks proportionally each day over your screen validity period.', open:false },
-    { q:'How do I withdraw money?',       a:'Go to Wallet tab → Tap Withdraw and follow the steps.', open:false },
-    { q:'What if the seller is offline?', a:'You can still purchase. Credentials will be shared via in-app chat once the seller is online.', open:false },
-    { q:'How do I become a seller?',      a:'Select an OTT app → Tap Share → Fill the Create Group form.', open:false },
-    { q:'Is my payment secure?',          a:'Yes. All payments are screenshot-verified by our admin team before your wallet is credited.', open:false },
+  readonly langs: { code: LangCode; label: string }[] = [
+    { code: 'en', label: 'English' },
+    { code: 'hi', label: 'हिंदी' },
+    { code: 'te', label: 'తెలుగు' },
   ];
 
-  constructor(private router: Router) {
-    addIcons({ headsetOutline, chatbubblesOutline, logoWhatsapp, callOutline, chevronForwardOutline, chevronUpOutline, chevronDownOutline });
+  constructor(private router: Router, private data: DataService) {
+    addIcons({
+      headsetOutline, chatbubblesOutline, logoWhatsapp, callOutline,
+      chevronUpOutline, chevronDownOutline, arrowBackOutline, optionsOutline,
+      playCircleOutline, documentTextOutline,
+    });
   }
 
-  openInAppChat() { this.router.navigate(['/user/chat'], { queryParams: { mode: 'support' } }); }
-  openInApp()     { /* TODO: Phase 2 */ }
-  openWhatsApp()  { window.open('https://wa.me/919876500000?text=Hi%20I%20need%20help', '_system'); }
-  callSupport()   { window.open('tel:+919876511111', '_system'); }
+  async ngOnInit() { await this.load(); }
+
+  async load() {
+    this.loading = true;
+    this.error = '';
+    try {
+      const [faqs, links] = await Promise.all([
+        this.data.getFaqs(),
+        this.data.getSocialLinks(),
+      ]);
+      this.faqs = faqs;
+      this.links = links.filter(l => l.active);
+    } catch (e) {
+      this.error = 'Could not load help content.';
+      console.error(e);
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  back() { this.router.navigate(['/user/home']); }
+
+  /** Falls back to English when a translation is missing. */
+  q(f: FaqItem) { return f.q[this.lang]?.trim() || f.q.en; }
+  a(f: FaqItem) { return f.a[this.lang]?.trim() || f.a.en; }
+  video(f: FaqItem) { return f.videoUrl?.[this.lang]?.trim() || f.videoUrl?.en || ''; }
+
+  /** True when this entry has no copy in the chosen language. */
+  untranslated(f: FaqItem) { return !f.q[this.lang]?.trim(); }
+
+  openLink(l: SocialLink) { window.open(l.url, '_system'); }
+
+  openChat() { this.router.navigate(['/user/chats']); }
 }

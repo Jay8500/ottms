@@ -1,39 +1,70 @@
-<ion-content class="support-content" [scrollY]="true">
+<ion-content class="sp-content" [scrollY]="true">
   <div class="top-bar">
-    <button class="icon-btn" onclick="history.back()"><ion-icon name="settings-outline"></ion-icon></button>
+    <button class="icon-btn" (click)="back()" aria-label="Back">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
     <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
-    <button class="icon-btn dark"><ion-icon name="options-outline"></ion-icon></button>
-  </div>
-  <div class="contact-list">
-    <button class="contact-btn" (click)="openInAppChat()">
-      <div class="c-icon"><ion-icon name="chatbubbles-outline"></ion-icon></div><span>InApp Chat</span>
-    </button>
-    <button class="contact-btn" (click)="openInApp()">
-      <div class="c-icon"><ion-icon name="headset-outline"></ion-icon></div><span>Support</span>
-    </button>
-    <button class="contact-btn" (click)="openWhatsApp()">
-      <div class="c-icon"><ion-icon name="logo-whatsapp"></ion-icon></div><span>WhatsApp</span>
-    </button>
-    <button class="contact-btn" (click)="callSupport()">
-      <div class="c-icon"><ion-icon name="call-outline"></ion-icon></div><span>Call Us</span>
+    <button class="icon-btn dark" aria-label="Options">
+      <ion-icon name="options-outline"></ion-icon>
     </button>
   </div>
-  <div class="faq-section">
-    <div class="faq-header">
-      <p class="faq-title">Frequently Asked Questions</p>
-      <div class="lang-tabs">
-        <button class="lang-btn" [class.active]="faqLang==='en'" (click)="faqLang='en'">EN</button>
-        <button class="lang-btn" [class.active]="faqLang==='hi'" (click)="faqLang='hi'">HI</button>
-        <button class="lang-btn" [class.active]="faqLang==='te'" (click)="faqLang='te'">TE</button>
+
+  <h1 class="page-title">Support</h1>
+
+  <!-- Contact -->
+  <div class="contact-row">
+    <button class="contact" (click)="openChat()">
+      <div class="c-ico"><ion-icon name="chatbubbles-outline"></ion-icon></div>
+      <span>In-App Chat</span>
+    </button>
+    <button class="contact" *ngFor="let l of links" (click)="openLink(l)">
+      <div class="c-ico" [style.background]="l.color + '22'">
+        <ion-icon [name]="l.icon" [style.color]="l.color"></ion-icon>
       </div>
-    </div>
-    <div class="faq-item" *ngFor="let f of faqs">
-      <div class="faq-q" (click)="f.open=!f.open">
-        <span>{{ f.q }}</span>
+      <span>{{ l.title }}</span>
+    </button>
+  </div>
+
+  <!-- Language -->
+  <div class="lang-row">
+    <button *ngFor="let l of langs" [class.on]="lang === l.code" (click)="lang = l.code">
+      {{ l.label }}
+    </button>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-card" *ngIf="faqs.length">
+    <p class="faq-h">Frequently Asked Questions</p>
+
+    <div class="faq" *ngFor="let f of faqs; let i = index">
+      <button class="faq-q" (click)="f.open = !f.open">
+        <span class="n">{{ i + 1 }}</span>
+        <span class="q">{{ q(f) }}</span>
         <ion-icon [name]="f.open ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+      </button>
+
+      <div class="faq-a" *ngIf="f.open">
+        <p>{{ a(f) }}</p>
+        <p class="fallback" *ngIf="untranslated(f)">Shown in English — not translated yet.</p>
+        <a class="watch" *ngIf="video(f)" [href]="video(f)" target="_blank" rel="noopener">
+          <ion-icon name="play-circle-outline"></ion-icon> Watch video
+        </a>
       </div>
-      <div class="faq-a" *ngIf="f.open"><p>{{ f.a }}</p></div>
     </div>
   </div>
+
+  <div class="skeleton" *ngIf="loading">
+    <div class="sk" *ngFor="let i of [1,2,3]"></div>
+  </div>
+
+  <div class="state" *ngIf="error">
+    <p>{{ error }}</p>
+    <button class="retry" (click)="load()">Try again</button>
+  </div>
+
+  <div class="state" *ngIf="!loading && !error && !faqs.length">
+    <p>No help articles yet.</p>
+  </div>
+
   <div style="height:80px"></div>
 </ion-content>

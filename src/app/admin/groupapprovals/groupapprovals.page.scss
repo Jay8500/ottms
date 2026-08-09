@@ -1,17 +1,89 @@
 @import '../../../global.scss';
-.page-content { --background: #{$white}; }
-.page-header { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
-.icon-btn { @include icon-btn; }
-.page-title { text-align: center; font-size: $font-xl; font-weight: 700; color: $black; padding: 0 $sp-lg $sp-sm; margin: 0; }
-.filter-chips { display: flex; gap: $sp-sm; padding: 0 $sp-lg $sp-md; overflow-x: auto; scrollbar-width: none; &::-webkit-scrollbar { display: none; } }
-.chip { padding: 8px $sp-lg; border-radius: $r-pill; background: $white; border: 1.5px solid $gray-200; font-size: $font-xs; font-weight: 600; color: $gray-600; cursor: pointer; flex-shrink: 0; font-family: inherit; display: flex; align-items: center; gap: $sp-xs; .badge { background: $red; color: $white; border-radius: 50%; width: 18px; height: 18px; @include flex-center; font-size: 10px; } &.active { background: $yellow; border-color: $yellow; color: $black; } }
-.section-sub { font-size: $font-base; font-weight: 700; color: $black; padding: 0 $sp-lg $sp-sm; margin: 0; }
-.list-area { padding: 0 $sp-lg $sp-xl; display: flex; flex-direction: column; gap: $sp-sm; }
-.card { background: $white; border-radius: $r-lg; border: 1px solid $gray-200; box-shadow: $shadow-sm; padding: $sp-md $sp-lg; }
-.g-top { display: flex; gap: $sp-md; margin-bottom: $sp-md; }
-.g-logo { width: 48px; height: 48px; border-radius: $r-md; @include flex-center; font-size: $font-xl; font-weight: 900; color: $white; flex-shrink: 0; }
-.g-info { flex: 1; .g-name { font-size: $font-sm; font-weight: 700; color: $black; margin: 0; } .g-seller { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; } .g-meta { display: flex; gap: $sp-sm; margin-top: 4px; span { font-size: $font-xs; color: $gray-600; } } }
-.g-actions { display: flex; gap: $sp-sm; }
-.green-btn { display: flex; align-items: center; gap: 4px; background: $green; color: $white; border: none; border-radius: $r-pill; height: 38px; padding: 0 $sp-lg; font-size: $font-sm; font-weight: 700; cursor: pointer; font-family: inherit; flex: 1; justify-content: center; ion-icon { font-size: 16px; } }
-.red-btn { display: flex; align-items: center; gap: 4px; background: $red; color: $white; border: none; border-radius: $r-pill; height: 38px; padding: 0 $sp-lg; font-size: $font-sm; font-weight: 700; cursor: pointer; font-family: inherit; flex: 1; justify-content: center; ion-icon { font-size: 16px; } }
-.status-badge { font-size: $font-xs; padding: 4px 12px; border-radius: $r-pill; font-weight: 600; &.approved { background: $green-light; color: $green; } &.rejected { background: $red-light; color: $red; } }
+
+.ga-content { --background: #{$gray-50}; }
+
+// ── OTT platform grid ──────────────────────────────────────────────────────
+.app-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: $sp-md; padding: 0 $sp-lg $sp-lg;
+}
+
+.app-tile {
+  display: flex; flex-direction: column; align-items: center; gap: $sp-sm;
+  padding: $sp-md 6px; background: $white; border: 1px solid $gray-200;
+  border-radius: $r-lg; box-shadow: $shadow-sm; cursor: pointer; font-family: inherit;
+  &:active { transform: scale(0.97); }
+  .at-name { font-size: $font-sm; font-weight: 700; color: $black; text-align: center; line-height: 1.25; }
+  .at-rule { width: 26px; height: 3px; border-radius: 2px; }
+}
+
+// ── Group cards ────────────────────────────────────────────────────────────
+.ga-list { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-md; }
+
+.ga-card {
+  background: $white; border: 1px solid $gray-200; border-radius: $r-md;
+  padding: $sp-md; box-shadow: $shadow-sm;
+}
+
+.ga-top { display: flex; align-items: center; gap: $sp-sm; }
+
+.ga-avatar {
+  width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+  @include flex-center; background: $yellow-light; color: $black;
+  font-size: $font-lg; font-weight: 800; border: 2px solid $yellow;
+}
+
+.ga-mid {
+  flex: 1; min-width: 0;
+  .ga-name {
+    font-size: $font-lg; font-weight: 800; color: $black; margin: 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    .uid { font-size: $font-base; color: $gray-600; font-weight: 700; }
+  }
+  .ga-dates {
+    font-size: $font-xs; color: $gray-600; margin: 2px 0 0;
+    display: flex; align-items: center; gap: 4px;
+    ion-icon { font-size: 13px; }
+  }
+}
+
+.ga-chat {
+  flex-shrink: 0; height: 40px; padding: 0 $sp-md; border: none; border-radius: $r-sm;
+  background: #2563EB; color: $white; font-family: inherit;
+  font-size: $font-xs; font-weight: 700; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  ion-icon { font-size: 16px; }
+}
+
+.ga-meta {
+  display: flex; align-items: center; gap: 6px;
+  flex-wrap: wrap; margin-top: $sp-md;
+}
+
+.chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 30px; padding: 0 10px; border-radius: $r-sm;
+  font-size: $font-xs; font-weight: 700;
+  ion-icon { font-size: 14px; }
+
+  &.months { background: $yellow-light; color: #92400E; border: 1px solid $yellow; }
+  &.seats  { background: #E0F2FE; color: #075985; }
+  &.tier   { background: $gray-100; color: $gray-700; }
+  &.flag   { background: $white; color: $gray-600; border: 1px solid $gray-300; }
+}
+
+.ga-actions { display: flex; gap: $sp-sm; margin-top: $sp-md; }
+
+.ga-btn {
+  height: 44px; border: none; border-radius: $r-sm; font-family: inherit;
+  font-size: $font-base; font-weight: 800; color: $white; cursor: pointer;
+  @include flex-center; gap: 6px;
+  ion-icon { font-size: 18px; }
+  &:active { opacity: 0.88; }
+
+  &.del { flex: 1; background: #B91C1C; }
+  &.ok  { flex: 1; background: #15803D; }
+  &.img { flex: 0 0 52px; background: #2563EB; }
+}
+
+.empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }
