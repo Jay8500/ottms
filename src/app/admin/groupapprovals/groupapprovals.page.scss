@@ -49,7 +49,7 @@
 
 .ga-chat {
   flex-shrink: 0; height: 40px; padding: 0 $sp-md; border: none; border-radius: $r-sm;
-  background: #2563EB; color: $white; font-family: inherit;
+  background: $info; color: $white; font-family: inherit;
   font-size: $font-xs; font-weight: 700; cursor: pointer;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   ion-icon { font-size: 16px; }
@@ -66,8 +66,8 @@
   font-size: $font-xs; font-weight: 700;
   ion-icon { font-size: 14px; }
 
-  &.months { background: $yellow-light; color: #92400E; border: 1px solid $yellow; }
-  &.seats  { background: #E0F2FE; color: #075985; }
+  &.months { background: $yellow-light; color: $warn-ink; border: 1px solid $yellow; }
+  &.seats  { background: $info-soft; color: #075985; }
   &.tier   { background: $gray-100; color: $gray-700; }
   &.flag   { background: $white; color: $gray-600; border: 1px solid $gray-300; }
 }
@@ -81,9 +81,9 @@
   ion-icon { font-size: 18px; }
   &:active { opacity: 0.88; }
 
-  &.del { flex: 1; background: #B91C1C; }
-  &.ok  { flex: 1; background: #15803D; }
-  &.img { flex: 0 0 52px; background: #2563EB; }
+  &.del { flex: 1; background: $danger-dark; }
+  &.ok  { flex: 1; background: $success-dark; }
+  &.img { flex: 0 0 52px; background: $info; }
 }
 
 .empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }

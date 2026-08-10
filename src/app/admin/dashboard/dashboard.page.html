@@ -36,6 +36,12 @@
     </div>
   </div>
 
+  <div class="revenue">
+    <span class="r-lbl">Your earnings</span>
+    <span class="r-val">₹{{ statsLoading ? '—' : (stats.revenue | number) }}</span>
+    <span class="r-note">Service charges and penalties collected</span>
+  </div>
+
   <div class="feat-grid">
     <button class="feat" *ngFor="let f of filtered" (click)="open(f)">
       <span class="feat-badge" *ngIf="f.badge">{{ f.badge }}</span>

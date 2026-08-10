@@ -24,14 +24,14 @@
   .b-amt { font-size: $font-2xl; font-weight: 800; color: $black; margin: 0; }
 
   &.locked {
-    background: #FEF2F2; border-color: #FECACA;
-    .b-ico { background: #FEE2E2; ion-icon { color: #DC2626; } }
-    .b-lbl { color: #991B1B; }
+    background: $danger-soft; border-color: $danger-line;
+    .b-ico { background: $danger-bg; ion-icon { color: $danger; } }
+    .b-lbl { color: $danger-ink; }
   }
   &.unlocked {
-    background: #F0FDF4; border-color: #BBF7D0;
-    .b-ico { background: #DCFCE7; ion-icon { color: #16A34A; } }
-    .b-lbl { color: #166534; }
+    background: #F0FDF4; border-color: $success-line;
+    .b-ico { background: $success-bg; ion-icon { color: $success; } }
+    .b-lbl { color: $success-ink; }
   }
 }
 
@@ -46,7 +46,7 @@
   &:active { opacity: 0.88; }
   &.fund  { background: $yellow;  color: $black; }
   &.draw  { background: $yellow;  color: $black; }
-  &.excel { background: #1D6F42;  color: $white; }
+  &.excel { background: $excel-green;  color: $white; }
 }
 
 // ── Withdraw ───────────────────────────────────────────────────────────────
@@ -97,7 +97,7 @@
     font-family: inherit; font-size: $font-sm; font-weight: 700; color: $gray-700;
     @include flex-center; gap: 5px;
     ion-icon { font-size: 18px; }
-    &.on { background: #1D4ED8; border-color: #1D4ED8; color: $white; }
+    &.on { background: $info-dark; border-color: $info-dark; color: $white; }
   }
 }
 
@@ -175,16 +175,16 @@
 .tx-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
 
 .t-amt {
-  font-size: $font-xl; font-weight: 800; color: #DC2626; margin: 0; white-space: nowrap;
-  &.plus { color: #16A34A; }
+  font-size: $font-xl; font-weight: 800; color: $danger; margin: 0; white-space: nowrap;
+  &.plus { color: $success; }
 }
 
 .t-status {
   font-size: 10px; font-weight: 700; padding: 3px 8px;
   border-radius: $r-sm; border: 1.5px solid currentColor;
   text-align: right; max-width: 130px;
-  &[data-s='pending']  { color: #DC2626; }
-  &[data-s='cleared']  { color: #16A34A; }
+  &[data-s='pending']  { color: $danger; }
+  &[data-s='cleared']  { color: $success; }
   &[data-s='rejected'] { color: $gray-600; }
 }
 
@@ -197,10 +197,10 @@
   display: inline-flex; align-items: center; gap: 4px;
   height: 30px; padding: 0 10px; border-radius: $r-sm;
   font-size: $font-xs; font-weight: 700; border: none; font-family: inherit;
-  background: #E0F2FE; color: #075985;
+  background: $info-soft; color: #075985;
   ion-icon { font-size: 14px; }
   &.ref  { background: #F3E8FF; color: #6B21A8; }
-  &.chat { background: #2563EB; color: $white; margin-left: auto; cursor: pointer; }
+  &.chat { background: $info; color: $white; margin-left: auto; cursor: pointer; }
 }
 
 // ── States ─────────────────────────────────────────────────────────────────

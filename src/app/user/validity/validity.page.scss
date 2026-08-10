@@ -40,7 +40,7 @@
   .p-name { flex: 1; text-align: left; font-size: $font-xl; font-weight: 800; color: $black; }
 
   .p-save {
-    flex-shrink: 0; background: #15803D; color: $white;
+    flex-shrink: 0; background: $success-dark; color: $white;
     font-size: 10px; font-weight: 800; padding: 4px 8px;
     border-radius: $r-sm; white-space: nowrap;
   }

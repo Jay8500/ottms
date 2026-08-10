@@ -31,6 +31,42 @@ $gray-300:    #E0E0E0;
 $gray-400:    #BDBDBD;
 $gray-600:    #757575;
 $gray-700: #616161;
+
+// ─── SEMANTIC COLOURS ─────────────────────────────────────────────────────
+// State colours, separate from the brand palette above. Everything that
+// means "good", "bad" or "needs attention" comes from here so a change is
+// one edit rather than hunting through twenty stylesheets.
+$success:      #16A34A;
+$success-dark: #15803D;
+$success-bg:   #DCFCE7;
+$success-ink:  #166534;
+$success-line: #BBF7D0;
+
+$danger:       #DC2626;
+$danger-dark:  #B91C1C;
+$danger-bg:    #FEE2E2;
+$danger-soft:  #FEF2F2;
+$danger-ink:   #991B1B;
+$danger-line:  #FECACA;
+
+$info:         #2563EB;
+$info-dark:    #1D4ED8;
+$info-bg:      #EFF6FF;
+$info-soft:    #E0F2FE;
+$info-ink:     #1E3A8A;
+$info-line:    #BFDBFE;
+
+$warn:         #D97706;
+$warn-bg:      #FEF3C7;
+$warn-ink:     #92400E;
+$warn-line:    #FDE68A;
+
+$accent-purple: #8B5CF6;
+$excel-green:   #1D6F42;
+
+// Smallest comfortable touch target. Android's guidance is 48dp; 44px is
+// the accessibility floor and what we hold icon buttons to.
+$tap-min: 44px;
 // Typography
 $font-xs:   11px;
 $font-sm:   12px;
@@ -133,6 +169,37 @@ ion-footer.cta-footer {
     ion-icon { font-size: 24px; }
   }
   .cta-btn.save { background: $yellow; }
+}
+
+// ─── FOCUS ────────────────────────────────────────────────────────────────
+// Removing the tap highlight below also removes the only visible focus cue,
+// which leaves keyboard and switch-access users navigating blind. This puts
+// a deliberate one back — :focus-visible so it never shows on touch.
+:focus-visible {
+  outline: 3px solid $blue;
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/**
+ * Grows a small button's touch area without changing how it looks.
+ *
+ * Applied per-component rather than globally: a blanket `button::after`
+ * would collide with the components that already use ::after for their own
+ * decoration (filter chips, the login divider), and overlapping invisible
+ * hit areas on adjacent icon buttons cause mis-taps.
+ */
+@mixin tap-area($size: $tap-min) {
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: $size;
+    min-height: $size;
+    width: 100%; height: 100%;
+  }
 }
 
 // ─── TOUCH FIXES ──────────────────────────────────────────────────────────

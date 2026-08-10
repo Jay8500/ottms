@@ -5,9 +5,9 @@
 .devices {
   display: flex; align-items: center; gap: $sp-sm;
   margin: 0 $sp-lg $sp-lg; padding: $sp-md;
-  background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: $r-md;
-  ion-icon { font-size: 22px; color: #2563EB; flex-shrink: 0; }
-  span { font-size: $font-sm; color: #1E3A8A; }
+  background: $info-bg; border: 1px solid $info-line; border-radius: $r-md;
+  ion-icon { font-size: 22px; color: $info; flex-shrink: 0; }
+  span { font-size: $font-sm; color: $info-ink; }
   b { font-size: $font-lg; font-weight: 800; }
 }
 
@@ -42,7 +42,7 @@
     border-radius: 50%; background: $white; transition: transform 0.18s;
     box-shadow: $shadow-sm;
   }
-  &.on { background: #16A34A; i { transform: translateX(22px); } }
+  &.on { background: $success; i { transform: translateX(22px); } }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -60,9 +60,9 @@
   font-size: $font-xs; font-weight: 700; border: none; font-family: inherit;
   ion-icon { font-size: 15px; }
 
-  &.timing { background: #FEF3C7; color: #92400E; cursor: pointer; }
+  &.timing { background: $warn-bg; color: $warn-ink; cursor: pointer; }
   &.event  { background: $gray-100; color: $gray-600; }
-  &.edit   { background: #E0F2FE; color: #075985; cursor: pointer; margin-left: auto; }
+  &.edit   { background: $info-soft; color: #075985; cursor: pointer; margin-left: auto; }
 }
 
 .tip {

@@ -36,15 +36,32 @@
 
   // Anything waiting on the admin should look like it needs attention.
   &.alert {
-    background: #FEF2F2; border-color: #FECACA;
-    .s-val { color: #DC2626; }
-    .s-lbl { color: #991B1B; }
+    background: $danger-soft; border-color: $danger-line;
+    .s-val { color: $danger; }
+    .s-lbl { color: $danger-ink; }
   }
   &.alert.quiet {
-    background: #F0FDF4; border-color: #BBF7D0;
-    .s-val { color: #16A34A; }
-    .s-lbl { color: #166534; }
+    background: #F0FDF4; border-color: $success-line;
+    .s-val { color: $success; }
+    .s-lbl { color: $success-ink; }
   }
+}
+
+.revenue {
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  margin: 0 $sp-lg $sp-md; padding: $sp-md;
+  background: linear-gradient(135deg, #FFF6D6 0%, $white 100%);
+  border: 1.5px solid $yellow; border-radius: $r-md;
+
+  .r-lbl {
+    font-size: $font-xs; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: $gray-600;
+  }
+  .r-val {
+    font-size: 30px; font-weight: 900; color: $black;
+    font-variant-numeric: tabular-nums;
+  }
+  .r-note { font-size: 10px; color: $gray-600; }
 }
 
 .feat-grid {
@@ -78,25 +95,11 @@
 
 .feat-badge {
   position: absolute; top: 6px; right: 6px; min-width: 20px; height: 20px;
-  padding: 0 5px; border-radius: $r-pill; background: #DC2626; color: $white;
+  padding: 0 5px; border-radius: $r-pill; background: $danger; color: $white;
   font-size: 11px; font-weight: 800; @include flex-center;
 }
 
 .no-hits {
   text-align: center; color: $gray-600; font-size: $font-base;
   padding: $sp-xl $sp-lg;
-}
-
-.dash-cta {
-  position: fixed; left: 0; right: 0; z-index: 20;
-  bottom: calc(64px + var(--ion-safe-area-bottom, 0px));
-  padding: $sp-sm $sp-lg $sp-md;
-  background: linear-gradient(to top, $gray-50 62%, rgba(250, 250, 250, 0));
-  pointer-events: none;
-}
-
-.add-new {
-  @include yellow-btn; width: 100%; height: 52px; font-size: $font-lg;
-  box-shadow: $shadow-md; pointer-events: all;
-  ion-icon { font-size: 24px; }
 }

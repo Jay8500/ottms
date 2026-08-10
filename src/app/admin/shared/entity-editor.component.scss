@@ -87,7 +87,7 @@ select.ee-input { appearance: none; background-image: none; }
     border-radius: 50%; background: $white; transition: transform 0.18s;
     box-shadow: $shadow-sm;
   }
-  &.on { background: #16A34A; i { transform: translateX(22px); } }
+  &.on { background: $success; i { transform: translateX(22px); } }
 }
 
 .ee-actions {
@@ -106,7 +106,7 @@ select.ee-input { appearance: none; background-image: none; }
 
 .ee-del {
   flex: 0 0 auto; height: 50px; padding: 0 $sp-lg; border: none; border-radius: $r-md;
-  background: #DC2626; color: $white; font-family: inherit;
+  background: $danger; color: $white; font-family: inherit;
   font-size: $font-lg; font-weight: 800; cursor: pointer;
   @include flex-center; gap: 6px;
   ion-icon { font-size: 20px; }

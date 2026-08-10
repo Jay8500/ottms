@@ -31,9 +31,9 @@
 }
 
 .pa-amt {
-  font-size: $font-xl; font-weight: 800; color: #DC2626; margin: 0;
+  font-size: $font-xl; font-weight: 800; color: $danger; margin: 0;
   white-space: nowrap; flex-shrink: 0;
-  &.plus { color: #16A34A; }
+  &.plus { color: $success; }
 }
 
 .pa-meta {
@@ -47,10 +47,10 @@
   font-size: $font-xs; font-weight: 700; border: none; font-family: inherit;
   ion-icon { font-size: 15px; }
 
-  &.time    { background: #E0F2FE; color: #075985; }
+  &.time    { background: $info-soft; color: #075985; }
   &.app     { background: #5F259F; color: $white; }
-  &.pending { background: $white; color: #DC2626; border: 1.5px solid #DC2626; }
-  &.img     { background: #2563EB; color: $white; margin-left: auto; cursor: pointer; }
+  &.pending { background: $white; color: $danger; border: 1.5px solid $danger; }
+  &.img     { background: $info; color: $white; margin-left: auto; cursor: pointer; }
 }
 
 .pa-actions { display: flex; gap: $sp-md; padding: 0 $sp-md $sp-md; }
@@ -62,8 +62,8 @@
   ion-icon { font-size: 20px; }
   &:active { opacity: 0.88; }
 }
-.pa-reject  { background: #B91C1C; }
-.pa-approve { background: #15803D; }
+.pa-reject  { background: $danger-dark; }
+.pa-approve { background: $success-dark; }
 
 // ── Bank change requests (Q4) ──────────────────────────────────────────────
 .bank-new {
@@ -87,8 +87,8 @@
 
 .bank-warn {
   margin: 0 $sp-md $sp-md; padding: 9px $sp-md;
-  background: #FEF2F2; border: 1px solid #FECACA; border-radius: $r-sm;
-  font-size: $font-xs; color: #991B1B; line-height: 1.5;
+  background: $danger-soft; border: 1px solid $danger-line; border-radius: $r-sm;
+  font-size: $font-xs; color: $danger-ink; line-height: 1.5;
 }
 
 .empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }

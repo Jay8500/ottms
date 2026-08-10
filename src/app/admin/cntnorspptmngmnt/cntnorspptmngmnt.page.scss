@@ -68,8 +68,8 @@
   width: 32px; height: 32px; border-radius: $r-sm; cursor: pointer;
   border: 1.5px solid currentColor; background: $white; @include flex-center;
   ion-icon { font-size: 16px; }
-  &.edit { color: #2563EB; }
-  &.del  { color: #DC2626; }
+  &.edit { color: $info; }
+  &.del  { color: $danger; }
 }
 
 .faq-add {
@@ -104,19 +104,4 @@
 .vid-note {
   font-size: $font-xs; color: $gray-600; margin: $sp-md 0 0;
   line-height: 1.5; text-align: center;
-}
-
-// ── Save ───────────────────────────────────────────────────────────────────
-.sp-cta {
-  position: fixed; left: 0; right: 0; z-index: 20;
-  bottom: calc(64px + var(--ion-safe-area-bottom, 0px));
-  padding: $sp-sm $sp-lg $sp-md;
-  background: linear-gradient(to top, $gray-50 62%, rgba(250, 250, 250, 0));
-  pointer-events: none;
-}
-
-.save-btn {
-  @include yellow-btn; width: 100%; height: 52px; font-size: $font-lg;
-  box-shadow: $shadow-md; pointer-events: all;
-  ion-icon { font-size: 22px; }
 }

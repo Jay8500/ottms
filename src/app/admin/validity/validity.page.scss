@@ -28,7 +28,7 @@
 }
 
 .vp-save {
-  flex-shrink: 0; background: #15803D; color: $white;
+  flex-shrink: 0; background: $success-dark; color: $white;
   font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: $r-sm;
   white-space: nowrap;
 }
@@ -62,17 +62,3 @@
 }
 
 .hint { font-size: $font-xs; color: $gray-600; margin: 5px 0 0; }
-
-.vp-cta {
-  position: fixed; left: 0; right: 0; z-index: 20;
-  bottom: calc(64px + var(--ion-safe-area-bottom, 0px));
-  padding: $sp-sm $sp-lg $sp-md;
-  background: linear-gradient(to top, $gray-50 62%, rgba(250, 250, 250, 0));
-  pointer-events: none;
-}
-
-.add-new {
-  @include yellow-btn; width: 100%; height: 52px; font-size: $font-lg;
-  box-shadow: $shadow-md; pointer-events: all;
-  ion-icon { font-size: 24px; }
-}

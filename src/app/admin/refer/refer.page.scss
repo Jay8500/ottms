@@ -26,7 +26,7 @@
     border-radius: 50%; background: $white; transition: transform 0.18s;
     box-shadow: $shadow-sm;
   }
-  &.on { background: #16A34A; i { transform: translateX(22px); } }
+  &.on { background: $success; i { transform: translateX(22px); } }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -61,9 +61,9 @@
   .s-val { font-size: $font-xl; font-weight: 800; color: $black; }
   .s-lbl { font-size: 10px; font-weight: 600; color: $gray-700; text-align: center; }
 
-  &.blue  { background: #EFF6FF; border-color: #BFDBFE; ion-icon { color: #2563EB; } }
-  &.green { background: #F0FDF4; border-color: #BBF7D0; ion-icon { color: #16A34A; } }
-  &.amber { background: #FFFBEB; border-color: #FDE68A; ion-icon { color: #D97706; } }
+  &.blue  { background: $info-bg; border-color: $info-line; ion-icon { color: $info; } }
+  &.green { background: #F0FDF4; border-color: $success-line; ion-icon { color: $success; } }
+  &.amber { background: #FFFBEB; border-color: $warn-line; ion-icon { color: $warn; } }
 }
 
 // ── List ───────────────────────────────────────────────────────────────────
@@ -85,7 +85,7 @@
   width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
   @include flex-center; background: $gray-100;
   ion-icon { font-size: 22px; color: $gray-600; }
-  &.done { background: #DCFCE7; ion-icon { color: #16A34A; } }
+  &.done { background: $success-bg; ion-icon { color: $success; } }
 }
 
 .rf-mid {

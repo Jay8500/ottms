@@ -144,5 +144,5 @@
   cursor: pointer;
   &:disabled { opacity: 0.45; }
   &.buy    { background: $yellow; color: $black; }
-  &.wallet { background: #1D4ED8; color: $white; }
+  &.wallet { background: $info-dark; color: $white; }
 }

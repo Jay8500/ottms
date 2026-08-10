@@ -46,7 +46,7 @@
     display: flex; align-items: center; gap: 5px; min-width: 0;
     font-size: $font-sm; font-weight: 700; color: $black; text-align: right;
     overflow: hidden; text-overflow: ellipsis;
-    .ok { color: #16A34A; font-size: 16px; flex-shrink: 0; }
+    .ok { color: $success; font-size: 16px; flex-shrink: 0; }
   }
 }
 
@@ -72,7 +72,7 @@
     border-radius: 50%; background: $white; transition: transform 0.18s;
     box-shadow: $shadow-sm;
   }
-  &.on { background: #16A34A; i { transform: translateX(22px); } }
+  &.on { background: $success; i { transform: translateX(22px); } }
 }
 
 @media (prefers-reduced-motion: reduce) { .sw, .sw i { transition: none; } }
@@ -81,14 +81,14 @@
 .notice {
   display: flex; align-items: flex-start; gap: $sp-sm;
   margin: 0 $sp-lg $sp-sm; padding: $sp-md;
-  background: #FEF2F2; border: 1px solid #FECACA; border-radius: $r-md;
-  ion-icon { font-size: 20px; color: #DC2626; flex-shrink: 0; }
-  span { font-size: $font-sm; color: #991B1B; line-height: 1.5; }
+  background: $danger-soft; border: 1px solid $danger-line; border-radius: $r-md;
+  ion-icon { font-size: 20px; color: $danger; flex-shrink: 0; }
+  span { font-size: $font-sm; color: $danger-ink; line-height: 1.5; }
 
   &.pending {
-    background: #FFFBEB; border-color: #FDE68A;
-    ion-icon { color: #D97706; }
-    span { color: #92400E; }
+    background: #FFFBEB; border-color: $warn-line;
+    ion-icon { color: $warn; }
+    span { color: $warn-ink; }
   }
 }
 

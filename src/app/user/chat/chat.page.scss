@@ -47,7 +47,7 @@
       display: flex; align-items: center; gap: 5px; margin-top: 2px;
       font-size: $font-xs; font-weight: 600; color: rgba(0,0,0,0.7);
       .dot { width: 9px; height: 9px; border-radius: 50%; background: #9CA3AF;
-             &.on { background: #16A34A; } }
+             &.on { background: $success; } }
       .lk { font-size: 13px; }
     }
   }
@@ -132,7 +132,7 @@
 .c-lock {
   background: $gray-200;
   ion-icon { color: $gray-700; }
-  &.on { background: #16A34A; ion-icon { color: $white; } }
+  &.on { background: $success; ion-icon { color: $white; } }
 }
 
 .c-img  { background: $black; ion-icon { color: $white; } }

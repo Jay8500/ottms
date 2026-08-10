@@ -88,12 +88,12 @@
     border-radius: 50%; background: $white; transition: transform 0.18s;
     box-shadow: $shadow-sm;
   }
-  &.on { background: #16A34A; i { transform: translateX(22px); } }
+  &.on { background: $success; i { transform: translateX(22px); } }
 
   &.sm {
     width: 42px; height: 24px;
     i { width: 18px; height: 18px; }
-    &.on { background: #2563EB; i { transform: translateX(18px); } }
+    &.on { background: $info; i { transform: translateX(18px); } }
   }
 }
 
@@ -113,8 +113,8 @@
   border: 1.5px solid currentColor; background: $white;
   @include flex-center;
   ion-icon { font-size: 17px; }
-  &.edit { color: #2563EB; }
-  &.del  { color: #DC2626; }
+  &.edit { color: $info; }
+  &.del  { color: $danger; }
 }
 
 .fld-otp {
@@ -135,23 +135,8 @@
 
 .fb-tip {
   display: flex; gap: $sp-sm; margin-top: $sp-lg;
-  padding: $sp-md; background: #EFF6FF; border-radius: $r-md;
-  ion-icon { font-size: 20px; color: #2563EB; flex-shrink: 0; }
-  .tip-h { font-size: $font-base; font-weight: 700; color: #1E3A8A; margin: 0 0 4px; }
+  padding: $sp-md; background: $info-bg; border-radius: $r-md;
+  ion-icon { font-size: 20px; color: $info; flex-shrink: 0; }
+  .tip-h { font-size: $font-base; font-weight: 700; color: $info-ink; margin: 0 0 4px; }
   p { font-size: $font-sm; color: #1E40AF; margin: 0 0 2px; line-height: 1.45; }
-}
-
-// ── Save ───────────────────────────────────────────────────────────────────
-.fb-cta {
-  position: fixed; left: 0; right: 0; z-index: 20;
-  bottom: calc(64px + var(--ion-safe-area-bottom, 0px));
-  padding: $sp-sm $sp-lg $sp-md;
-  background: linear-gradient(to top, $gray-50 62%, rgba(250, 250, 250, 0));
-  pointer-events: none;
-}
-
-.save-btn {
-  @include yellow-btn; width: 100%; height: 52px; font-size: $font-lg;
-  box-shadow: $shadow-md; pointer-events: all;
-  ion-icon { font-size: 22px; }
 }

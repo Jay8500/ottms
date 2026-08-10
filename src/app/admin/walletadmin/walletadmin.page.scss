@@ -26,8 +26,8 @@
 
 .wa-net {
   margin: 0; flex-shrink: 0; white-space: nowrap;
-  font-size: $font-xl; font-weight: 800; color: #DC2626;
-  &.plus { color: #16A34A; }
+  font-size: $font-xl; font-weight: 800; color: $danger;
+  &.plus { color: $success; }
 }
 
 // ── Balances ───────────────────────────────────────────────────────────────
@@ -53,8 +53,8 @@
     padding: 4px 2px;
   }
 
-  &.total    { border-color: #86EFAC; .a-tag { background: #DCFCE7; color: #166534; } }
-  &.locked   { border-color: #FCD34D; .a-tag { background: #FEF3C7; color: #92400E; } }
+  &.total    { border-color: #86EFAC; .a-tag { background: $success-bg; color: $success-ink; } }
+  &.locked   { border-color: #FCD34D; .a-tag { background: $warn-bg; color: $warn-ink; } }
   &.unlocked { border-color: #93C5FD; .a-tag { background: #DBEAFE; color: #1E40AF; } }
 }
 
@@ -72,10 +72,10 @@
   ion-icon { font-size: 18px; flex-shrink: 0; }
   b { font-size: $font-base; font-weight: 800; color: $black; }
 
-  &.blue   ion-icon { color: #2563EB; }
-  &.red    ion-icon { color: #DC2626; }
-  &.green  ion-icon { color: #16A34A; }
-  &.purple ion-icon { color: #8B5CF6; }
+  &.blue   ion-icon { color: $info; }
+  &.red    ion-icon { color: $danger; }
+  &.green  ion-icon { color: $success; }
+  &.purple ion-icon { color: $accent-purple; }
 }
 
 .wa-hint {
@@ -93,8 +93,8 @@
   &:disabled { opacity: 0.4; }
   &:active:not(:disabled) { opacity: 0.88; }
 
-  &.edit   { background: #2563EB; }
-  &.save   { background: #15803D; }
+  &.edit   { background: $info; }
+  &.save   { background: $success-dark; }
   &.cancel { background: $gray-400; }
 }
 

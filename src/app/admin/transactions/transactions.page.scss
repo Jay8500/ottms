@@ -40,15 +40,15 @@
 .tx-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
 
 .tx-amt {
-  font-size: $font-xl; font-weight: 800; color: #DC2626; margin: 0; white-space: nowrap;
-  &.plus { color: #16A34A; }
+  font-size: $font-xl; font-weight: 800; color: $danger; margin: 0; white-space: nowrap;
+  &.plus { color: $success; }
 }
 
 .tx-status {
   font-size: $font-xs; font-weight: 700; padding: 3px 9px;
   border-radius: $r-sm; border: 1.5px solid currentColor; white-space: nowrap;
-  &[data-s='pending']  { color: #DC2626; }
-  &[data-s='cleared']  { color: #16A34A; }
+  &[data-s='pending']  { color: $danger; }
+  &[data-s='cleared']  { color: $success; }
   &[data-s='rejected'] { color: $gray-600; }
 }
 
@@ -63,9 +63,9 @@
   font-size: $font-xs; font-weight: 700; border: none; font-family: inherit;
   ion-icon { font-size: 15px; }
 
-  &.time { background: #E0F2FE; color: #075985; }
+  &.time { background: $info-soft; color: #075985; }
   &.ref  { background: #F3E8FF; color: #6B21A8; }
-  &.img  { background: #2563EB; color: $white; margin-left: auto; cursor: pointer; }
+  &.img  { background: $info; color: $white; margin-left: auto; cursor: pointer; }
 }
 
 .empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }

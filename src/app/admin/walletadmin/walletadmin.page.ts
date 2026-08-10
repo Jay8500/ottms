@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonIcon, ToastController, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
+import { IonContent, IonIcon, AlertController, ToastController, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   createOutline, saveOutline, arrowDownCircleOutline,
@@ -11,6 +11,7 @@ import { AdminHeaderComponent } from '../shared/admin-header.component';
 import { AdminSearchbarComponent } from '../shared/admin-searchbar.component';
 import { DataService } from '../../shared/data.service';
 import { ExportService } from '../../shared/export.service';
+import { humanError } from '../../shared/errors';
 import { WalletSummary } from '../../shared/models';
 
 /** Editable copy of a row, so an abandoned edit doesn't mutate the list. */
@@ -40,6 +41,7 @@ export class WalletadminPage implements OnInit {
   constructor(
     private data: DataService,
     private exporter: ExportService,
+    private alertCtrl: AlertController,
     private toastCtrl: ToastController,
   ) {
     addIcons({
@@ -81,10 +83,35 @@ export class WalletadminPage implements OnInit {
     }
     if (locked < 0 || unlocked < 0) { this.toast('Amounts cannot be negative'); return; }
 
-    await this.data.saveWallet(r.userId, total, locked, unlocked);
-    r.total = total; r.locked = locked; r.unlocked = unlocked;
-    r.editing = false;
-    this.toast(`${r.name}'s wallet updated`);
+    // A reason is mandatory — this is the one place money moves without a
+    // purchase or payout behind it, so it has to say why.
+    const alert = await this.alertCtrl.create({
+      header: `Adjust ${r.name}'s wallet`,
+      subHeader: `Locked ₹${locked.toLocaleString('en-IN')} · Unlocked ₹${unlocked.toLocaleString('en-IN')}`,
+      inputs: [{
+        name: 'reason', type: 'text',
+        placeholder: 'Why? e.g. refund for failed payment',
+      }],
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        {
+          text: 'Save',
+          handler: async (d) => {
+            if (!d.reason?.trim()) { this.toast('Please give a reason'); return false; }
+            try {
+              await this.data.saveWallet(r.userId, total, locked, unlocked, d.reason.trim());
+              r.total = total; r.locked = locked; r.unlocked = unlocked;
+              r.editing = false;
+              this.toast(`${r.name}'s wallet updated`);
+            } catch (e) {
+              this.toast(humanError(e, 'Could not update the wallet'));
+            }
+            return true;
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 
   exportCsv() {

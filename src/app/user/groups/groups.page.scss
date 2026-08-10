@@ -80,9 +80,9 @@
   font-size: $font-xs; font-weight: 700;
   ion-icon { font-size: 13px; }
 
-  &[data-tone='green'] { background: #DCFCE7; color: #166534; }
-  &[data-tone='red']   { background: #FEE2E2; color: #991B1B; }
-  &[data-tone='amber'] { background: #FEF3C7; color: #92400E; }
+  &[data-tone='green'] { background: $success-bg; color: $success-ink; }
+  &[data-tone='red']   { background: $danger-bg; color: $danger-ink; }
+  &[data-tone='amber'] { background: $warn-bg; color: $warn-ink; }
   &[data-tone='grey'], &.grey { background: $gray-100; color: $gray-700; }
 }
 
@@ -95,8 +95,8 @@
   ion-icon { font-size: 16px; }
 
   &.img  { background: $gray-100; color: $gray-700; }
-  &.chat { background: #2563EB; color: $white; }
-  &.exit { background: #FEE2E2; color: #991B1B; }
+  &.chat { background: $info; color: $white; }
+  &.exit { background: $danger-bg; color: $danger-ink; }
 }
 
 // ── States ─────────────────────────────────────────────────────────────────

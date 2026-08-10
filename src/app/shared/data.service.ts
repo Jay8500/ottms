@@ -86,25 +86,30 @@ export class DataService {
   // ══ People ══════════════════════════════════════════════════════════════
 
   async getUsers(): Promise<AppUser[]> {
-    const { data, error } = await this.db
-      .from('profiles')
-      .select('*, bank_details(*)')
-      .order('created_at');
+    // user_stats (view, migration 0004) carries the real rating average and
+    // activity counters — without it every profile reads as 0 reviews.
+    const [{ data, error }, { data: stats }] = await Promise.all([
+      this.db.from('profiles').select('*, bank_details(*)').order('created_at'),
+      this.db.from('user_stats').select('*'),
+    ]);
     if (error) throw error;
 
+    const byUser = new Map((stats ?? []).map(s => [s.user_id, s]));
     const badges = await this.getBadges();
-    return (data ?? []).map(r => this.toUser(r, badges));
+    return (data ?? []).map(r => this.toUser(r, badges, byUser.get(r.id)));
   }
 
   async getUser(id: string): Promise<AppUser | null> {
-    const { data, error } = await this.db
-      .from('profiles').select('*, bank_details(*)').eq('id', id).maybeSingle();
+    const [{ data, error }, { data: stat }] = await Promise.all([
+      this.db.from('profiles').select('*, bank_details(*)').eq('id', id).maybeSingle(),
+      this.db.from('user_stats').select('*').eq('user_id', id).maybeSingle(),
+    ]);
     if (error) throw error;
     if (!data) return null;
-    return this.toUser(data, await this.getBadges());
+    return this.toUser(data, await this.getBadges(), stat);
   }
 
-  private toUser(r: any, allBadges: Badge[]): AppUser {
+  private toUser(r: any, allBadges: Badge[], stat?: any): AppUser {
     const bank = Array.isArray(r.bank_details) ? r.bank_details[0] : r.bank_details;
     return {
       id: r.id, name: r.name, nickName: r.nick_name ?? '',
@@ -115,7 +120,9 @@ export class DataService {
       }),
       mobileVerified: r.mobile_verified, emailVerified: r.email_verified,
       isOnline: r.is_online,
-      rating: 0, reviewCount: 0, badges: allBadges.slice(0, 0),
+      rating: Math.round(Number(stat?.rating_avg ?? 0)),
+      reviewCount: Number(stat?.review_count ?? 0),
+      badges: allBadges.slice(0, Number(stat?.badge_count ?? 0)),
       bank: bank ? {
         holderName: bank.holder_name, upiId: bank.upi_id ?? '',
         accountNo: bank.account_no ?? '', ifsc: bank.ifsc ?? '', locked: bank.locked,
@@ -123,7 +130,9 @@ export class DataService {
       walletAmount: Number(r.wallet_locked) + Number(r.wallet_unlocked),
       lockedAmount: Number(r.wallet_locked),
       unlockedAmount: Number(r.wallet_unlocked),
-      groupsJoined: 0, groupsCreated: 0, txCount: 0,
+      groupsJoined: Number(stat?.groups_joined ?? 0),
+      groupsCreated: Number(stat?.groups_created ?? 0),
+      txCount: Number(stat?.tx_count ?? 0),
     };
   }
 
@@ -193,16 +202,25 @@ export class DataService {
   }
 
   async getDashboardStats() {
-    const [users, sellers, live, pendingGroups, pendingPayments] = await Promise.all([
+    const [users, sellers, live, pendingGroups, pendingPayments, fees] = await Promise.all([
       this.count('profiles'),
       this.count('profiles', q => q.eq('is_seller', true)),
       this.count('groups', q => q.in('status', ['approved', 'full'])),
       this.count('groups', q => q.eq('status', 'pending')),
       this.count('wallet_transactions', q => q.eq('status', 'pending')),
+      // Revenue is what the platform actually kept — service charges and
+      // penalties — not the total value of everything that changed hands.
+      this.db.from('wallet_transactions')
+        .select('amount')
+        .in('tx_kind', ['service_fee', 'penalty'])
+        .eq('status', 'cleared'),
     ]);
+
+    const revenue = (fees.data ?? []).reduce((s, r) => s + Number(r.amount), 0);
+
     return {
       totalUsers: users, activeSellers: sellers, activeScreens: live,
-      pendingGroups, pendingPayments, revenue: 0,
+      pendingGroups, pendingPayments, revenue,
     };
   }
 
@@ -965,13 +983,21 @@ export class DataService {
     if (error) throw error;
   }
 
-  async saveWallet(userId: string, _total: number, locked: number, unlocked: number) {
-    // Direct balance edit by admin. Deliberately not a ledger entry — the
-    // ledger records movements, and this is a correction. Consider adding an
-    // adjust_balance() RPC so corrections are audited too.
-    const { error } = await this.db.from('profiles')
-      .update({ wallet_locked: locked, wallet_unlocked: unlocked }).eq('id', userId);
-    if (error) throw error;
+  /**
+   * Admin balance correction. Goes through adjust_balance() so it writes a
+   * ledger entry and a transaction row naming who changed it and why.
+   *
+   * A direct UPDATE would fail anyway — the profiles_admin_write policy in
+   * 0004 blocks balance columns from the client precisely so corrections
+   * cannot happen without an audit trail.
+   */
+  async saveWallet(userId: string, _total: number, locked: number, unlocked: number, reason: string) {
+    return this.sb.rpc('adjust_balance', {
+      p_user: userId,
+      p_locked: locked,
+      p_unlocked: unlocked,
+      p_reason: reason,
+    });
   }
 
   // ══ Money — RPCs only ═══════════════════════════════════════════════════

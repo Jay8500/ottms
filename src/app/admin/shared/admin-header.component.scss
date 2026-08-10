@@ -16,7 +16,7 @@
 
   // Green spreadsheet glyph used for CSV export
   &.excel {
-    background: #1D6F42;
+    background: $excel-green;
     .x { color: $white; font-weight: 900; font-size: 15px; line-height: 1; }
     ion-icon {
       color: $white; font-size: 13px;

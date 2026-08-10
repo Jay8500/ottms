@@ -46,8 +46,8 @@
   cursor: pointer; border: 1.5px solid $gray-300;
   background: $white; color: $black; position: relative;
 
-  &[data-tone='green'] { background: #16A34A; color: $white; border-color: #16A34A; }
-  &[data-tone='red']   { background: #DC2626; color: $white; border-color: #DC2626; }
+  &[data-tone='green'] { background: $success; color: $white; border-color: $success; }
+  &[data-tone='red']   { background: $danger; color: $white; border-color: $danger; }
   &[data-tone='yellow']{ background: $yellow;  color: $black; border-color: $yellow; }
 
   &.active::after {

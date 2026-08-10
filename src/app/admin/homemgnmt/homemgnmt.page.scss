@@ -78,17 +78,3 @@
   &.col { flex-direction: column; gap: 2px; }
   &.on { border-color: $yellow; border-width: 2px; background: $yellow-light; }
 }
-
-.hm-cta {
-  position: fixed; left: 0; right: 0; z-index: 20;
-  bottom: calc(64px + var(--ion-safe-area-bottom, 0px));
-  padding: $sp-sm $sp-lg $sp-md;
-  background: linear-gradient(to top, $gray-50 62%, rgba(250, 250, 250, 0));
-  pointer-events: none;
-}
-
-.add-new {
-  @include yellow-btn; width: 100%; height: 52px; font-size: $font-lg;
-  box-shadow: $shadow-md; pointer-events: all;
-  ion-icon { font-size: 24px; }
-}
