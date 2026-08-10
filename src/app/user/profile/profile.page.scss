@@ -1,0 +1,147 @@
+@import '../../../global.scss';
+
+.pr-content { --background: #{$gray-50}; }
+
+.top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; }
+.logo-badge { @include logo-badge; }
+
+// ── Identity ───────────────────────────────────────────────────────────────
+.who {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: $sp-md 0 $sp-lg;
+  .w-av {
+    width: 82px; height: 82px; border-radius: 50%;
+    @include flex-center; background: $yellow-light; color: $black;
+    font-size: 34px; font-weight: 800; border: 3px solid $yellow;
+  }
+  .w-name { font-size: $font-2xl; font-weight: 800; color: $black; margin: 8px 0 0; }
+  .w-uid {
+    font-size: $font-xs; font-weight: 700; color: $black;
+    background: $yellow; padding: 3px 12px; border-radius: $r-pill;
+  }
+}
+
+.sec {
+  font-size: $font-xs; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: $gray-600;
+  margin: $sp-xl $sp-lg $sp-sm;
+}
+
+.card {
+  margin: 0 $sp-lg; padding: $sp-md $sp-lg;
+  background: $white; border: 1px solid $gray-200;
+  border-radius: $r-md; box-shadow: $shadow-sm;
+}
+
+.row {
+  @include flex-between; gap: $sp-md; padding: 11px 0;
+  & + .row { border-top: 1px solid $gray-100; }
+  .k {
+    display: flex; align-items: center; gap: 7px; flex-shrink: 0;
+    font-size: $font-sm; color: $gray-600;
+    ion-icon { font-size: 17px; }
+  }
+  .v {
+    display: flex; align-items: center; gap: 5px; min-width: 0;
+    font-size: $font-sm; font-weight: 700; color: $black; text-align: right;
+    overflow: hidden; text-overflow: ellipsis;
+    .ok { color: #16A34A; font-size: 16px; flex-shrink: 0; }
+  }
+}
+
+// ── Seller toggle ──────────────────────────────────────────────────────────
+.card.seller {
+  display: flex; align-items: center; gap: $sp-md;
+  .s-ico {
+    width: 44px; height: 44px; border-radius: $r-sm; flex-shrink: 0;
+    background: $yellow-light; @include flex-center;
+    ion-icon { font-size: 24px; color: $yellow-dark; }
+  }
+  .s-text { flex: 1; min-width: 0; }
+  .s-title { font-size: $font-lg; font-weight: 800; color: $black; margin: 0; }
+  .s-sub   { font-size: $font-xs; color: $gray-600; margin: 2px 0 0; }
+}
+
+.sw {
+  width: 52px; height: 30px; border-radius: $r-pill; border: none;
+  background: $gray-300; position: relative; cursor: pointer; flex-shrink: 0;
+  transition: background 0.18s;
+  i {
+    position: absolute; top: 3px; left: 3px; width: 24px; height: 24px;
+    border-radius: 50%; background: $white; transition: transform 0.18s;
+    box-shadow: $shadow-sm;
+  }
+  &.on { background: #16A34A; i { transform: translateX(22px); } }
+}
+
+@media (prefers-reduced-motion: reduce) { .sw, .sw i { transition: none; } }
+
+// ── Notices ────────────────────────────────────────────────────────────────
+.notice {
+  display: flex; align-items: flex-start; gap: $sp-sm;
+  margin: 0 $sp-lg $sp-sm; padding: $sp-md;
+  background: #FEF2F2; border: 1px solid #FECACA; border-radius: $r-md;
+  ion-icon { font-size: 20px; color: #DC2626; flex-shrink: 0; }
+  span { font-size: $font-sm; color: #991B1B; line-height: 1.5; }
+
+  &.pending {
+    background: #FFFBEB; border-color: #FDE68A;
+    ion-icon { color: #D97706; }
+    span { color: #92400E; }
+  }
+}
+
+// ── Form ───────────────────────────────────────────────────────────────────
+.fl {
+  display: block; font-size: $font-sm; font-weight: 700;
+  color: $gray-700; margin: $sp-md 0 6px;
+}
+
+.fi {
+  width: 100%; height: 48px; padding: 0 $sp-md;
+  border: 1.5px solid $gray-300; border-radius: $r-sm;
+  font-family: inherit; font-size: $font-base; color: $black;
+  outline: none; background: $white;
+  &::placeholder { color: $gray-400; }
+  &:focus { border-color: $yellow; }
+}
+
+.or {
+  text-align: center; font-size: $font-sm; color: $gray-400;
+  margin: $sp-md 0 0;
+}
+
+.hint {
+  font-size: $font-xs; color: $gray-600; line-height: 1.55;
+  margin: $sp-md 0 0;
+}
+
+.form-actions { display: flex; gap: $sp-sm; margin-top: $sp-lg; }
+
+.save {
+  @include yellow-btn; flex: 1; height: 50px; font-size: $font-base;
+  ion-icon { font-size: 19px; }
+  &:disabled { opacity: 0.45; }
+}
+
+.cancel {
+  flex: 0 0 auto; height: 50px; padding: 0 $sp-lg;
+  border: 1.5px solid $gray-300; border-radius: $r-pill; background: $white;
+  font-family: inherit; font-size: $font-base; font-weight: 700; color: $gray-700;
+  cursor: pointer;
+}
+
+.edit-btn {
+  width: 100%; height: 44px; margin-top: $sp-md;
+  border: 1.5px solid $blue; border-radius: $r-sm; background: transparent;
+  color: $blue; font-family: inherit; font-size: $font-sm; font-weight: 700;
+  cursor: pointer; @include flex-center; gap: 6px;
+  ion-icon { font-size: 17px; }
+  &:disabled { opacity: 0.4; border-color: $gray-400; color: $gray-400; }
+}
+
+.state {
+  text-align: center; padding: $sp-xl $sp-lg;
+  p { font-size: $font-base; color: $gray-600; margin: 0; }
+}

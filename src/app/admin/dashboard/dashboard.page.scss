@@ -21,6 +21,32 @@
   ion-icon { font-size: 18px; }
 }
 
+// ── At-a-glance numbers ────────────────────────────────────────────────────
+.stat-row {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 6px; padding: 0 $sp-lg $sp-md;
+}
+
+.stat {
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  padding: 10px 4px; border-radius: $r-md;
+  background: $white; border: 1px solid $gray-200;
+  .s-val { font-size: $font-xl; font-weight: 800; color: $black; font-variant-numeric: tabular-nums; }
+  .s-lbl { font-size: 10px; font-weight: 600; color: $gray-600; text-align: center; }
+
+  // Anything waiting on the admin should look like it needs attention.
+  &.alert {
+    background: #FEF2F2; border-color: #FECACA;
+    .s-val { color: #DC2626; }
+    .s-lbl { color: #991B1B; }
+  }
+  &.alert.quiet {
+    background: #F0FDF4; border-color: #BBF7D0;
+    .s-val { color: #16A34A; }
+    .s-lbl { color: #166534; }
+  }
+}
+
 .feat-grid {
   display: grid; grid-template-columns: repeat(3, 1fr);
   gap: $sp-md; padding: $sp-xs $sp-lg $sp-lg;

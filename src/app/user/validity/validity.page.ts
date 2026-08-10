@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,6 +7,7 @@ import { addIcons } from 'ionicons';
 import { calendarOutline, arrowBackOutline, optionsOutline, chevronForwardOutline } from 'ionicons/icons';
 import { DataService } from '../../shared/data.service';
 import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
+import { AppMenuService } from '../../shared/app-menu.service';
 import { OttApp, ValidityPlan } from '../../shared/models';
 
 @Component({
@@ -17,6 +18,9 @@ import { OttApp, ValidityPlan } from '../../shared/models';
   imports: [IonContent, CommonModule, FormsModule, IonIcon, OttLogoComponent],
 })
 export class ValidityPage implements OnInit {
+  private appMenu = inject(AppMenuService);
+  openMenu() { this.appMenu.open(); }
+
   ottId = '';
   app: OttApp | null = null;
   plans: ValidityPlan[] = [];

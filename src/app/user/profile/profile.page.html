@@ -1,0 +1,116 @@
+<ion-content class="pr-content" [scrollY]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="top-bar">
+    <button class="icon-btn" (click)="back()" aria-label="Back">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <div class="logo-badge"><span class="money">Share</span><span class="saver">OTT's</span></div>
+    <div style="width:40px"></div>
+  </div>
+
+  <ng-container *ngIf="me">
+    <!-- Identity -->
+    <div class="who">
+      <div class="w-av">{{ me.name.charAt(0) }}</div>
+      <p class="w-name">{{ me.name }}</p>
+      <span class="w-uid">User ID {{ me.uniqueNumber }}</span>
+    </div>
+
+    <!-- Seller mode -->
+    <div class="card seller">
+      <div class="s-ico"><ion-icon name="storefront-outline"></ion-icon></div>
+      <div class="s-text">
+        <p class="s-title">Seller mode</p>
+        <p class="s-sub">Share your screens and earn from unused seats.</p>
+      </div>
+      <button class="sw" [class.on]="me.isSeller" (click)="toggleSeller()"
+              [attr.aria-pressed]="me.isSeller"><i></i></button>
+    </div>
+
+    <!-- Account -->
+    <p class="sec">Account</p>
+    <div class="card">
+      <div class="row">
+        <span class="k"><ion-icon name="call-outline"></ion-icon> Mobile</span>
+        <span class="v">+91 {{ me.mobile }}
+          <ion-icon class="ok" name="checkmark-circle" *ngIf="me.mobileVerified"></ion-icon>
+        </span>
+      </div>
+      <div class="row">
+        <span class="k"><ion-icon name="mail-outline"></ion-icon> Email</span>
+        <span class="v">{{ me.email || '—' }}</span>
+      </div>
+      <div class="row">
+        <span class="k"><ion-icon name="calendar-outline"></ion-icon> Joined</span>
+        <span class="v">{{ me.registeredDate }}</span>
+      </div>
+    </div>
+
+    <!-- Payout details -->
+    <p class="sec">Payout Details</p>
+
+    <div class="notice" *ngIf="!hasBank">
+      <ion-icon name="warning-outline"></ion-icon>
+      <span>Add a UPI ID or bank account before you can withdraw money.</span>
+    </div>
+
+    <div class="notice pending" *ngIf="pendingChange">
+      <ion-icon name="lock-closed-outline"></ion-icon>
+      <span>A change is waiting for admin approval. Your current details stay active.</span>
+    </div>
+
+    <!-- Saved view -->
+    <div class="card" *ngIf="hasBank && !editing">
+      <div class="row"><span class="k"><ion-icon name="person-outline"></ion-icon> Holder</span>
+        <span class="v">{{ me.bank?.holderName }}</span></div>
+      <div class="row" *ngIf="me.bank?.upiId"><span class="k"><ion-icon name="cash-outline"></ion-icon> UPI ID</span>
+        <span class="v">{{ me.bank?.upiId }}</span></div>
+      <div class="row" *ngIf="me.bank?.accountNo"><span class="k"><ion-icon name="card-outline"></ion-icon> A/C No</span>
+        <span class="v">{{ me.bank?.accountNo }}</span></div>
+      <div class="row" *ngIf="me.bank?.ifsc"><span class="k"><ion-icon name="shield-outline"></ion-icon> IFSC</span>
+        <span class="v">{{ me.bank?.ifsc }}</span></div>
+
+      <button class="edit-btn" [disabled]="pendingChange" (click)="startEdit()">
+        <ion-icon name="create-outline"></ion-icon> Request a change
+      </button>
+    </div>
+
+    <!-- Edit / first-time form -->
+    <div class="card" *ngIf="editing">
+      <label class="fl">Account holder name</label>
+      <input class="fi" [(ngModel)]="form.holderName" placeholder="As on your bank account" />
+
+      <label class="fl">UPI ID</label>
+      <input class="fi" [(ngModel)]="form.upiId" placeholder="name@bank"
+             inputmode="email" autocapitalize="off" />
+
+      <p class="or">or</p>
+
+      <label class="fl">Bank account number</label>
+      <input class="fi" [(ngModel)]="form.accountNo" placeholder="Account number" inputmode="numeric" />
+
+      <label class="fl">IFSC code</label>
+      <input class="fi" [(ngModel)]="form.ifsc" placeholder="e.g. HDFC0001234" autocapitalize="characters" />
+
+      <p class="hint">
+        This is where your withdrawals are paid. Check it carefully —
+        <span *ngIf="hasBank">changes need admin approval each time.</span>
+        <span *ngIf="!hasBank">you will need admin approval to change it later.</span>
+      </p>
+
+      <div class="form-actions">
+        <button class="cancel" *ngIf="hasBank" (click)="cancelEdit()">Cancel</button>
+        <button class="save" [disabled]="saving" (click)="save()">
+          <ion-icon name="save-outline"></ion-icon>
+          {{ saving ? 'Saving…' : hasBank ? 'Send for approval' : 'Save details' }}
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="state" *ngIf="loading"><p>Loading…</p></div>
+  <div style="height:80px"></div>
+</ion-content>

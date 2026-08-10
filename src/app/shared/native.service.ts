@@ -105,7 +105,7 @@ export class NativeService {
 
   private async toastExit() {
     const alert = await this.alertCtrl.create({
-      header: 'Close Money Saver?',
+      header: "Close ShareOTT's?",
       message: 'Press back again to exit.',
       buttons: [{ text: 'Stay', role: 'cancel' }],
     });

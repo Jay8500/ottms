@@ -1,0 +1,87 @@
+<ion-content class="gp-content" [scrollY]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="top-bar">
+    <button class="icon-btn" (click)="back()" aria-label="Back">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <div class="logo-badge"><span class="money">Share</span><span class="saver">OTT's</span></div>
+    <button class="icon-btn dark" (click)="openMenu()" aria-label="Options">
+      <ion-icon name="options-outline"></ion-icon>
+    </button>
+  </div>
+
+  <h1 class="page-title">My Groups</h1>
+
+  <div class="tabs">
+    <button [class.on]="tab === 'joined'" (click)="tab = 'joined'">
+      Joined <span class="n">{{ joined.length }}</span>
+    </button>
+    <button [class.on]="tab === 'pending'" (click)="tab = 'pending'">
+      Pending <span class="n">{{ pending.length }}</span>
+    </button>
+    <button [class.on]="tab === 'sold'" (click)="tab = 'sold'">
+      Selling <span class="n">{{ sold.length }}</span>
+    </button>
+  </div>
+
+  <div class="list">
+    <div class="grp" *ngFor="let g of shown">
+      <div class="g-top">
+        <div class="g-logo" [attr.data-brand]="g.brand">{{ g.ottName.charAt(0) }}</div>
+        <div class="g-mid">
+          <p class="g-name">{{ g.ottName }} <span class="tier">{{ g.tierLabel }}</span></p>
+          <p class="g-dates">
+            <ion-icon name="calendar-outline"></ion-icon>
+            {{ g.dateFrom }} – {{ g.dateTo }} ({{ g.months }}M)
+          </p>
+        </div>
+        <span class="g-amt">₹{{ (tab === 'joined' ? g.amountPaid : g.price) | number }}</span>
+      </div>
+
+      <div class="g-meta">
+        <span class="chip" [attr.data-tone]="statusTone(g)">{{ statusLabel(g) }}</span>
+        <span class="chip grey" *ngIf="tab !== 'joined'">
+          <ion-icon name="desktop-outline"></ion-icon>
+          {{ g.seatsFilled }}/{{ g.seatsTotal }} seats
+        </span>
+        <span class="chip grey" *ngIf="tab === 'joined'">
+          Seller: {{ g.sellerName }} ({{ g.sellerUniqueNum }})
+        </span>
+      </div>
+
+      <div class="g-actions">
+        <button class="ga img" (click)="viewProof(g)">
+          <ion-icon name="image-outline"></ion-icon> Proof
+        </button>
+        <button class="ga chat" (click)="chat(g)">
+          <ion-icon name="chatbubble-outline"></ion-icon> Chat
+        </button>
+        <button class="ga exit" *ngIf="tab === 'joined' && daysLeft(g) > 0"
+                (click)="requestExit(g)">
+          <ion-icon name="exit-outline"></ion-icon> Leave
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Faulty-account claims need a photo before anything else happens. -->
+  <input type="file" #proofInput hidden accept="image/*" (change)="onProofPicked($event)" />
+
+  <div class="skeleton" *ngIf="loading">
+    <div class="sk" *ngFor="let i of [1,2]"></div>
+  </div>
+
+  <div class="state" *ngIf="!loading && !shown.length">
+    <ion-icon name="people-outline"></ion-icon>
+    <p *ngIf="tab === 'joined'">You have not joined any groups yet.</p>
+    <p *ngIf="tab === 'pending'">Nothing waiting for approval.</p>
+    <p *ngIf="tab === 'sold'">You are not sharing any screens yet.</p>
+    <button class="cta" *ngIf="tab === 'joined'" (click)="browse()">Browse platforms</button>
+    <button class="cta" *ngIf="tab !== 'joined'" (click)="share()">Share a screen</button>
+  </div>
+
+  <div style="height:80px"></div>
+</ion-content>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -7,6 +7,7 @@ import { addIcons } from 'ionicons';
 import { arrowBackOutline, optionsOutline, informationCircleOutline } from 'ionicons/icons';
 import { DataService } from '../../shared/data.service';
 import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
+import { AppMenuService } from '../../shared/app-menu.service';
 import { OttApp } from '../../shared/models';
 
 /**
@@ -22,6 +23,9 @@ import { OttApp } from '../../shared/models';
   imports: [IonContent, CommonModule, FormsModule, IonIcon, OttLogoComponent],
 })
 export class CreategroupPage implements OnInit {
+  private appMenu = inject(AppMenuService);
+  openMenu() { this.appMenu.open(); }
+
   apps: OttApp[] = [];
   loading = true;
   error = '';

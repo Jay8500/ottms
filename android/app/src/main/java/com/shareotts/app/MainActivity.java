@@ -1,4 +1,4 @@
-package com.jay.ottmoneysaver;
+package com.shareotts.app;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -1,4 +1,8 @@
 <ion-content class="dash-content" [scrollY]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
+
   <app-admin-header leading="menu" trailing="options"
                     (menu)="openMenu()" (options)="openMenu()"></app-admin-header>
 
@@ -10,6 +14,26 @@
     <button class="ds-go" (click)="filter()">
       <ion-icon name="search-outline"></ion-icon><span>Search</span>
     </button>
+  </div>
+
+  <!-- At-a-glance numbers -->
+  <div class="stat-row">
+    <div class="stat">
+      <span class="s-val">{{ statsLoading ? '—' : stats.totalUsers }}</span>
+      <span class="s-lbl">Users</span>
+    </div>
+    <div class="stat">
+      <span class="s-val">{{ statsLoading ? '—' : stats.activeSellers }}</span>
+      <span class="s-lbl">Sellers</span>
+    </div>
+    <div class="stat">
+      <span class="s-val">{{ statsLoading ? '—' : stats.activeScreens }}</span>
+      <span class="s-lbl">Live groups</span>
+    </div>
+    <div class="stat alert" [class.quiet]="!stats.pendingGroups && !stats.pendingPayments">
+      <span class="s-val">{{ statsLoading ? '—' : stats.pendingGroups + stats.pendingPayments }}</span>
+      <span class="s-lbl">To review</span>
+    </div>
   </div>
 
   <div class="feat-grid">

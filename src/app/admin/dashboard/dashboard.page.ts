@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonContent, IonIcon, ActionSheetController, IonFooter } from '@ionic/angular/standalone';
+import { IonContent, IonIcon, ActionSheetController, IonFooter, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   menuOutline, optionsOutline, searchOutline, addCircleOutline,
@@ -10,7 +10,7 @@ import {
   calendarOutline, idCardOutline, peopleOutline, walletOutline,
   swapHorizontalOutline, cardOutline, chatbubblesOutline, documentTextOutline,
   headsetOutline, starOutline, peopleCircleOutline, shareSocialOutline,
-  shieldCheckmarkOutline, logOutOutline,
+  shieldCheckmarkOutline, logOutOutline, notificationsOutline,
 } from 'ionicons/icons';
 import { AdminHeaderComponent } from '../shared/admin-header.component';
 import { DataService } from '../../shared/data.service';
@@ -31,7 +31,7 @@ interface Feature {
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonContent, IonIcon, AdminHeaderComponent, IonFooter],
+  imports: [CommonModule, FormsModule, IonContent, IonIcon, AdminHeaderComponent, IonFooter, IonRefresher, IonRefresherContent],
 })
 export class DashboardPage implements OnInit {
   term = '';
@@ -55,6 +55,7 @@ export class DashboardPage implements OnInit {
     { n: 16, label: 'Follow Us',            icon: 'people-circle-outline',   tint: '#F97316', accent: '#F97316', route: '/admin/followus' },
     { n: 17, label: 'Refer Friends',        icon: 'share-social-outline',    tint: '#22C55E', accent: '#22C55E', route: '/admin/refer' },
     { n: 18, label: 'Terms & Conditions',   icon: 'shield-checkmark-outline',tint: '#2563EB', accent: '#2563EB', route: '/admin/terms' },
+    { n: 19, label: 'Notifications',        icon: 'notifications-outline',   tint: '#EC4899', accent: '#EC4899', route: '/admin/notifications' },
   ];
 
   filtered: Feature[] = [...this.features];
@@ -71,14 +72,34 @@ export class DashboardPage implements OnInit {
       calendarOutline, idCardOutline, peopleOutline, walletOutline,
       swapHorizontalOutline, cardOutline, chatbubblesOutline, documentTextOutline,
       headsetOutline, starOutline, peopleCircleOutline, shareSocialOutline,
-      shieldCheckmarkOutline, logOutOutline,
+      shieldCheckmarkOutline, logOutOutline, notificationsOutline,
     });
   }
 
-  async ngOnInit() {
-    const s = await this.data.getDashboardStats();
-    this.badge("Group's", s.pendingGroups);
-    this.badge("Payment's", s.pendingPayments);
+  stats = {
+    totalUsers: 0, activeSellers: 0, activeScreens: 0,
+    pendingGroups: 0, pendingPayments: 0, revenue: 0,
+  };
+  statsLoading = true;
+
+  async ngOnInit() { await this.loadStats(); }
+
+  private async loadStats() {
+    this.statsLoading = true;
+    try {
+      this.stats = await this.data.getDashboardStats();
+      this.badge("Group's", this.stats.pendingGroups);
+      this.badge("Payment's", this.stats.pendingPayments);
+    } catch (e) {
+      console.error('Dashboard stats failed', e);
+    } finally {
+      this.statsLoading = false;
+    }
+  }
+
+  async refresh(ev: CustomEvent) {
+    await this.loadStats();
+    (ev.target as HTMLIonRefresherElement).complete();
   }
 
   private badge(label: string, count: number) {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { IonContent, IonIcon } from '@ionic/angular/standalone';
@@ -9,6 +9,7 @@ import {
   playCircleOutline, documentTextOutline,
 } from 'ionicons/icons';
 import { DataService } from '../../shared/data.service';
+import { AppMenuService } from '../../shared/app-menu.service';
 import { FaqItem, LangCode, SocialLink } from '../../shared/models';
 
 @Component({
@@ -19,6 +20,9 @@ import { FaqItem, LangCode, SocialLink } from '../../shared/models';
   imports: [CommonModule, IonContent, IonIcon],
 })
 export class SupportPage implements OnInit {
+  private appMenu = inject(AppMenuService);
+  openMenu() { this.appMenu.open(); }
+
   lang: LangCode = 'en';
   faqs: FaqItem[] = [];
   links: SocialLink[] = [];

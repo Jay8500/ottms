@@ -49,7 +49,105 @@
     </div>
   </div>
 
-  <p class="empty" *ngIf="!shown.length">
+  <!-- Bank change requests (Q4) -->
+  <div class="pa-list" *ngIf="activeChip === 'bank'">
+    <div class="pa-card" *ngFor="let b of bankRequests">
+      <div class="pa-head">
+        <span class="ph-kind">Bank Change</span>
+        <span class="ph-date">{{ b.createdAt }}</span>
+      </div>
+
+      <div class="pa-body">
+        <div class="pa-avatar">{{ b.userName.charAt(0) }}</div>
+        <div class="pa-mid">
+          <p class="pa-mobile">{{ b.userMobile }}</p>
+          <p class="pa-user">{{ b.userName }} ({{ b.userUniqueNum }})</p>
+        </div>
+      </div>
+
+      <div class="bank-new">
+        <p class="bn-title">Requested details</p>
+        <div class="bn-row"><span class="k">Holder</span><span class="v">{{ b.holderName }}</span></div>
+        <div class="bn-row" *ngIf="b.upiId"><span class="k">UPI ID</span><span class="v">{{ b.upiId }}</span></div>
+        <div class="bn-row" *ngIf="b.accountNo"><span class="k">A/C No</span><span class="v">{{ b.accountNo }}</span></div>
+        <div class="bn-row" *ngIf="b.ifsc"><span class="k">IFSC</span><span class="v">{{ b.ifsc }}</span></div>
+      </div>
+
+      <p class="bank-warn">
+        This changes where their withdrawals are paid. Verify it is really them
+        before approving.
+      </p>
+
+      <div class="pa-actions">
+        <button class="pa-reject" (click)="rejectBank(b)">
+          <ion-icon name="close-circle-outline"></ion-icon> Reject
+        </button>
+        <button class="pa-approve" (click)="approveBank(b)">
+          <ion-icon name="checkmark-circle-outline"></ion-icon> Approve
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Faulty-account exit claims -->
+  <div class="pa-list" *ngIf="activeChip === 'exit'">
+    <div class="pa-card" *ngFor="let e of exitRequests">
+      <div class="pa-head">
+        <span class="ph-kind">Faulty Account Claim</span>
+        <span class="ph-date">{{ e.createdAt }}</span>
+      </div>
+
+      <div class="pa-body">
+        <div class="pa-avatar">{{ e.buyerName.charAt(0) }}</div>
+        <div class="pa-mid">
+          <p class="pa-mobile">{{ e.ottName }}</p>
+          <p class="pa-user">{{ e.buyerName }} ({{ e.buyerUniqueNum }})</p>
+        </div>
+        <p class="pa-amt">₹{{ e.amountPaid | number }}</p>
+      </div>
+
+      <div class="bank-new">
+        <div class="bn-row"><span class="k">Seller</span>
+          <span class="v">{{ e.sellerName }} ({{ e.sellerUniqueNum }})</span></div>
+        <div class="bn-row"><span class="k">Period</span>
+          <span class="v">{{ e.joinedOn }} – {{ e.expiresOn }}</span></div>
+        <div class="bn-row"><span class="k">Unused</span>
+          <span class="v">{{ unusedDays(e) }} days</span></div>
+        <div class="bn-row" *ngIf="e.note"><span class="k">Problem</span>
+          <span class="v">{{ e.note }}</span></div>
+      </div>
+
+      <p class="bank-warn">
+        Accepting refunds the buyer in full and penalises the seller.
+        Look at the photo before deciding.
+      </p>
+
+      <div class="pa-meta">
+        <button class="chip img" (click)="viewExitProof(e)">
+          <ion-icon name="image-outline"></ion-icon> View photo
+        </button>
+      </div>
+
+      <div class="pa-actions">
+        <button class="pa-reject" (click)="rejectExit(e)">
+          <ion-icon name="close-circle-outline"></ion-icon> Reject
+        </button>
+        <button class="pa-approve" (click)="approveExit(e)">
+          <ion-icon name="checkmark-circle-outline"></ion-icon> Accept
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <p class="empty" *ngIf="activeChip === 'bank' && !bankRequests.length">
+    No pending bank change requests.
+  </p>
+
+  <p class="empty" *ngIf="activeChip === 'exit' && !exitRequests.length">
+    No exit claims to review.
+  </p>
+
+  <p class="empty" *ngIf="activeChip !== 'bank' && activeChip !== 'exit' && !shown.length">
     No pending {{ activeChip === 'withdraw' ? 'withdraw' : 'payment' }} requests.
   </p>
   <div style="height:100px"></div>

@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.jay.ottmoneysaver',
-  appName: 'OTT Money Saver',
+  appId: 'com.shareotts.app',
+  appName: 'ShareOTTs',
   webDir: 'www',
   server: {
     androidScheme: 'https',

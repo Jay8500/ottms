@@ -1,0 +1,108 @@
+@import '../../../global.scss';
+
+.rf-content { --background: #{$gray-50}; }
+
+.top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; }
+.logo-badge { @include logo-badge; }
+
+// ── Hero ───────────────────────────────────────────────────────────────────
+.hero {
+  text-align: center; padding: $sp-lg $sp-lg $sp-xl;
+  ion-icon { font-size: 56px; color: $yellow-dark; }
+  h1 { font-size: $font-2xl; font-weight: 800; color: $black; margin: $sp-sm 0 4px; }
+  p  { font-size: $font-base; color: $gray-600; margin: 0; line-height: 1.5; }
+}
+
+// ── Code ───────────────────────────────────────────────────────────────────
+.code-card {
+  margin: 0 $sp-lg $sp-lg; padding: $sp-lg;
+  background: linear-gradient(160deg, #FFF6D6 0%, $white 100%);
+  border: 2px dashed $yellow; border-radius: $r-lg; text-align: center;
+
+  .c-lbl { font-size: $font-xs; font-weight: 700; letter-spacing: 0.08em;
+           text-transform: uppercase; color: $gray-600; margin: 0; }
+  .c-val {
+    font-size: 34px; font-weight: 900; color: $black;
+    letter-spacing: 4px; margin: 6px 0 $sp-md;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.c-actions { display: flex; gap: $sp-sm; }
+
+.c-copy, .c-share {
+  flex: 1; height: 46px; border: none; border-radius: $r-sm;
+  font-family: inherit; font-size: $font-base; font-weight: 800;
+  cursor: pointer; @include flex-center; gap: 6px;
+  ion-icon { font-size: 19px; }
+  &:disabled { opacity: 0.45; }
+}
+.c-copy  { background: $white; color: $black; border: 1.5px solid $gray-300; }
+.c-share { background: #25D366; color: $white; }
+
+// ── Stats ──────────────────────────────────────────────────────────────────
+.stat-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: $sp-sm; padding: 0 $sp-lg;
+}
+
+.stat {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: $sp-md; border-radius: $r-md;
+  background: $white; border: 1px solid $gray-200;
+  ion-icon { font-size: 24px; color: $blue; }
+  .s-val { font-size: $font-2xl; font-weight: 800; color: $black; }
+  .s-lbl { font-size: $font-xs; color: $gray-600; }
+}
+
+.how {
+  display: block; margin: $sp-md auto 0; padding: 0;
+  background: none; border: none; cursor: pointer;
+  font-family: inherit; font-size: $font-sm; font-weight: 700;
+  color: $blue; text-decoration: underline;
+}
+
+// ── Redeem ─────────────────────────────────────────────────────────────────
+.sec {
+  font-size: $font-xs; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: $gray-600;
+  margin: $sp-xl $sp-lg $sp-sm;
+}
+
+.redeem {
+  display: flex; gap: $sp-sm; padding: 0 $sp-lg;
+
+  input {
+    flex: 1; min-width: 0; height: 50px; padding: 0 $sp-md;
+    border: 1.5px solid $gray-300; border-radius: $r-sm;
+    font-family: inherit; font-size: $font-lg; font-weight: 800;
+    letter-spacing: 2px; text-transform: uppercase; color: $black;
+    outline: none; background: $white;
+    &::placeholder { letter-spacing: normal; font-weight: 400; color: $gray-400; }
+    &:focus { border-color: $yellow; }
+  }
+
+  button {
+    @include yellow-btn; flex: 0 0 auto; height: 50px; padding: 0 $sp-xl;
+    &:disabled { opacity: 0.45; }
+  }
+}
+
+.redeem-note {
+  font-size: $font-xs; color: $gray-600;
+  margin: $sp-sm $sp-lg 0;
+}
+
+// ── Off / loading ──────────────────────────────────────────────────────────
+.off-state {
+  text-align: center; padding: $sp-2xl $sp-lg;
+  ion-icon { font-size: 60px; color: $gray-300; }
+  .o-title { font-size: $font-xl; font-weight: 800; color: $black; margin: $sp-md 0 4px; }
+  .o-sub   { font-size: $font-base; color: $gray-600; margin: 0; line-height: 1.5; }
+}
+
+.state {
+  text-align: center; padding: $sp-xl $sp-lg;
+  p { font-size: $font-base; color: $gray-600; margin: 0; }
+}

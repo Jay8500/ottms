@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -6,6 +6,7 @@ import { IonContent, IonIcon, ToastController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons';
 import { chevronForwardOutline, arrowBackOutline, optionsOutline, lockClosedOutline } from 'ionicons/icons';
 import { DataService } from '../../shared/data.service';
+import { AppMenuService } from '../../shared/app-menu.service';
 import { Category } from '../../shared/models';
 
 @Component({
@@ -16,6 +17,9 @@ import { Category } from '../../shared/models';
   imports: [IonContent, CommonModule, FormsModule, IonIcon],
 })
 export class CategoryPage implements OnInit {
+  private appMenu = inject(AppMenuService);
+  openMenu() { this.appMenu.open(); }
+
   categories: Category[] = [];
   loading = true;
   error = '';

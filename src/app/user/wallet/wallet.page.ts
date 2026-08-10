@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -15,6 +15,7 @@ import { ExportService } from '../../shared/export.service';
 import { NetworkService } from '../../shared/network.service';
 import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
 import { humanError } from '../../shared/errors';
+import { AppMenuService } from '../../shared/app-menu.service';
 import { AppUser, WalletTx } from '../../shared/models';
 
 @Component({
@@ -25,6 +26,9 @@ import { AppUser, WalletTx } from '../../shared/models';
   imports: [CommonModule, FormsModule, IonContent, IonIcon, OttLogoComponent],
 })
 export class WalletPage implements OnInit {
+  private appMenu = inject(AppMenuService);
+  openMenu() { this.appMenu.open(); }
+
   locked = 0;
   unlocked = 0;
 
@@ -103,6 +107,8 @@ export class WalletPage implements OnInit {
   setTab(t: 'all' | 'funded' | 'expense') { this.tab = t; this.applyFilter(); }
 
   back() { this.router.navigate(['/user/home']); }
+
+  goProfile() { this.router.navigate(['/user/profile']); }
 
   // ── Withdraw ────────────────────────────────────────────────────────────
 

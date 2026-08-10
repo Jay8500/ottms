@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,6 +7,7 @@ import { addIcons } from 'ionicons';
 import { searchOutline, arrowBackOutline, optionsOutline } from 'ionicons/icons';
 import { DataService } from '../../shared/data.service';
 import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
+import { AppMenuService } from '../../shared/app-menu.service';
 import { Category, OttApp } from '../../shared/models';
 
 @Component({
@@ -17,6 +18,9 @@ import { Category, OttApp } from '../../shared/models';
   imports: [CommonModule, FormsModule, IonContent, IonIcon, OttLogoComponent],
 })
 export class OttplatformsPage implements OnInit {
+  private appMenu = inject(AppMenuService);
+  openMenu() { this.appMenu.open(); }
+
   categoryId = '';
   categoryName = '';
   categoryColor = '#F9D54B';

@@ -1,0 +1,62 @@
+<ion-content class="nt-content" [scrollY]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
+
+  <app-admin-header title="Notifications" trailing="options"></app-admin-header>
+
+  <div class="devices">
+    <ion-icon name="phone-portrait-outline"></ion-icon>
+    <span><b>{{ deviceCount }}</b> device{{ deviceCount === 1 ? '' : 's' }} can receive notifications</span>
+  </div>
+
+  <div class="list">
+    <div class="rule" *ngFor="let r of rules" [class.off]="!r.enabled">
+      <div class="r-top">
+        <div class="r-ico"><ion-icon name="notifications-outline"></ion-icon></div>
+        <div class="r-text">
+          <p class="r-title">{{ r.title }}</p>
+          <p class="r-body">{{ r.bodyTemplate }}</p>
+        </div>
+        <button class="sw" [class.on]="r.enabled" (click)="toggle(r)"
+                [attr.aria-pressed]="r.enabled"
+                [attr.aria-label]="'Turn ' + r.title + (r.enabled ? ' off' : ' on')"><i></i></button>
+      </div>
+
+      <div class="r-tools">
+        <button class="chip timing" *ngIf="isTimed(r)" (click)="editTiming(r)">
+          <ion-icon name="time-outline"></ion-icon>
+          {{ r.offsetDays === 0 ? 'On the day' : r.offsetDays + ' days before' }}
+        </button>
+        <span class="chip event" *ngIf="!isTimed(r)">Sent when it happens</span>
+
+        <button class="chip edit" (click)="editText(r)">
+          <ion-icon name="create-outline"></ion-icon> Edit wording
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip">
+    <ion-icon name="information-circle-outline"></ion-icon>
+    <div>
+      <p>Words inside curly brackets are filled in automatically —
+        <code>&#123;amount&#125;</code>, <code>&#123;ott&#125;</code>,
+        <code>&#123;sender&#125;</code>, <code>&#123;reason&#125;</code>.</p>
+      <p class="warn" *ngIf="!deviceCount">
+        No devices are registered yet, so nothing will actually be delivered.
+        Devices register when someone signs in on a phone and accepts the
+        notification prompt.
+      </p>
+    </div>
+  </div>
+
+  <p class="empty" *ngIf="!loading && !rules.length">No notification types configured.</p>
+  <div style="height:120px"></div>
+</ion-content>
+
+<ion-footer class="cta-footer">
+  <button class="cta-btn" [disabled]="!dirty" (click)="save()">
+    <ion-icon name="save-outline"></ion-icon> Save Changes
+  </button>
+</ion-footer>

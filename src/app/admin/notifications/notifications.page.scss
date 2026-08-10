@@ -1,0 +1,81 @@
+@import '../../../global.scss';
+
+.nt-content { --background: #{$gray-50}; }
+
+.devices {
+  display: flex; align-items: center; gap: $sp-sm;
+  margin: 0 $sp-lg $sp-lg; padding: $sp-md;
+  background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: $r-md;
+  ion-icon { font-size: 22px; color: #2563EB; flex-shrink: 0; }
+  span { font-size: $font-sm; color: #1E3A8A; }
+  b { font-size: $font-lg; font-weight: 800; }
+}
+
+.list { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-md; }
+
+.rule {
+  background: $white; border: 1px solid $gray-200; border-radius: $r-md;
+  padding: $sp-md; box-shadow: $shadow-sm;
+  &.off { opacity: 0.55; }
+}
+
+.r-top { display: flex; align-items: flex-start; gap: $sp-md; }
+
+.r-ico {
+  width: 40px; height: 40px; border-radius: $r-sm; flex-shrink: 0;
+  background: $yellow-light; @include flex-center;
+  ion-icon { font-size: 20px; color: $yellow-dark; }
+}
+
+.r-text {
+  flex: 1; min-width: 0;
+  .r-title { font-size: $font-lg; font-weight: 800; color: $black; margin: 0; }
+  .r-body  { font-size: $font-xs; color: $gray-600; margin: 3px 0 0; line-height: 1.45; }
+}
+
+.sw {
+  width: 50px; height: 28px; border-radius: $r-pill; border: none;
+  background: $gray-300; position: relative; cursor: pointer; flex-shrink: 0;
+  transition: background 0.18s;
+  i {
+    position: absolute; top: 3px; left: 3px; width: 22px; height: 22px;
+    border-radius: 50%; background: $white; transition: transform 0.18s;
+    box-shadow: $shadow-sm;
+  }
+  &.on { background: #16A34A; i { transform: translateX(22px); } }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sw, .sw i { transition: none; }
+}
+
+.r-tools {
+  display: flex; align-items: center; gap: 6px;
+  margin-top: $sp-md; flex-wrap: wrap;
+}
+
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  height: 32px; padding: 0 $sp-md; border-radius: $r-sm;
+  font-size: $font-xs; font-weight: 700; border: none; font-family: inherit;
+  ion-icon { font-size: 15px; }
+
+  &.timing { background: #FEF3C7; color: #92400E; cursor: pointer; }
+  &.event  { background: $gray-100; color: $gray-600; }
+  &.edit   { background: #E0F2FE; color: #075985; cursor: pointer; margin-left: auto; }
+}
+
+.tip {
+  display: flex; gap: $sp-sm; align-items: flex-start;
+  margin: $sp-lg $sp-lg 0; padding: $sp-md;
+  background: $white; border: 1px solid $gray-200; border-radius: $r-md;
+  > ion-icon { font-size: 20px; color: $gray-600; flex-shrink: 0; }
+  p { font-size: $font-xs; color: $gray-700; line-height: 1.55; margin: 0; }
+  .warn { color: $orange; margin-top: 6px; font-weight: 600; }
+  code {
+    background: $gray-100; padding: 1px 5px; border-radius: 3px;
+    font-size: 11px; font-family: ui-monospace, monospace;
+  }
+}
+
+.empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }

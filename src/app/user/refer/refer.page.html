@@ -1,0 +1,76 @@
+<ion-content class="rf-content" [scrollY]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="top-bar">
+    <button class="icon-btn" (click)="back()" aria-label="Back">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <div class="logo-badge"><span class="money">Share</span><span class="saver">OTT's</span></div>
+    <button class="icon-btn dark" (click)="openMenu()" aria-label="Options">
+      <ion-icon name="options-outline"></ion-icon>
+    </button>
+  </div>
+
+  <!-- Switched off by admin -->
+  <div class="off-state" *ngIf="!loading && !enabled">
+    <ion-icon name="gift-outline"></ion-icon>
+    <p class="o-title">Invites are not open yet</p>
+    <p class="o-sub">We will let you know when you can start earning by inviting friends.</p>
+  </div>
+
+  <ng-container *ngIf="enabled">
+    <div class="hero">
+      <ion-icon name="gift-outline"></ion-icon>
+      <h1>Invite a friend</h1>
+      <p *ngIf="reward > 0">Get ₹{{ reward }} when they make their first purchase.</p>
+      <p *ngIf="!reward">Share the app with friends who split subscriptions.</p>
+    </div>
+
+    <!-- Your code -->
+    <div class="code-card">
+      <p class="c-lbl">Your invite code</p>
+      <p class="c-val">{{ code || '……' }}</p>
+
+      <div class="c-actions">
+        <button class="c-copy" (click)="copyCode()" [disabled]="!code">
+          <ion-icon name="copy-outline"></ion-icon> Copy
+        </button>
+        <button class="c-share" (click)="share()" [disabled]="!code">
+          <ion-icon name="share-social-outline"></ion-icon> Share
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-row">
+      <div class="stat">
+        <ion-icon name="people-outline"></ion-icon>
+        <span class="s-val">{{ invited }}</span>
+        <span class="s-lbl">Friends joined</span>
+      </div>
+      <div class="stat">
+        <ion-icon name="cash-outline"></ion-icon>
+        <span class="s-val">₹{{ earned | number }}</span>
+        <span class="s-lbl">Earned</span>
+      </div>
+    </div>
+
+    <button class="how" (click)="howItWorks()">How does this work?</button>
+
+    <!-- Redeem -->
+    <p class="sec">Got a code from a friend?</p>
+    <div class="redeem">
+      <input [(ngModel)]="enterCode" placeholder="Enter code"
+             maxlength="8" autocapitalize="characters" />
+      <button [disabled]="busy || !enterCode.trim()" (click)="redeem()">
+        {{ busy ? '…' : 'Apply' }}
+      </button>
+    </div>
+    <p class="redeem-note">You can use one code, once, on a new account.</p>
+  </ng-container>
+
+  <div class="state" *ngIf="loading"><p>Loading…</p></div>
+  <div style="height:80px"></div>
+</ion-content>

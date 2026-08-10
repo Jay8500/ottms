@@ -85,6 +85,10 @@ export const routes: Routes = [
         loadComponent: () => import('../followus/followus.page').then(m => m.AdminFollowusPage),
       },
       {
+        path: 'notifications',      // 19 — Notification controls (L2)
+        loadComponent: () => import('../notifications/notifications.page').then(m => m.AdminNotificationsPage),
+      },
+      {
         path: 'refer',              // 17 — Refer Friends
         loadComponent: () => import('../refer/refer.page').then(m => m.AdminReferPage),
       },

@@ -113,11 +113,26 @@
 
 .composer { display: flex; align-items: center; gap: $sp-sm; }
 
-.c-img, .c-send {
+.media-hint {
+  display: flex; align-items: center; gap: 6px;
+  margin: 0 0 $sp-sm; padding: 7px $sp-md;
+  background: $gray-100; border-radius: $r-sm;
+  font-size: $font-xs; color: $gray-700;
+  ion-icon { font-size: 14px; flex-shrink: 0; }
+}
+
+.c-lock, .c-img, .c-send {
   width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
   border: none; @include flex-center; cursor: pointer;
   ion-icon { font-size: 22px; }
   &:disabled { opacity: 0.4; }
+}
+
+// Replaces the AUTO toggle from the mockups — this is the media lock (Q5).
+.c-lock {
+  background: $gray-200;
+  ion-icon { color: $gray-700; }
+  &.on { background: #16A34A; ion-icon { color: $white; } }
 }
 
 .c-img  { background: $black; ion-icon { color: $white; } }

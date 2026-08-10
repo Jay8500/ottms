@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:17778649130:android:9bb932164508342e907b53",
+        "mobilesdk_app_id": "1:17778649130:android:163202c4d490af4c907b53",
         "android_client_info": {
-          "package_name": "com.jay.ottmoneysaver"
+          "package_name": "com.shareotts.app"
         }
       },
       "oauth_client": [],

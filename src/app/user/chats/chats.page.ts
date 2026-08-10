@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -10,6 +10,7 @@ import { addIcons } from 'ionicons';
 import { lockClosedOutline, chatbubblesOutline, optionsOutline } from 'ionicons/icons';
 import { DataService } from '../../shared/data.service';
 import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
+import { AppMenuService } from '../../shared/app-menu.service';
 import { ChatThread } from '../../shared/models';
 
 /** The Chats tab — every conversation this user is part of. */
@@ -24,6 +25,9 @@ import { ChatThread } from '../../shared/models';
   ],
 })
 export class UserChatsPage implements ViewWillEnter, ViewWillLeave {
+  private appMenu = inject(AppMenuService);
+  openMenu() { this.appMenu.open(); }
+
   threads: ChatThread[] = [];
   loading = true;
   error = '';

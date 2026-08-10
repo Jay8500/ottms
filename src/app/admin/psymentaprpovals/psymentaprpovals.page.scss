@@ -65,4 +65,30 @@
 .pa-reject  { background: #B91C1C; }
 .pa-approve { background: #15803D; }
 
+// ── Bank change requests (Q4) ──────────────────────────────────────────────
+.bank-new {
+  margin: 0 $sp-md $sp-sm; padding: $sp-md;
+  background: $gray-50; border: 1px solid $gray-200; border-radius: $r-sm;
+
+  .bn-title {
+    font-size: $font-xs; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; color: $gray-600; margin: 0 0 6px;
+  }
+  .bn-row {
+    @include flex-between; gap: $sp-sm; padding: 5px 0;
+    & + .bn-row { border-top: 1px solid $gray-200; }
+    .k { font-size: $font-xs; color: $gray-600; flex-shrink: 0; }
+    .v {
+      font-size: $font-sm; font-weight: 700; color: $black;
+      text-align: right; overflow: hidden; text-overflow: ellipsis;
+    }
+  }
+}
+
+.bank-warn {
+  margin: 0 $sp-md $sp-md; padding: 9px $sp-md;
+  background: #FEF2F2; border: 1px solid #FECACA; border-radius: $r-sm;
+  font-size: $font-xs; color: #991B1B; line-height: 1.5;
+}
+
 .empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }

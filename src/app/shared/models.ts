@@ -1,4 +1,4 @@
-// Domain models for OTT Money Saver.
+// Domain models for ShareOTT's.
 //
 // These mirror the tables planned in Supabase. Every CMS-editable entity
 // carries the fields the admin panel edits (title / subName / color / icon /
@@ -16,6 +16,7 @@ export type TxStatus = 'pending' | 'cleared' | 'rejected';
 
 export type GroupStatus = 'pending' | 'approved' | 'rejected' | 'full' | 'expired';
 export type MemberStatus = 'active' | 'expiring' | 'expired' | 'exited';
+export type ExitReason = 'personal' | 'faulty';
 
 export type LangCode = 'en' | 'hi' | 'te';
 
@@ -196,6 +197,10 @@ export interface ChatThread {
   unread: number;
   isOnline: boolean;
   locked: boolean;
+  /** Q5 — photos and voice need both sides unlocked. Resets when chat closes. */
+  buyerMediaUnlocked: boolean;
+  sellerMediaUnlocked: boolean;
+  iAmBuyer: boolean;
 }
 
 export interface ChatMessage {
@@ -250,6 +255,51 @@ export interface PaymentConfig {
 
 export interface SocialLink extends CmsEntity {
   url: string;
+}
+
+/** A buyer leaving early. Faulty-account claims wait for admin review. */
+export interface ExitRequest {
+  id: string;
+  memberId: string;
+  buyerName: string;
+  buyerUniqueNum: number;
+  sellerName: string;
+  sellerUniqueNum: number;
+  ottName: string;
+  brand: string;
+  amountPaid: number;
+  joinedOn: string;
+  expiresOn: string;
+  reason: ExitReason;
+  note?: string;
+  proofUrl?: string;
+  status: TxStatus;
+  createdAt: string;
+}
+
+/** A pending change to someone's payout destination. Admin must approve (Q4). */
+export interface BankChangeRequest {
+  id: string;
+  userId: string;
+  userName: string;
+  userUniqueNum: number;
+  userMobile: string;
+  holderName: string;
+  upiId: string;
+  accountNo: string;
+  ifsc: string;
+  status: TxStatus;
+  rejectReason?: string;
+  createdAt: string;
+}
+
+export interface NotificationRule {
+  key: string;
+  title: string;
+  bodyTemplate: string;
+  enabled: boolean;
+  /** Days before expiry. Null for event-driven alerts. */
+  offsetDays: number | null;
 }
 
 export interface Referral {

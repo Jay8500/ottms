@@ -4,7 +4,7 @@
     <button class="icon-btn" (click)="back()" aria-label="Back">
       <ion-icon name="arrow-back-outline"></ion-icon>
     </button>
-    <div class="logo-badge"><span class="money">Money</span><span class="saver">Saver</span></div>
+    <div class="logo-badge"><span class="money">Share</span><span class="saver">OTT's</span></div>
     <button class="icon-btn dark" (click)="openMore()" aria-label="More">
       <ion-icon name="ellipsis-vertical-outline"></ion-icon>
     </button>
@@ -74,8 +74,21 @@
       <button *ngFor="let q of quickReplies" (click)="send(q)" [disabled]="thread.locked">{{ q }}</button>
     </div>
 
+    <p class="media-hint" *ngIf="!mediaOpen">
+      <ion-icon name="lock-closed-outline"></ion-icon>
+      <span *ngIf="!iUnlocked">Photos are locked. Tap the lock if you want to share.</span>
+      <span *ngIf="iUnlocked">You unlocked. Waiting for the other person.</span>
+    </p>
+
     <div class="composer">
-      <button class="c-img" (click)="pickImage()" [disabled]="thread.locked" aria-label="Send a photo">
+      <button class="c-lock" [class.on]="iUnlocked" (click)="toggleMedia()"
+              [disabled]="thread.locked"
+              [attr.aria-pressed]="iUnlocked" aria-label="Allow photos">
+        <ion-icon [name]="iUnlocked ? 'lock-open-outline' : 'lock-closed-outline'"></ion-icon>
+      </button>
+
+      <button class="c-img" (click)="pickImage()"
+              [disabled]="thread.locked || !mediaOpen" aria-label="Send a photo">
         <ion-icon name="image-outline"></ion-icon>
       </button>
       <input type="file" #imgInput hidden accept="image/*" (change)="onImage($event)" />

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +12,7 @@ import { Auth } from '../../auth';
 import { DataService } from '../../shared/data.service';
 import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
 import { humanError } from '../../shared/errors';
+import { AppMenuService } from '../../shared/app-menu.service';
 import { GroupScreen, OttApp, ValidityPlan } from '../../shared/models';
 
 type SortKey = 'all' | 'stars' | 'batch' | 'verified';
@@ -24,6 +25,9 @@ type SortKey = 'all' | 'stars' | 'batch' | 'verified';
   imports: [IonContent, CommonModule, FormsModule, IonIcon, OttLogoComponent],
 })
 export class SellerslistPage implements OnInit {
+  private appMenu = inject(AppMenuService);
+  openMenu() { this.appMenu.open(); }
+
   ottId = '';
   months = 0;
   app: OttApp | null = null;

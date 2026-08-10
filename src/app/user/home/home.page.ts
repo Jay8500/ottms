@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 import { Auth } from '../../auth';
 import { DataService } from '../../shared/data.service';
 import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
+import { AppMenuService } from '../../shared/app-menu.service';
 import { HomeButton, OttApp } from '../../shared/models';
 
 @Component({
@@ -24,6 +25,9 @@ import { HomeButton, OttApp } from '../../shared/models';
   imports: [IonContent, CommonModule, FormsModule, IonIcon, OttLogoComponent],
 })
 export class HomePage implements OnInit, OnDestroy {
+  private appMenu = inject(AppMenuService);
+  openMenu() { this.appMenu.open(); }
+
   @ViewChild(IonContent) content!: IonContent;
 
   userName = '';

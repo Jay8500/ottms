@@ -4,7 +4,7 @@
       <ion-icon name="arrow-back-outline"></ion-icon>
     </button>
     <p class="page-title">Wallet</p>
-    <button class="icon-btn dark" aria-label="Options">
+    <button class="icon-btn dark" (click)="openMenu()" aria-label="Options">
       <ion-icon name="options-outline"></ion-icon>
     </button>
   </div>
@@ -66,12 +66,13 @@
       <div class="wb" *ngIf="method === 'upi'"><span class="k">UPI ID</span><span class="v">{{ me?.bank?.upiId }}</span></div>
       <div class="wb" *ngIf="method === 'bank'"><span class="k">A/C No</span><span class="v">{{ me?.bank?.accountNo }}</span></div>
       <div class="wb" *ngIf="method === 'bank'"><span class="k">IFSC</span><span class="v">{{ me?.bank?.ifsc }}</span></div>
-      <p class="wb-note">Set at sign-up and cannot be changed.</p>
+      <p class="wb-note">Changes to these need admin approval.</p>
     </div>
 
-    <p class="wd-nobank" *ngIf="!me?.bank">
-      No bank details on file. Contact support to add them.
-    </p>
+    <div class="wd-nobank" *ngIf="!me?.bank">
+      <p>Add a UPI ID or bank account before you can withdraw.</p>
+      <button class="add-bank" (click)="goProfile()">Add payout details</button>
+    </div>
 
     <button class="wd-send" [disabled]="submitting || !me?.bank" (click)="sendWithdraw()">
       {{ submitting ? 'Sending…' : 'Send Request' }}

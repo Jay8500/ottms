@@ -1,6 +1,7 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, Injector } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { SupabaseService } from './shared/supabase.service';
+import { PushService } from './shared/push.service';
 
 export interface UserProfile {
   id: string;
@@ -20,6 +21,11 @@ export interface UserProfile {
 @Injectable({ providedIn: 'root' })
 export class Auth {
   private sb = inject(SupabaseService);
+  // Injector rather than a direct inject: PushService depends on Router, and
+  // Auth is constructed during app initialisation before routing is ready.
+  private injector = inject(Injector);
+
+  private get push() { return this.injector.get(PushService); }
 
   private _user = new BehaviorSubject<UserProfile | null>(null);
   user$ = this._user.asObservable();
@@ -96,6 +102,11 @@ export class Auth {
     };
 
     this._user.next(profile);
+
+    // Register for push once we know who this device belongs to. Fire and
+    // forget — a denied permission must never block sign-in.
+    this.push.start().catch(() => { /* not fatal */ });
+
     return profile;
   }
 
@@ -115,6 +126,9 @@ export class Auth {
   }
 
   async logout(): Promise<void> {
+    // Drop the push token first, while we still have a session to delete it
+    // with — otherwise the next person on this device gets their alerts.
+    await this.push.clear().catch(() => { /* not fatal */ });
     await this.sb.signOut();
     this._user.next(null);
   }

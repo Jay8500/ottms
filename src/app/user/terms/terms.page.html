@@ -1,0 +1,33 @@
+<ion-content class="tm-content" [scrollY]="true">
+  <div class="top-bar">
+    <button class="icon-btn" (click)="back()" aria-label="Back">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <div class="logo-badge"><span class="money">Share</span><span class="saver">OTT's</span></div>
+    <button class="icon-btn dark" (click)="openMenu()" aria-label="Options">
+      <ion-icon name="options-outline"></ion-icon>
+    </button>
+  </div>
+
+  <div class="head">
+    <ion-icon name="shield-checkmark-outline"></ion-icon>
+    <h1>Terms &amp; Conditions</h1>
+  </div>
+
+  <div class="body">
+    <p class="line" *ngFor="let l of lines">{{ l }}</p>
+  </div>
+
+  <div class="state" *ngIf="loading"><p>Loading…</p></div>
+
+  <div class="state" *ngIf="error">
+    <p>{{ error }}</p>
+    <button class="retry" (click)="load()">Try again</button>
+  </div>
+
+  <div class="state" *ngIf="!loading && !error && !lines.length">
+    <p>The terms have not been published yet.</p>
+  </div>
+
+  <div style="height:80px"></div>
+</ion-content>

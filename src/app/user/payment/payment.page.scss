@@ -8,15 +8,90 @@
 
 .page-title {
   font-size: $font-2xl; font-weight: 800; color: $black;
-  text-align: center; margin: $sp-xs 0 $sp-md;
-  position: relative;
-  &::after {
-    content: ''; display: block; width: 120px; height: 3px;
-    background: $yellow; border-radius: 2px; margin: 6px auto 0;
+  text-align: center; margin: $sp-xs 0 $sp-lg;
+}
+
+// ── Instant vs manual ──────────────────────────────────────────────────────
+.mode-row { display: flex; gap: $sp-sm; padding: 0 $sp-lg $sp-lg; }
+
+.mode {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: $sp-md 6px; border-radius: $r-md; cursor: pointer; font-family: inherit;
+  border: 1.5px solid $gray-300; background: $white;
+  ion-icon { font-size: 24px; color: $gray-600; }
+  .m-title { font-size: $font-base; font-weight: 800; color: $black; }
+  .m-sub   { font-size: 10px; color: $gray-600; }
+
+  &.on {
+    border-color: $yellow; border-width: 2px; background: $yellow-light;
+    ion-icon { color: $yellow-dark; }
   }
 }
 
-// ── Admin payment details ──────────────────────────────────────────────────
+// ── Amount ─────────────────────────────────────────────────────────────────
+.amt-card {
+  margin: 0 $sp-lg $sp-lg; padding: $sp-lg;
+  background: $white; border: 1px solid $gray-200;
+  border-radius: $r-lg; box-shadow: $shadow-sm;
+}
+
+.fl {
+  display: block; font-size: $font-sm; font-weight: 700;
+  color: $gray-700; margin: $sp-md 0 6px;
+  &:first-child { margin-top: 0; }
+  .opt { font-weight: 500; color: $gray-400; font-size: $font-xs; }
+}
+
+.fi {
+  width: 100%; height: 48px; padding: 0 $sp-md;
+  border: 1.5px solid $gray-300; border-radius: $r-sm;
+  font-family: inherit; font-size: $font-base; color: $black;
+  outline: none; background: $white;
+  &::placeholder { color: $gray-400; }
+  &:focus { border-color: $yellow; }
+  &.big { height: 60px; font-size: $font-3xl; font-weight: 800; text-align: center; }
+}
+
+.quick {
+  display: flex; gap: 6px; margin-top: $sp-sm;
+  button {
+    flex: 1; height: 38px; border-radius: $r-sm; cursor: pointer;
+    border: 1.5px solid $gray-300; background: $white;
+    font-family: inherit; font-size: $font-sm; font-weight: 700; color: $gray-700;
+    &:active { background: $yellow-light; }
+  }
+}
+
+.fee-box {
+  margin-top: $sp-lg; padding: $sp-md;
+  background: $gray-50; border: 1px solid $gray-200; border-radius: $r-sm;
+}
+
+.fee-row {
+  @include flex-between; padding: 5px 0;
+  font-size: $font-sm; color: $gray-700;
+  &.total {
+    border-top: 1px solid $gray-300; margin-top: 5px; padding-top: 9px;
+    font-size: $font-lg; font-weight: 800; color: $black;
+  }
+}
+
+.fee-note { font-size: $font-xs; color: $gray-600; margin: 8px 0 0; font-style: italic; }
+
+// ── Instant CTA ────────────────────────────────────────────────────────────
+.pay-btn {
+  @include yellow-btn; width: calc(100% - #{$sp-lg} * 2);
+  height: 54px; margin: 0 $sp-lg; font-size: $font-lg;
+  ion-icon { font-size: 22px; }
+  &:disabled { opacity: 0.45; }
+}
+
+.pay-hint {
+  text-align: center; font-size: $font-xs; color: $gray-600;
+  margin: $sp-sm $sp-lg 0;
+}
+
+// ── Manual ─────────────────────────────────────────────────────────────────
 .pay-card {
   margin: 0 $sp-lg $sp-lg; padding: $sp-lg;
   background: $white; border: 1px solid $gray-200;
@@ -58,7 +133,6 @@
   ion-icon { font-size: 14px; }
 }
 
-// ── Divider ────────────────────────────────────────────────────────────────
 .divider {
   display: flex; align-items: center; gap: $sp-md;
   margin: 0 $sp-lg $sp-lg;
@@ -66,23 +140,7 @@
   span { font-size: $font-lg; font-weight: 800; color: $black; }
 }
 
-// ── Form ───────────────────────────────────────────────────────────────────
 .form { padding: 0 $sp-lg; }
-
-.fl {
-  display: block; font-size: $font-sm; font-weight: 700;
-  color: $gray-700; margin: $sp-md 0 6px;
-  .opt { font-weight: 500; color: $gray-400; font-size: $font-xs; }
-}
-
-.fi {
-  width: 100%; height: 48px; padding: 0 $sp-md;
-  border: 1.5px solid $gray-300; border-radius: $r-sm;
-  font-family: inherit; font-size: $font-base; color: $black;
-  outline: none; background: $white;
-  &::placeholder { color: $gray-400; }
-  &:focus { border-color: $yellow; }
-}
 
 .app-row {
   display: flex; gap: 6px; flex-wrap: wrap;

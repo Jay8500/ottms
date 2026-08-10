@@ -1,0 +1,28 @@
+@import '../../../global.scss';
+
+.tm-content { --background: #{$white}; }
+
+.top-bar { @include flex-between; padding: calc(#{$sp-md} + var(--ion-safe-area-top,0px)) $sp-lg $sp-sm; }
+.icon-btn { @include icon-btn; }
+.logo-badge { @include logo-badge; }
+
+.head {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: $sp-md 0 $sp-lg;
+  ion-icon { font-size: 40px; color: $blue; }
+  h1 { font-size: $font-2xl; font-weight: 800; color: $black; margin: 0; }
+}
+
+.body { padding: 0 $sp-lg; }
+
+.line {
+  font-size: $font-base; color: $gray-700; line-height: 1.7;
+  margin: 0 0 $sp-md; padding-left: $sp-md;
+  border-left: 3px solid $yellow;
+}
+
+.state {
+  text-align: center; padding: $sp-xl $sp-lg;
+  p { font-size: $font-base; color: $gray-600; margin: 0 0 $sp-md; }
+}
+.retry { @include yellow-btn; height: 42px; padding: 0 $sp-xl; margin: 0 auto; }

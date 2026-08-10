@@ -92,9 +92,45 @@ export class ChatPage implements OnInit, OnDestroy {
     });
   }
 
+  /** Both sides must unlock before photos or voice are allowed (Q5). */
+  get mediaOpen() {
+    return !!this.thread?.buyerMediaUnlocked && !!this.thread?.sellerMediaUnlocked;
+  }
+
+  get iUnlocked() {
+    if (!this.thread) return false;
+    return this.thread.iAmBuyer
+      ? this.thread.buyerMediaUnlocked
+      : this.thread.sellerMediaUnlocked;
+  }
+
+  async toggleMedia() {
+    if (!this.thread) return;
+    const next = !this.iUnlocked;
+    try {
+      await this.data.setMediaUnlock(this.thread.id, next);
+      if (this.thread.iAmBuyer) this.thread.buyerMediaUnlocked = next;
+      else this.thread.sellerMediaUnlocked = next;
+
+      this.toast(
+        !next ? 'Media locked'
+          : this.mediaOpen
+            ? 'Media unlocked — you can both share photos now'
+            : 'Waiting for the other person to unlock too',
+      );
+    } catch (e) {
+      this.toast(humanError(e, 'Could not change the lock'));
+    }
+  }
+
   ngOnDestroy() {
     this.unsubscribe?.();
     this.data.setPresence(false);
+    // Q5 — closing the conversation re-locks media, so a one-off unlock
+    // does not stay open for the next visit.
+    if (this.thread && this.iUnlocked) {
+      this.data.setMediaUnlock(this.thread.id, false).catch(() => {});
+    }
   }
 
   get title() {
@@ -136,6 +172,14 @@ export class ChatPage implements OnInit, OnDestroy {
 
   pickImage() {
     if (!this.thread || this.thread.locked) { this.toast('This conversation is closed'); return; }
+    if (!this.mediaOpen) {
+      this.toast(
+        this.iUnlocked
+          ? 'Waiting for the other person to unlock media'
+          : 'Tap the lock to allow photos. Both of you must unlock.',
+      );
+      return;
+    }
     this.imgInput.nativeElement.click();
   }
 
