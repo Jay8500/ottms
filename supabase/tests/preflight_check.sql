@@ -164,6 +164,22 @@ results as (
 
   union all
 
+  -- ── 5b. There must be an admin ────────────────────────────────────────
+  -- admin_user_id() picks the oldest admin as the account that receives
+  -- service charges and penalties. With none, purchases now refuse rather
+  -- than lose the fee (0021) — but that means nobody can buy anything.
+  select 5,
+         'an admin account exists',
+         case when exists (select 1 from profiles where role = 'admin')
+              then 'PASS' else 'FAIL' end,
+         coalesce(
+           (select 'admin is ' || name || ' (' || mobile || ')'
+              from profiles where role = 'admin'
+             order by created_at limit 1),
+           'NONE — nobody can buy a screen until you make someone admin')
+
+  union all
+
   -- ── 6. Which payment route is live right now ──────────────────────────
   select 6,
          'payment gateway mode',
