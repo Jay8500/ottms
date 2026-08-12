@@ -32,7 +32,11 @@
 
       <p class="ca-empty" *ngIf="!fields.length && !error">Loading the form…</p>
 
-      <button class="yellow-btn full" [disabled]="loading || !isValid" (click)="createAccount()">
+      <!-- Only disabled while the request is in flight. Disabling it on an
+           invalid form left the user tapping a dead button with nothing on
+           screen, because the message explaining why lives in
+           createAccount(). Let the tap through so it can say what is wrong. -->
+      <button class="yellow-btn full" [disabled]="loading" (click)="createAccount()">
         <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
         {{ loading ? 'Creating…' : 'Create Account' }}
       </button>

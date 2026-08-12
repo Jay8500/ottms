@@ -68,6 +68,21 @@ export class CreateaccntPage implements OnInit {
     reader.readAsDataURL(file);
   }
 
+  /**
+   * People type their number as they say it: "+91 90595 42610",
+   * "090595 42610", "9059542610". Strip it down to the ten digits rather
+   * than rejecting a number that is perfectly correct.
+   */
+  private tidyPhoneNumbers() {
+    for (const f of this.fields) {
+      if (f.type !== 'tel') continue;
+      let v = (this.values[f.id] ?? '').replace(/\D/g, '');
+      if (v.length === 12 && v.startsWith('91')) v = v.slice(2);   // +91 …
+      if (v.length === 11 && v.startsWith('0'))  v = v.slice(1);   // 0…
+      this.values[f.id] = v;
+    }
+  }
+
   /** First thing that fails, or null when the form is good. */
   private validate(): string | null {
     for (const f of this.fields) {
@@ -85,6 +100,17 @@ export class CreateaccntPage implements OnInit {
 
   async createAccount() {
     this.error = '';
+
+    // The form is built from admin Form Builder rows. If that fetch failed
+    // there is nothing to fill in, and validate() would wave an empty form
+    // straight through to a sign-up with no mobile or password.
+    if (!this.fields.length) {
+      this.error = 'The sign-up form could not load. Check your connection and try again.';
+      return;
+    }
+
+    this.tidyPhoneNumbers();
+
     const problem = this.validate();
     if (problem) { this.error = problem; return; }
 
