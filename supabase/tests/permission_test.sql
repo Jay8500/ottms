@@ -69,8 +69,8 @@ begin
 
     -- Bob has money and bank details worth stealing.
     perform adjust_balance(v_bob, 0, 5000, 'permission test');
-    insert into bank_details (user_id, holder_name, upi_id, account_number)
-    values (v_bob, 'Bob', 'bob@upi', '1234567890');
+    insert into bank_details (user_id, holder_name, upi_id, account_no, ifsc)
+    values (v_bob, 'Bob', 'bob@upi', '1234567890', 'HDFC0000215');
 
     res := res || jsonb_build_array(jsonb_build_object(
       'step', 'setup', 'outcome', 'PASS',
