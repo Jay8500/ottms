@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonContent, IonIcon, ActionSheetController, IonFooter, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
+import { IonContent, IonIcon, ActionSheetController, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   menuOutline, optionsOutline, searchOutline, addCircleOutline,
@@ -31,7 +31,7 @@ interface Feature {
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonContent, IonIcon, AdminHeaderComponent, IonFooter, IonRefresher, IonRefresherContent],
+  imports: [CommonModule, FormsModule, IonContent, IonIcon, AdminHeaderComponent, IonRefresher, IonRefresherContent],
 })
 export class DashboardPage implements OnInit {
   term = '';

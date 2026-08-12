@@ -10,14 +10,19 @@
     <div class="logo-badge"><span class="money">Share</span><span class="saver">OTT's</span></div>
   </div>
 
-  <button class="ah-btn excel" *ngIf="trailing === 'excel'" (click)="excel.emit()" aria-label="Export to Excel">
-    <span class="x">X</span>
-    <ion-icon name="download-outline"></ion-icon>
-  </button>
-  <button class="ah-btn dark" *ngIf="trailing === 'options'" (click)="options.emit()" aria-label="Options">
-    <ion-icon name="options-outline"></ion-icon>
-  </button>
-  <div class="ah-spacer" *ngIf="trailing === 'none'"></div>
+  <div class="ah-actions">
+    <button class="ah-btn excel" *ngIf="trailing === 'excel'" (click)="excel.emit()" aria-label="Export to Excel">
+      <span class="x">X</span>
+      <ion-icon name="download-outline"></ion-icon>
+    </button>
+    <button class="ah-btn" *ngIf="trailing === 'options'" (click)="options.emit()" aria-label="Options">
+      <ion-icon name="options-outline"></ion-icon>
+    </button>
+    <button class="ah-btn add" *ngIf="showAdd" (click)="add.emit()" aria-label="Add new">
+      <ion-icon name="add-outline"></ion-icon>
+    </button>
+    <div class="ah-spacer" *ngIf="trailing === 'none' && !showAdd"></div>
+  </div>
 </div>
 
 <h1 class="ah-title" *ngIf="title">{{ title }}</h1>

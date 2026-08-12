@@ -3,6 +3,9 @@
 .ah {
   @include flex-between;
   padding: calc(#{$sp-md} + var(--ion-safe-area-top, 0px)) $sp-lg $sp-sm;
+  // The logo is centred against the bar, not against the buttons, so adding
+  // a second action on the right does not drag it off-centre.
+  position: relative;
 }
 
 .ah-btn {
@@ -12,7 +15,14 @@
   ion-icon { font-size: 22px; color: $black; }
 
   &.plain { box-shadow: none; background: transparent; ion-icon { font-size: 26px; } }
-  &.dark  { background: $black; ion-icon { color: $white; } }
+
+  // Create action. Yellow so it reads as the primary thing on the screen,
+  // the same colour the old bottom button used.
+  &.add {
+    background: $yellow;
+    ion-icon { color: $black; font-size: 26px; }
+    &:active { background: $yellow-dark; }
+  }
 
   // Green spreadsheet glyph used for CSV export
   &.excel {
@@ -27,7 +37,14 @@
 
 .ah-spacer { width: 40px; flex-shrink: 0; }
 
-.ah-mid { flex: 1; @include flex-center; }
+.ah-actions { display: flex; align-items: center; gap: $sp-sm; flex-shrink: 0; }
+
+.ah-mid {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;   // never sits over a button's tap area
+}
 .logo-badge { @include logo-badge; }
 
 .ah-title {
