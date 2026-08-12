@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonContent, IonIcon, IonSpinner, ToastController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
-  tvOutline, cameraOutline, personOutline, callOutline, mailOutline,
-  happyOutline, lockClosedOutline, eyeOutline, eyeOffOutline, idCardOutline, addOutline,
+  tvOutline, personOutline, callOutline, mailOutline,
+  happyOutline, lockClosedOutline, eyeOutline, eyeOffOutline, idCardOutline,
 } from 'ionicons/icons';
 import { Auth } from '../../auth';
 import { DataService } from '../../shared/data.service';
@@ -21,8 +21,6 @@ import { FormField } from '../../shared/models';
   imports: [CommonModule, FormsModule, IonContent, IonIcon, IonSpinner],
 })
 export class CreateaccntPage implements OnInit {
-  @ViewChild('avatarInput') avatarInput!: ElementRef<HTMLInputElement>;
-
   /** Driven by the admin Form Builder rather than hardcoded. */
   fields: FormField[] = [];
   values: Record<string, string> = {};
@@ -30,7 +28,6 @@ export class CreateaccntPage implements OnInit {
   showPwd = false;
   loading = false;
   error = '';
-  avatarPreview: string | null = null;
 
   constructor(
     private auth: Auth,
@@ -39,8 +36,8 @@ export class CreateaccntPage implements OnInit {
     private toastCtrl: ToastController,
   ) {
     addIcons({
-      tvOutline, cameraOutline, personOutline, callOutline, mailOutline,
-      happyOutline, lockClosedOutline, eyeOutline, eyeOffOutline, idCardOutline, addOutline,
+      tvOutline, personOutline, callOutline, mailOutline,
+      happyOutline, lockClosedOutline, eyeOutline, eyeOffOutline, idCardOutline,
     });
   }
 
@@ -56,16 +53,6 @@ export class CreateaccntPage implements OnInit {
   private valueOf(label: string) {
     const f = this.fields.find(x => x.label.toLowerCase() === label.toLowerCase());
     return f ? (this.values[f.id] ?? '').trim() : '';
-  }
-
-  pickAvatar() { this.avatarInput?.nativeElement.click(); }
-
-  onAvatarSelected(e: Event) {
-    const file = (e.target as HTMLInputElement).files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => (this.avatarPreview = reader.result as string);
-    reader.readAsDataURL(file);
   }
 
   /**
