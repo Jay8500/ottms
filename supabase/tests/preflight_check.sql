@@ -100,6 +100,26 @@ results as (
 
   union all
 
+  -- ── 2c. The webhook must still be able to credit ──────────────────────
+  -- 0013 revoked these from public + authenticated so no user can call
+  -- them. The Cashfree webhook calls them with the service role key. If the
+  -- revoke also took service_role's grant, every successful payment would
+  -- be taken by Cashfree and never credited to the wallet — the worst
+  -- possible failure, and invisible until a real payment is made.
+  select 2,
+         'service_role can call: ' || f.fn,
+         case when has_function_privilege('service_role', f.sig, 'EXECUTE')
+              then 'PASS' else 'FAIL' end,
+         case when has_function_privilege('service_role', f.sig, 'EXECUTE')
+              then 'yes — webhook can credit wallets'
+              else 'NO — paid money would never reach the wallet' end
+    from (values
+      ('credit_paid_order', 'credit_paid_order(text,text)'),
+      ('fail_order',        'fail_order(text,text)')
+    ) as f(fn, sig)
+
+  union all
+
   -- ── 3. RLS on every table ─────────────────────────────────────────────
   -- The publishable key ships inside the APK. It is only safe because RLS
   -- stands between it and the data. One table without RLS is a public table.
