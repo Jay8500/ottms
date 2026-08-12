@@ -6,11 +6,16 @@
 --  all about permissions.
 --
 --  This file fixes that. It creates two throwaway users, then actually
---  BECOMES one of them — `set local role authenticated` plus their JWT — so
---  every RLS policy applies exactly as it would to a real phone.
+--  BECOMES one of them — `set local session authorization authenticated`
+--  plus their JWT — so every RLS policy applies exactly as it would to a
+--  real phone.
 --
 --  Each check tries something a user must not be able to do. Failing is
 --  passing.
+--
+--  Check 0 verifies the disguise worked. If it fails, ignore everything
+--  else in the run — the attacker was still an admin and the results are
+--  meaningless.
 --
 --  HOW TO RUN
 --    Paste the whole file into the SQL Editor, or:
@@ -38,12 +43,23 @@ declare
   v_pass int;
   v_all  int;
 
-  -- Becomes Alice: the `authenticated` role makes RLS apply, the claim
-  -- makes auth.uid() return her id.
+  v_alice_is_admin boolean;
+
+  -- Becomes Alice.
+  --
+  -- This MUST be SET SESSION AUTHORIZATION, not SET ROLE. is_admin() starts
+  -- with `session_user in ('postgres','supabase_admin')` so the SQL Editor
+  -- can run admin RPCs. SET ROLE changes current_user but leaves
+  -- session_user as postgres — so Alice would still pass is_admin(), every
+  -- `using (is_admin())` policy would let her through, and the test would
+  -- report holes that do not exist. SET SESSION AUTHORIZATION changes both.
+  --
+  -- In production PostgREST connects as `authenticator` and switches role,
+  -- so session_user is never postgres. This makes the test match that.
   c_become_alice text;
 begin
   c_become_alice := format(
-    'set local role authenticated; '
+    'set local session authorization authenticated; '
     'select set_config(''request.jwt.claims'', %L, true)',
     json_build_object('sub', v_alice, 'role', 'authenticated')::text);
 
@@ -76,13 +92,35 @@ begin
       'step', 'setup', 'outcome', 'PASS',
       'detail', 'Alice (attacker) and Bob (victim, 5000 + bank details)'));
 
+    -- ══ 0. Is the test itself set up correctly? ═════════════════════
+    -- If is_admin() is true while we are pretending to be Alice, then every
+    -- `using (is_admin())` policy lets her through and all nine results
+    -- below are worthless. This check must come first and must pass.
+    begin
+      execute c_become_alice;
+      select is_admin() into v_alice_is_admin;
+      reset session authorization;
+    exception when others then
+      reset session authorization;
+      v_alice_is_admin := null;
+    end;
+
+    res := res || jsonb_build_array(jsonb_build_object(
+      'step', 'the test is really running as a normal user',
+      'outcome', case when v_alice_is_admin is false then 'PASS' else 'FAIL' end,
+      'detail', case
+        when v_alice_is_admin is false then 'is_admin() says no — results below are meaningful'
+        when v_alice_is_admin is true  then
+          'is_admin() says YES — session_user is still postgres, ignore every result below'
+        else 'could not switch user — ignore every result below' end));
+
     -- ══ 1. Can Alice make herself admin? ════════════════════════════
     begin
       execute c_become_alice;
       update profiles set role = 'admin' where id = v_alice;
-      reset role;
+      reset session authorization;
     exception when others then
-      reset role;
+      reset session authorization;
     end;
 
     select role into v_role_after from profiles where id = v_alice;
@@ -97,9 +135,9 @@ begin
     begin
       execute c_become_alice;
       update profiles set wallet_unlocked = 999999 where id = v_alice;
-      reset role;
+      reset session authorization;
     exception when others then
-      reset role;
+      reset session authorization;
     end;
 
     select wallet_unlocked into v_money_after from profiles where id = v_alice;
@@ -112,9 +150,9 @@ begin
     begin
       execute c_become_alice;
       update profiles set wallet_unlocked = 0 where id = v_bob;
-      reset role;
+      reset session authorization;
     exception when others then
-      reset role;
+      reset session authorization;
     end;
 
     select wallet_unlocked into v_money_after from profiles where id = v_bob;
@@ -127,9 +165,9 @@ begin
     begin
       execute c_become_alice;
       select count(*) into v_seen from bank_details where user_id = v_bob;
-      reset role;
+      reset session authorization;
     exception when others then
-      reset role;
+      reset session authorization;
       v_seen := -1;
     end;
 
@@ -144,12 +182,12 @@ begin
     begin
       execute c_become_alice;
       perform post_ledger(v_alice, 0, 999999, 'free money');
-      reset role;
+      reset session authorization;
       res := res || jsonb_build_array(jsonb_build_object(
         'step', 'Alice cannot call post_ledger', 'outcome', 'FAIL',
         'detail', 'SHE WROTE THE LEDGER DIRECTLY'));
     exception when others then
-      reset role;
+      reset session authorization;
       res := res || jsonb_build_array(jsonb_build_object(
         'step', 'Alice cannot call post_ledger', 'outcome', 'PASS',
         'detail', left(sqlerrm, 60)));
@@ -159,12 +197,12 @@ begin
     begin
       execute c_become_alice;
       perform exit_membership(gen_random_uuid(), 'faulty'::exit_reason, 'x');
-      reset role;
+      reset session authorization;
       res := res || jsonb_build_array(jsonb_build_object(
         'step', 'Alice cannot call exit_membership', 'outcome', 'FAIL',
         'detail', 'SHE REACHED THE NO-REVIEW REFUND PATH'));
     exception when others then
-      reset role;
+      reset session authorization;
       -- "Membership not found" would mean she got past the permission gate.
       res := res || jsonb_build_array(jsonb_build_object(
         'step', 'Alice cannot call exit_membership',
@@ -177,12 +215,12 @@ begin
     begin
       execute c_become_alice;
       perform credit_paid_order('anything', 'anything');
-      reset role;
+      reset session authorization;
       res := res || jsonb_build_array(jsonb_build_object(
         'step', 'Alice cannot call credit_paid_order', 'outcome', 'FAIL',
         'detail', 'SHE CAN CREDIT WALLETS'));
     exception when others then
-      reset role;
+      reset session authorization;
       res := res || jsonb_build_array(jsonb_build_object(
         'step', 'Alice cannot call credit_paid_order',
         'outcome', case when sqlerrm ilike '%permission denied%'
@@ -195,9 +233,9 @@ begin
       execute c_become_alice;
       update app_settings set value = '0'::jsonb
        where key = 'service_charge_pct';
-      reset role;
+      reset session authorization;
     exception when others then
-      reset role;
+      reset session authorization;
     end;
 
     res := res || jsonb_build_array(jsonb_build_object(
@@ -213,12 +251,12 @@ begin
       insert into group_members
         (group_id, buyer_id, expires_on, amount_paid)
       select id, v_alice, current_date + 30, 0 from groups limit 1;
-      reset role;
+      reset session authorization;
       res := res || jsonb_build_array(jsonb_build_object(
         'step', 'Alice cannot insert a free membership', 'outcome', 'FAIL',
         'detail', 'SHE GAVE HERSELF A SEAT FOR ZERO'));
     exception when others then
-      reset role;
+      reset session authorization;
       res := res || jsonb_build_array(jsonb_build_object(
         'step', 'Alice cannot insert a free membership', 'outcome', 'PASS',
         'detail', left(sqlerrm, 60)));
@@ -227,7 +265,7 @@ begin
     raise exception 'permission test finished' using errcode = 'PERMT';
 
   exception when others then
-    begin reset role; exception when others then null; end;
+    begin reset session authorization; exception when others then null; end;
     if sqlstate <> 'PERMT' then
       res := res || jsonb_build_array(jsonb_build_object(
         'step', 'ABORTED — test stopped early', 'outcome', 'FAIL',
