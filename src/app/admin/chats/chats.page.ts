@@ -1,16 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonIcon, AlertController, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
+import { Router } from '@angular/router';
+import { IonContent, IonIcon, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { lockClosedOutline, chatbubbleEllipsesOutline, eyeOutline } from 'ionicons/icons';
+import { lockClosedOutline, chatbubbleEllipsesOutline, eyeOutline, headsetOutline } from 'ionicons/icons';
 import { AdminHeaderComponent } from '../shared/admin-header.component';
 import { AdminSearchbarComponent, FilterChip } from '../shared/admin-searchbar.component';
 import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
 import { DataService } from '../../shared/data.service';
 import { ChatThread } from '../../shared/models';
 
-/** 12 — Chat's. Live group chats and private one-to-one threads. */
+/** 12 — Chat's. Live group (trade) chats and support conversations with
+ *  the App Team. Every non-group thread is a support chat — nothing else
+ *  creates one, since purchase_screen() always attaches a group. */
 @Component({
   selector: 'app-admin-chats',
   templateUrl: './chats.page.html',
@@ -30,11 +33,11 @@ export class AdminChatsPage implements OnInit {
   chips: FilterChip[] = [
     { key: 'all',     label: 'All Chats',    tone: 'plain' },
     { key: 'group',   label: 'Live Groups',  tone: 'green' },
-    { key: 'private', label: 'Private Chats',tone: 'red' },
+    { key: 'private', label: 'Support',      tone: 'red' },
   ];
 
-  constructor(private data: DataService, private alertCtrl: AlertController) {
-    addIcons({ lockClosedOutline, chatbubbleEllipsesOutline, eyeOutline });
+  constructor(private data: DataService, private router: Router) {
+    addIcons({ lockClosedOutline, chatbubbleEllipsesOutline, eyeOutline, headsetOutline });
   }
 
   async ngOnInit() {
@@ -61,22 +64,13 @@ export class AdminChatsPage implements OnInit {
       : `${c.peerName} (${c.peerUniqueNum})`;
   }
 
-  async openThread(c: ChatThread) {
-    const alert = await this.alertCtrl.create({
-      header: this.title(c),
-      subHeader: c.isGroup ? `Seller: ${c.sellerName} (${c.sellerUniqueNum})` : undefined,
-      message:
-        'Opening a user conversation exposes private messages. The in-chat notice ' +
-        'tells users not to share personal details, so reading threads should be ' +
-        'limited to dispute handling. Transcript viewing is not wired up yet.',
-      buttons: ['Close'],
-    });
-    await alert.present();
+  openThread(c: ChatThread) {
+    this.router.navigate(['/admin/chat'], { queryParams: { thread: c.id } });
   }
+
   /** Pull-to-refresh. */
   async refresh(ev: CustomEvent) {
     await this.ngOnInit();
     (ev.target as HTMLIonRefresherElement).complete();
   }
-
 }

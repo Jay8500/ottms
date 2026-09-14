@@ -116,5 +116,19 @@ export class SupportPage implements OnInit {
 
   openLink(l: SocialLink) { window.open(l.url, '_system'); }
 
-  openChat() { this.router.navigate(['/user/chats']); }
+  /** Talks to the App Team, not the user's trade chats — this button lives
+   *  next to WhatsApp and Call Us for a reason. */
+  startingChat = false;
+  async openChat() {
+    if (this.startingChat) return;
+    this.startingChat = true;
+    try {
+      const threadId = await this.data.startSupportChat();
+      this.router.navigate(['/user/chat'], { queryParams: { thread: threadId } });
+    } catch (e) {
+      this.error = 'Could not start the chat. Check your connection and try again.';
+    } finally {
+      this.startingChat = false;
+    }
+  }
 }

@@ -9,6 +9,7 @@ import {
   starOutline, lockClosedOutline, chevronForwardOutline, flagOutline,
 } from 'ionicons/icons';
 import { DataService } from '../../shared/data.service';
+import { Auth } from '../../auth';
 import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
 import { humanError } from '../../shared/errors';
 import { ChatMessage, ChatThread } from '../../shared/models';
@@ -39,6 +40,7 @@ export class ChatPage implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private data: DataService,
+    private auth: Auth,
     private sheetCtrl: ActionSheetController,
     private toastCtrl: ToastController,
   ) {
@@ -151,7 +153,17 @@ export class ChatPage implements OnInit, OnDestroy {
       : `${this.thread.peerName} (${this.thread.peerUniqueNum})`;
   }
 
-  back() { this.router.navigate(['/user/chats']); }
+  // Reused for admin's inbox too — see /admin/chat in admintab.routes.ts —
+  // so "back" has to land on whichever list actually sent us here.
+  back() {
+    this.router.navigate([this.auth.role === 'admin' ? '/admin/chats' : '/user/chats']);
+  }
+
+  /** A support conversation with the App Team, not a trade — "Rate this
+   *  seller" and reporting a dispute have nothing to act on there. */
+  get isSupportThread() {
+    return !!this.thread && !this.thread.isGroup && !this.thread.ottName;
+  }
 
   async send(text?: string) {
     const body = (text ?? this.draft).trim();
@@ -216,16 +228,19 @@ export class ChatPage implements OnInit, OnDestroy {
   }
 
   async openMore() {
+    const buttons = this.isSupportThread
+      ? []
+      : [
+          { text: 'Rate this seller', icon: 'star-outline', handler: () => this.openRating() },
+          {
+            text: 'Report this conversation', icon: 'flag-outline', role: 'destructive' as const,
+            handler: () => { this.report(); },
+          },
+        ];
+
     const sheet = await this.sheetCtrl.create({
       header: this.title,
-      buttons: [
-        { text: 'Rate this seller', icon: 'star-outline', handler: () => this.openRating() },
-        {
-          text: 'Report this conversation', icon: 'flag-outline', role: 'destructive',
-          handler: () => { this.report(); },
-        },
-        { text: 'Cancel', role: 'cancel' },
-      ],
+      buttons: [...buttons, { text: 'Cancel', role: 'cancel' as const }],
     });
     await sheet.present();
   }

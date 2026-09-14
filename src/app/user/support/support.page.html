@@ -13,9 +13,9 @@
 
   <!-- Contact -->
   <div class="contact-row">
-    <button class="contact" *ngIf="inAppChatEnabled" (click)="openChat()">
+    <button class="contact" *ngIf="inAppChatEnabled" [disabled]="startingChat" (click)="openChat()">
       <div class="c-ico"><ion-icon name="chatbubbles-outline"></ion-icon></div>
-      <span>In-App Chat</span>
+      <span>{{ startingChat ? 'Opening…' : 'In-App Chat' }}</span>
     </button>
     <button class="contact" *ngFor="let l of links" (click)="openLink(l)">
       <div class="c-ico" [style.background]="l.color + '22'">

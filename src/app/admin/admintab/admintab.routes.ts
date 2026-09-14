@@ -72,6 +72,13 @@ export const routes: Routes = [
         loadComponent: () => import('../chats/chats.page').then(m => m.AdminChatsPage),
       },
       {
+        // Same conversation screen the app uses, reused rather than
+        // duplicated — RLS already scopes what a signed-in admin can read
+        // and send, and ChatPage adapts its own back button and menu by role.
+        path: 'chat',
+        loadComponent: () => import('../../user/chat/chat.page').then(m => m.ChatPage),
+      },
+      {
         path: 'paymentform',        // 13 — Payment Form
         loadComponent: () => import('../paymentform/paymentform.page').then(m => m.AdminPaymentformPage),
       },

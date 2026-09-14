@@ -336,8 +336,13 @@ export class DataService {
       iAmBuyer: r.buyer_id === me,
       id: r.id,
       isGroup: !!r.group_id,
-      peerName: r.buyer?.name,
-      peerUniqueNum: r.buyer?.unique_number,
+      // "Peer" means the other person, not "the buyer" — this only ever
+      // matched by coincidence because every thread up to now had a
+      // group_id, and the templates showed sellerName explicitly for those.
+      // A private thread with no group (support chat included) needs this
+      // to actually depend on who is asking.
+      peerName: r.buyer_id === me ? r.seller?.name : r.buyer?.name,
+      peerUniqueNum: r.buyer_id === me ? r.seller?.unique_number : r.buyer?.unique_number,
       ottName: r.groups?.ott_apps?.title,
       brand: r.groups?.ott_apps?.brand,
       tierLabel: r.groups?.ott_plan_tiers?.label,
@@ -426,6 +431,11 @@ export class DataService {
    * Flags a thread for admin review. This is the only thing that lets an
    * admin read its messages — see the messages_read policy in 0002.
    */
+  /** Opens (or reuses) the user's one conversation with the App Team. */
+  async startSupportChat(): Promise<string> {
+    return this.sb.rpc<string>('get_or_create_support_thread');
+  }
+
   async reportThread(threadId: string, note?: string) {
     const { error } = await this.db.from('chat_threads')
       .update({ reported: true, report_note: note ?? null })
