@@ -32,7 +32,7 @@ export class WalletPage implements OnInit {
   locked = 0;
   unlocked = 0;
 
-  tab: 'all' | 'funded' | 'expense' = 'all';
+  tab: 'all' | 'funded' | 'expense' | 'orders' = 'all';
   private all: WalletTx[] = [];
   shown: WalletTx[] = [];
 
@@ -106,12 +106,13 @@ export class WalletPage implements OnInit {
   }
 
   applyFilter() {
-    this.shown = this.tab === 'all'
-      ? [...this.all]
-      : this.all.filter(t => t.txType === this.tab);
+    if (this.tab === 'all')    { this.shown = [...this.all]; return; }
+    // "Order History" — the accounts you have bought, not every ledger line.
+    if (this.tab === 'orders') { this.shown = this.all.filter(t => t.txKind === 'purchase'); return; }
+    this.shown = this.all.filter(t => t.txType === this.tab);
   }
 
-  setTab(t: 'all' | 'funded' | 'expense') { this.tab = t; this.applyFilter(); }
+  setTab(t: 'all' | 'funded' | 'expense' | 'orders') { this.tab = t; this.applyFilter(); }
 
   back() { this.router.navigate(['/user/home']); }
 

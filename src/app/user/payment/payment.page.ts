@@ -47,7 +47,15 @@ export class PaymentPage implements OnInit {
 
   feePct = 0;
 
-  readonly apps = ['PhonePe', 'GPay', 'Paytm', 'Bank'];
+  // A colour dot rather than the real app logos — this project avoids
+  // using other companies' trademarks without permission (see the OTT
+  // platform logos, which are look-alikes for the same reason).
+  readonly apps = [
+    { label: 'PhonePe', color: '#5F259F' },
+    { label: 'GPay',    color: '#4285F4' },
+    { label: 'Paytm',   color: '#00BAF2' },
+    { label: 'Bank',    color: '#374151' },
+  ];
 
   constructor(
     private router: Router,

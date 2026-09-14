@@ -8,6 +8,12 @@ import {
   ValidityPlan, WalletSummary, WalletTx,
 } from './models';
 
+/** Whole months between two ISO dates, rounded — matches createGroup()'s own duration guess. */
+function monthsBetween(fromIso: string, toIso: string): number {
+  const ms = new Date(toIso).getTime() - new Date(fromIso).getTime();
+  return Math.max(1, Math.round(ms / (1000 * 60 * 60 * 24 * 30.44)));
+}
+
 /**
  * Single data layer for the whole app. Pages never see a query.
  *
@@ -150,7 +156,9 @@ export class DataService {
   async getTransactions(userId?: string): Promise<WalletTx[]> {
     let q = this.db
       .from('wallet_transactions')
-      .select('*, counterparty:counterparty_id(name, unique_number, mobile), groups(ott_apps(title, brand))')
+      .select(`*, counterparty:counterparty_id(name, unique_number, mobile),
+                groups(ott_apps(title, brand), ott_plan_tiers(label)),
+                group_members(joined_on, expires_on)`)
       .order('created_at', { ascending: false });
     if (userId) q = q.eq('user_id', userId);
 
@@ -160,6 +168,7 @@ export class DataService {
     return (data ?? []).map(r => {
       const created = new Date(r.created_at);
       const app = r.groups?.ott_apps;
+      const member = r.group_members;
       return {
         id: r.id, userId: r.user_id,
         txType: r.tx_type, txKind: r.tx_kind, status: r.status,
@@ -169,6 +178,9 @@ export class DataService {
         txnRef: r.txn_ref ?? undefined,
         screenshotUrl: r.screenshot_url ?? undefined,
         ottName: app?.title, brand: app?.brand,
+        tierLabel: r.groups?.ott_plan_tiers?.label,
+        dateFrom: member?.joined_on, dateTo: member?.expires_on,
+        months: member ? monthsBetween(member.joined_on, member.expires_on) : undefined,
         partyName: r.counterparty?.name, partyUniqueNum: r.counterparty?.unique_number,
         partyMobile: r.counterparty?.mobile,
         paymentApp: r.payment_app ?? undefined,

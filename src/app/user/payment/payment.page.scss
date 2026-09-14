@@ -133,6 +133,15 @@
   ion-icon { font-size: 14px; }
 }
 
+// Restated amount, right above the submit form — the figure entered at the
+// top of the page is easy to lose track of after scrolling past the QR box.
+.paid-amt {
+  @include flex-between; margin: 0 $sp-lg $sp-lg; padding: $sp-md;
+  background: $yellow-light; border: 1.5px solid $yellow; border-radius: $r-md;
+  span { font-size: $font-sm; font-weight: 700; color: $gray-700; }
+  b { font-size: $font-lg; font-weight: 800; color: $black; }
+}
+
 .divider {
   display: flex; align-items: center; gap: $sp-md;
   margin: 0 $sp-lg $sp-lg;
@@ -144,12 +153,14 @@
 
 .app-row {
   display: flex; gap: 6px; flex-wrap: wrap;
-  button {
+  .app-btn {
     flex: 1 1 auto; min-width: 74px; height: 40px; border-radius: $r-sm;
     border: 1.5px solid $gray-300; background: $white; cursor: pointer;
     font-family: inherit; font-size: $font-sm; font-weight: 700; color: $gray-700;
-    &.on { background: $yellow; border-color: $yellow; color: $black; }
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    &.on { background: $yellow-light; border-color: $yellow-dark; color: $black; }
   }
+  .app-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 }
 
 .upload {

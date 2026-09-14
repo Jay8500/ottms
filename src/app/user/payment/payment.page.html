@@ -81,12 +81,23 @@
       </div>
     </div>
 
+    <!-- Restated here because the amount was entered at the top of the page,
+         a full scroll above — easy to lose track of by the time you reach
+         the submit form. -->
+    <div class="paid-amt" *ngIf="amount">
+      <span>You are paying</span>
+      <b>₹{{ amount | number }}</b>
+    </div>
+
     <div class="divider"><span>After Payment</span></div>
 
     <div class="form">
       <label class="fl">Paid Using</label>
       <div class="app-row">
-        <button *ngFor="let a of apps" [class.on]="paymentApp === a" (click)="paymentApp = a">{{ a }}</button>
+        <button *ngFor="let a of apps" type="button" class="app-btn"
+                [class.on]="paymentApp === a.label" (click)="paymentApp = a.label">
+          <span class="app-dot" [style.background]="a.color"></span>{{ a.label }}
+        </button>
       </div>
 
       <label class="fl">Transaction ID <span class="opt">optional</span></label>

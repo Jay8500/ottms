@@ -131,10 +131,14 @@
   display: flex; gap: $sp-sm; margin: 0 $sp-lg $sp-md;
   background: $white; border: 1.5px solid $gray-200;
   border-radius: $r-sm; padding: 4px;
+  // "Order History" alongside three short labels no longer fits four equal
+  // flex columns without wrapping — scroll sideways instead of squeezing.
+  overflow-x: auto;
   button {
-    flex: 1; height: 38px; border: none; border-radius: $r-sm;
+    flex: 0 0 auto; min-width: 25%; height: 38px; padding: 0 $sp-sm;
+    border: none; border-radius: $r-sm; white-space: nowrap;
     background: transparent; cursor: pointer; font-family: inherit;
-    font-size: $font-base; font-weight: 700; color: $gray-600;
+    font-size: $font-sm; font-weight: 700; color: $gray-600;
     &.on { background: $yellow; color: $black; }
   }
 }
