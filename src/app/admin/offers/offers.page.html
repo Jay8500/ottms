@@ -1,0 +1,76 @@
+<ion-content class="of-content" [scrollY]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
+
+  <app-admin-header title="New Offers" trailing="options"></app-admin-header>
+
+  <p class="of-note">These appear as promotional posts on the user's home screen.</p>
+
+  <div class="of-list">
+    <div class="of-item" *ngFor="let o of items" [class.off]="!o.active" (click)="edit(o)">
+      <img *ngIf="o.imageUrl" [src]="o.imageUrl" alt="" class="of-img" />
+      <div class="of-img ph" *ngIf="!o.imageUrl"><ion-icon name="pricetag-outline"></ion-icon></div>
+
+      <div class="of-mid">
+        <p class="of-title">{{ o.title || 'Untitled offer' }}</p>
+        <p class="of-desc" *ngIf="o.description">{{ o.description }}</p>
+        <div class="of-prices" *ngIf="o.offerPrice != null">
+          <span class="strike" *ngIf="o.actualPrice != null">₹{{ o.actualPrice }}</span>
+          <span class="now">₹{{ o.offerPrice }}</span>
+        </div>
+        <span class="of-linked" *ngIf="o.linkedOttTitle">Links to {{ o.linkedOttTitle }}</span>
+      </div>
+
+      <ion-icon class="of-edit" name="create-outline"></ion-icon>
+    </div>
+  </div>
+
+  <p class="empty" *ngIf="!items.length">No offers yet. Tap Add New to create one.</p>
+  <div style="height:120px"></div>
+</ion-content>
+
+<ion-footer class="cta-footer">
+  <button class="cta-btn" (click)="create()">
+    <ion-icon name="add-circle-outline"></ion-icon> Add New
+  </button>
+</ion-footer>
+
+<app-entity-editor
+  [open]="editorOpen"
+  [heading]="isNew ? 'Add Offer' : 'Edit Offer'"
+  [model]="editing"
+  [showSubName]="false"
+  [showColor]="false"
+  [showIcon]="false"
+  [showImage]="true"
+  [showDelete]="!isNew"
+  (save)="onSave($event)"
+  (remove)="onRemove($event)"
+  (close)="editorOpen = false">
+
+  <ng-container *ngIf="editing">
+    <label class="ee-lbl">Description</label>
+    <textarea class="ee-input ee-ta" rows="3" [(ngModel)]="editing.description"
+              placeholder="What is this offer about"></textarea>
+
+    <label class="ee-lbl">Actual Price (₹)</label>
+    <input class="ee-input" type="number" inputmode="numeric" [(ngModel)]="editing.actualPrice"
+           placeholder="What it normally costs" />
+
+    <label class="ee-lbl">Our Price (₹)</label>
+    <input class="ee-input" type="number" inputmode="numeric" [(ngModel)]="editing.ourPrice"
+           placeholder="What we usually charge" />
+
+    <label class="ee-lbl">Offer Price (₹)</label>
+    <input class="ee-input" type="number" inputmode="numeric" [(ngModel)]="editing.offerPrice"
+           placeholder="What the user pays with this offer" />
+
+    <label class="ee-lbl">Link to an existing platform</label>
+    <select class="ee-input" [(ngModel)]="editing.linkedOttAppId">
+      <option [ngValue]="undefined">None — just an announcement</option>
+      <option *ngFor="let a of apps" [ngValue]="a.id">{{ a.title }}</option>
+    </select>
+    <p class="hint">Tapping the offer opens this platform's page.</p>
+  </ng-container>
+</app-entity-editor>

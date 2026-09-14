@@ -4,7 +4,7 @@ import {
   AppUser, Badge, BadgeAward, BankChangeRequest, Category, ChatMessage,
   ChatThread, CommerceOption, ExitRequest,
   FaqItem, FormField, GroupScreen, HomeButton, LangCode, Localized,
-  NotificationRule, OttApp, PaymentConfig, Referral, SocialLink, UserRating,
+  NotificationRule, Offer, OttApp, PaymentConfig, Referral, SocialLink, UserRating,
   ValidityPlan, WalletSummary, WalletTx,
 } from './models';
 
@@ -564,6 +564,38 @@ export class DataService {
       imageUrl: r.image_url ?? undefined, position: r.position, active: r.active,
     }));
   }
+
+  async getOffers(activeOnly = false): Promise<Offer[]> {
+    let q = this.db
+      .from('offers')
+      .select('*, ott_apps(title)')
+      .order('position');
+    if (activeOnly) q = q.eq('active', true);
+
+    const { data, error } = await q;
+    if (error) throw error;
+    return (data ?? []).map(r => ({
+      id: r.id, title: r.title, description: r.description ?? undefined,
+      color: '', icon: '', imageUrl: r.image_url ?? undefined,
+      actualPrice: r.actual_price != null ? Number(r.actual_price) : undefined,
+      ourPrice: r.our_price != null ? Number(r.our_price) : undefined,
+      offerPrice: r.offer_price != null ? Number(r.offer_price) : undefined,
+      linkedOttAppId: r.linked_ott_app_id ?? undefined,
+      linkedOttTitle: r.ott_apps?.title ?? undefined,
+      position: r.position, active: r.active,
+    }));
+  }
+
+  async saveOffer(o: Offer) {
+    return this.upsert('offers', {
+      id: this.idOrNull(o.id), title: o.title, description: o.description || null,
+      image_url: o.imageUrl || null,
+      actual_price: o.actualPrice ?? null, our_price: o.ourPrice ?? null,
+      offer_price: o.offerPrice ?? null, linked_ott_app_id: o.linkedOttAppId || null,
+      position: o.position, active: o.active,
+    });
+  }
+  async deleteOffer(id: string) { return this.del('offers', id); }
 
   async getCommerceOptions(): Promise<CommerceOption[]> {
     const { data, error } = await this.db.from('commerce_options').select('*').order('position');

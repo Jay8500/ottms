@@ -48,6 +48,36 @@
   &.icon-right { flex-direction: row-reverse; justify-content: flex-end; }
 }
 
+// ── New Offers ─────────────────────────────────────────────────────────────
+.offer-row {
+  display: flex; gap: $sp-md; padding: 0 $sp-lg $sp-lg;
+  overflow-x: auto;
+}
+
+.offer-card {
+  flex: 0 0 auto; width: 240px; border: none; cursor: default; text-align: left;
+  background: $white; border-radius: $r-lg; overflow: hidden;
+  box-shadow: $shadow-sm; padding: 0;
+  &.linked { cursor: pointer; }
+
+  .of-img { width: 100%; height: 100px; object-fit: cover; display: block; }
+  .of-body { padding: $sp-md; }
+  .of-title {
+    font-size: $font-base; font-weight: 800; color: $black; margin: 0 0 3px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .of-desc {
+    font-size: $font-xs; color: $gray-600; margin: 0 0 6px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .of-prices {
+    display: flex; align-items: baseline; gap: 6px;
+    .strike { font-size: $font-xs; color: $gray-400; text-decoration: line-through; }
+    .now { font-size: $font-lg; font-weight: 800; color: $success; }
+  }
+}
+
 // ── Platforms ──────────────────────────────────────────────────────────────
 .sec-label {
   font-size: $font-xs; font-weight: 700; letter-spacing: 0.08em;

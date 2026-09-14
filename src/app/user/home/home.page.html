@@ -24,6 +24,22 @@
     </button>
   </div>
 
+  <!-- New Offers -->
+  <div class="offer-row" *ngIf="offers.length">
+    <button class="offer-card" *ngFor="let o of offers"
+            [class.linked]="o.linkedOttAppId" (click)="tapOffer(o)">
+      <img *ngIf="o.imageUrl" [src]="o.imageUrl" alt="" class="of-img" />
+      <div class="of-body">
+        <p class="of-title">{{ o.title }}</p>
+        <p class="of-desc" *ngIf="o.description">{{ o.description }}</p>
+        <div class="of-prices" *ngIf="o.offerPrice != null">
+          <span class="strike" *ngIf="o.actualPrice != null">₹{{ o.actualPrice }}</span>
+          <span class="now">₹{{ o.offerPrice }}</span>
+        </div>
+      </div>
+    </button>
+  </div>
+
   <!-- Platforms -->
   <p class="sec-label" *ngIf="ottApps.length">Choose a platform</p>
 

@@ -1,0 +1,61 @@
+@import '../../../global.scss';
+
+.of-content { --background: #{$gray-50}; }
+
+.of-note {
+  font-size: $font-sm; color: $gray-600; text-align: center;
+  margin: 0 $sp-lg $sp-md;
+}
+
+.of-list { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-md; }
+
+.of-item {
+  display: flex; align-items: center; gap: $sp-md; cursor: pointer;
+  background: $white; border: 1px solid $gray-200; border-radius: $r-lg;
+  padding: $sp-md; box-shadow: $shadow-sm;
+  &.off { opacity: 0.5; }
+}
+
+.of-img {
+  width: 64px; height: 64px; border-radius: $r-md; flex-shrink: 0;
+  object-fit: cover; background: $gray-100;
+  &.ph { @include flex-center; ion-icon { font-size: 26px; color: $gray-400; } }
+}
+
+.of-mid { flex: 1; min-width: 0; }
+.of-title { font-size: $font-base; font-weight: 800; color: $black; margin: 0 0 2px; }
+.of-desc {
+  font-size: $font-xs; color: $gray-600; margin: 0 0 4px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.of-prices {
+  display: flex; align-items: baseline; gap: 6px;
+  .strike { font-size: $font-xs; color: $gray-400; text-decoration: line-through; }
+  .now { font-size: $font-base; font-weight: 800; color: $success; }
+}
+.of-linked {
+  display: inline-block; margin-top: 4px; font-size: 10px; font-weight: 700;
+  color: $info; background: $info-bg; padding: 2px 8px; border-radius: $r-sm;
+}
+
+.of-edit { font-size: 20px; color: $gray-400; flex-shrink: 0; }
+
+.empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }
+
+// ── Projected editor fields ──────────────────────────────────────────────
+// EntityEditorComponent's own styles do not reach content the parent
+// projects into it, so every admin page that adds custom fields repeats
+// this block — same convention as entertainment.page.scss.
+.ee-lbl {
+  display: block; font-size: $font-base; font-weight: 700;
+  color: $black; margin: $sp-md 0 6px;
+}
+.ee-input {
+  width: 100%; height: 48px; padding: 0 $sp-md; background: $white;
+  border: 1.5px solid $gray-300; border-radius: $r-md;
+  font-family: inherit; font-size: $font-base; color: $black; outline: none;
+  &::placeholder { color: $gray-400; }
+  &:focus { border-color: $yellow; }
+  &.ee-ta { height: auto; padding: 10px $sp-md; resize: vertical; line-height: 1.5; }
+}
+.hint { font-size: $font-xs; color: $gray-600; margin: 5px 0 0; }

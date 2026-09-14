@@ -15,7 +15,7 @@ import { Auth } from '../../auth';
 import { DataService } from '../../shared/data.service';
 import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
 import { AppMenuService } from '../../shared/app-menu.service';
-import { HomeButton, OttApp } from '../../shared/models';
+import { HomeButton, Offer, OttApp } from '../../shared/models';
 
 @Component({
   selector: 'app-home',
@@ -36,6 +36,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   buttons: HomeButton[] = [];
   ottApps: OttApp[] = [];
+  offers: Offer[] = [];
   loading = true;
   error = '';
 
@@ -70,12 +71,14 @@ export class HomePage implements OnInit, OnDestroy {
     this.loading = true;
     this.error = '';
     try {
-      const [buttons, apps] = await Promise.all([
+      const [buttons, apps, offers] = await Promise.all([
         this.data.getHomeButtons(),
         this.data.getOttApps(),
+        this.data.getOffers(true),
       ]);
       this.buttons = buttons.filter(b => b.active);
       this.ottApps = apps.filter(a => a.active);
+      this.offers = offers;
     } catch (e: any) {
       this.error = 'Could not load. Pull down to retry.';
       console.error(e);
@@ -90,6 +93,12 @@ export class HomePage implements OnInit, OnDestroy {
 
   selectApp(app: OttApp) {
     this.router.navigate(['/user/accnttype'], { queryParams: { id: app.id } });
+  }
+
+  tapOffer(o: Offer) {
+    if (o.linkedOttAppId) {
+      this.router.navigate(['/user/accnttype'], { queryParams: { id: o.linkedOttAppId } });
+    }
   }
 
   retry() { this.load(); }

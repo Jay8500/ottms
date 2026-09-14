@@ -32,6 +32,10 @@ export const routes: Routes = [
         loadComponent: () => import('../commerce/commerce.page').then(m => m.AdminCommercePage),
       },
       {
+        path: 'offers',             // New Offers, on the Home screen
+        loadComponent: () => import('../offers/offers.page').then(m => m.AdminOffersPage),
+      },
+      {
         path: 'ratings',            // 15 — Ratings & Batches
         loadComponent: () => import('../ratings/ratings.page').then(m => m.AdminRatingsPage),
       },

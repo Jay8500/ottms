@@ -246,6 +246,17 @@ export interface HomeButton extends CmsEntity {
   route: string;
 }
 
+export interface Offer extends CmsEntity {
+  description?: string;
+  actualPrice?: number;
+  ourPrice?: number;
+  offerPrice?: number;
+  /** "Selectable option of Already available Item" — tapping the offer
+   *  jumps to this platform. An offer may have nothing to link to. */
+  linkedOttAppId?: string;
+  linkedOttTitle?: string;   // for display only, filled in by getOffers()
+}
+
 export interface PaymentConfig {
   qrImageUrl?: string;
   name: string;
