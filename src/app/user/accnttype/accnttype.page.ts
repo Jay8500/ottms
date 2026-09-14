@@ -51,8 +51,21 @@ export class AccnttypePage implements OnInit {
     });
   }
 
-  async ngOnInit() {
-    this.ottId = this.route.snapshot.queryParamMap.get('id') ?? '';
+  async ngOnInit() { await this.enter(); }
+
+  // Ionic reuses this page instance when the user goes back and picks a
+  // different platform — same route, only the ?id= query param changes —
+  // so ngOnInit does not run again. Reading route.snapshot only once meant
+  // every platform after the first kept showing whichever loaded first.
+  // Reported as "OTT Heading, Plans etc was showing Netflix only".
+  ionViewWillEnter() { this.enter(); }
+
+  private async enter() {
+    const newId = this.route.snapshot.queryParamMap.get('id') ?? '';
+    if (newId !== this.ottId) {
+      this.ottId = newId;
+      this.closeGroupForm();
+    }
     await this.load();
 
     // Arriving from "Share a Screen" skips the Purchase/Share choice.
@@ -93,7 +106,14 @@ export class AccnttypePage implements OnInit {
     this.router.navigate(['/user/validity'], { queryParams: { id: this.ottId } });
   }
 
-  closeGroupForm() { this.showGroupForm = false; }
+  closeGroupForm() {
+    // Was hiding the panel but keeping every typed field, so reopening it
+    // — even for a different platform — showed the last attempt's leftovers.
+    // Reported as "content should be auto removed but it showing".
+    this.showGroupForm = false;
+    this.groupForm = { tierId: '', dateFrom: '', dateTo: '', proofName: '', comment: '' };
+    this.proofFile = null;
+  }
 
   onProof(e: Event) {
     const file = (e.target as HTMLInputElement).files?.[0];

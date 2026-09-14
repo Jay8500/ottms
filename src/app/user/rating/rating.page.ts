@@ -39,7 +39,14 @@ export class RatingPage implements OnInit {
     addIcons({ arrowBackOutline, star, starOutline, checkmarkCircle });
   }
 
-  async ngOnInit() {
+  async ngOnInit() { await this.enter(); }
+
+  // Same Ionic page-reuse issue as chat.page.ts: opening a rating screen
+  // for a different thread without leaving this route would otherwise keep
+  // showing the first one.
+  ionViewWillEnter() { this.enter(); }
+
+  private async enter() {
     const threadId = this.route.snapshot.queryParamMap.get('thread');
     this.loading = true;
     try {

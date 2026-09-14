@@ -65,7 +65,16 @@ export class SellerslistPage implements OnInit {
     });
   }
 
-  async ngOnInit() {
+  async ngOnInit() { await this.enter(); }
+
+  // Same reuse issue as accnttype.page.ts: going back to Validity and
+  // picking a different duration for the same platform keeps this exact
+  // page instance alive, so reading query params only in ngOnInit left
+  // `months` stuck on whatever was picked first. Reported as
+  // "Sellers List - Showing only 01-Month on all rest Months".
+  ionViewWillEnter() { this.enter(); }
+
+  private async enter() {
     const q = this.route.snapshot.queryParamMap;
     this.ottId = q.get('id') ?? '';
     this.months = Number(q.get('months') ?? 0);

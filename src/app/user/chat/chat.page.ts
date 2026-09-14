@@ -50,6 +50,17 @@ export class ChatPage implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.data.setPresence(true);
+    await this.enter();
+  }
+
+  // Ionic reuses this page instance when the user goes back to Chats and
+  // opens a different conversation — same route, only ?thread= changes —
+  // so without this it kept showing the previous thread. load() already
+  // tears down the old subscription before opening the new one, so this is
+  // safe to call again.
+  ionViewWillEnter() { this.enter(); }
+
+  private async enter() {
     const id = this.route.snapshot.queryParamMap.get('thread');
     await this.load(id);
   }

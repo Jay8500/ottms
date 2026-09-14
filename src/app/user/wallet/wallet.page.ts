@@ -67,6 +67,13 @@ export class WalletPage implements OnInit {
 
   async ngOnInit() { await this.load(); }
 
+  // Ionic keeps this page alive in its navigation stack rather than
+  // recreating it, so ngOnInit never runs again on return. Without this,
+  // adding bank details in Profile and coming straight back here still
+  // showed "Add payout details" — the page was holding the user record
+  // from before the bank row existed.
+  ionViewWillEnter() { this.load(); }
+
   async load() {
     this.loading = true;
     this.error = '';

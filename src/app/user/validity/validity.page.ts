@@ -36,7 +36,14 @@ export class ValidityPage implements OnInit {
     addIcons({ calendarOutline, arrowBackOutline, optionsOutline, chevronForwardOutline });
   }
 
-  async ngOnInit() {
+  async ngOnInit() { await this.enter(); }
+
+  // Same fix as accnttype/sellerslist: Ionic reuses this page instance when
+  // the user goes back and picks a different platform, so ngOnInit alone
+  // would keep showing the first platform's plans.
+  ionViewWillEnter() { this.enter(); }
+
+  private async enter() {
     this.ottId = this.route.snapshot.queryParamMap.get('id') ?? '';
     await this.load();
   }

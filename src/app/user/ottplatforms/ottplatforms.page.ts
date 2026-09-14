@@ -40,7 +40,13 @@ export class OttplatformsPage implements OnInit {
     addIcons({ searchOutline, arrowBackOutline, optionsOutline });
   }
 
-  async ngOnInit() {
+  async ngOnInit() { await this.enter(); }
+
+  // Same fix as accnttype/sellerslist/validity: Ionic reuses this page
+  // instance when the user goes back and picks a different category.
+  ionViewWillEnter() { this.enter(); }
+
+  private async enter() {
     this.categoryId = this.route.snapshot.queryParamMap.get('cat') ?? '';
     await this.load();
   }
