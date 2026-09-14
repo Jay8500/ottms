@@ -59,8 +59,61 @@ export class AdminFormbuilderPage implements OnInit {
     this.dirty = true;
   }
 
-  toggleRequired(f: FormField) {
+  /**
+   * A required field with no way to actually answer it — e.g. a text box
+   * asking for a photo — blocks every single sign-up, silently, until
+   * someone notices nobody can register. That happened once already: a
+   * "Profile Photo" field, placeholder "Upload any photo", marked required.
+   * Text/tel/email/password are the only field types this form can make;
+   * there is no real upload field, so anything suggesting one is a trap.
+   */
+  private looksUnanswerable(f: FormField): boolean {
+    const text = `${f.label} ${f.placeholder}`.toLowerCase();
+    return /photo|image|upload|picture|signature|document|file|scan/.test(text);
+  }
+
+  async toggleRequired(f: FormField) {
     if (!f.enabled) return;
+
+    if (!f.required && f.type === 'text' && this.looksUnanswerable(f)) {
+      const alert = await this.alertCtrl.create({
+        header: 'This field cannot be answered',
+        message:
+          `"${f.label}" is a plain text box — there is no real upload field in ` +
+          `this form. Making it required means nobody can create an account ` +
+          `until this is fixed, with no error explaining why.`,
+        buttons: [
+          { text: 'Cancel', role: 'cancel' },
+          {
+            text: 'Make required anyway', role: 'destructive',
+            handler: () => { f.required = true; this.dirty = true; },
+          },
+        ],
+      });
+      await alert.present();
+      return;
+    }
+
+    // Mobile Number and Password are already required and cannot be turned
+    // off (see toggleEnabled/remove below) — only warn about fields the
+    // admin actually chose to add.
+    const isSystemField = f.type === 'password' || f.label === 'Mobile Number';
+    if (!f.required && !isSystemField) {
+      const alert = await this.alertCtrl.create({
+        header: 'Make this required?',
+        message:
+          `Nobody will be able to create an account without filling in ` +
+          `"${f.label}". Only do this if you are sure every new user can ` +
+          `and will answer it.`,
+        buttons: [
+          { text: 'Cancel', role: 'cancel' },
+          { text: 'Yes, require it', handler: () => { f.required = true; this.dirty = true; } },
+        ],
+      });
+      await alert.present();
+      return;
+    }
+
     f.required = !f.required;
     this.dirty = true;
   }
