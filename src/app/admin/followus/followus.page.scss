@@ -44,7 +44,7 @@
 .fu-open ion-icon { color: $blue; }
 .fu-edit ion-icon { color: $black; }
 
-.empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }
+.empty, .fu-loading { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }
 
 // ── Editor extras ──────────────────────────────────────────────────────────
 .ee-lbl {

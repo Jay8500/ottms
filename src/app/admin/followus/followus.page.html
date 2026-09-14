@@ -28,6 +28,8 @@
     </div>
   </div>
 
+  <p class="fu-loading" *ngIf="loading">Loading…</p>
+
   <p class="empty" *ngIf="!loading && !items.length">
     No links yet. Tap Add New to add your first one.
   </p>

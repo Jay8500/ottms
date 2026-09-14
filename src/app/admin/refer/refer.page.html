@@ -61,6 +61,7 @@
     </div>
   </div>
 
+  <p class="empty" *ngIf="loading">Loading…</p>
   <p class="empty" *ngIf="!loading && !rows.length">
     No referrals yet. They appear here once users start inviting friends.
   </p>

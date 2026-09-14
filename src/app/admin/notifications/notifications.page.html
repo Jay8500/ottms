@@ -51,6 +51,7 @@
     </div>
   </div>
 
+  <p class="empty" *ngIf="loading">Loading…</p>
   <p class="empty" *ngIf="!loading && !rules.length">No notification types configured.</p>
   <div style="height:120px"></div>
 </ion-content>
