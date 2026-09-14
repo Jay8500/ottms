@@ -1,0 +1,46 @@
+<div class="fe-sheet">
+  <div class="fe-head">
+    <h2>Edit — {{ langLabel }}</h2>
+    <button class="fe-x" (click)="dismiss()" aria-label="Close">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+  </div>
+
+  <div class="fe-body">
+    <label class="fl">Question</label>
+    <textarea class="fi" rows="2" [(ngModel)]="question" placeholder="What users ask"></textarea>
+
+    <label class="fl">
+      Answer
+      <span class="fl-hint">Start a new line for each point — shown as a bulleted list</span>
+    </label>
+    <textarea class="fi ta" rows="6" [(ngModel)]="answer"
+              placeholder="Explain the answer. One point per line."></textarea>
+
+    <label class="fl">Video (optional)</label>
+    <input type="file" #videoInput hidden accept="video/*" (change)="onVideoPicked($event)" />
+
+    <div class="video-box" *ngIf="!hasVideo" (click)="pickVideo()">
+      <ion-icon name="cloud-upload-outline"></ion-icon>
+      <p>Tap to upload a video for this answer</p>
+      <p class="sub">MP4 · up to 50MB</p>
+    </div>
+
+    <div class="video-set" *ngIf="hasVideo">
+      <video [src]="videoPreviewUrl" controls></video>
+      <div class="video-actions">
+        <button class="v-swap" (click)="pickVideo()">
+          <ion-icon name="cloud-upload-outline"></ion-icon> Replace
+        </button>
+        <button class="v-remove" (click)="removeVideo()">
+          <ion-icon name="trash-outline"></ion-icon> Remove
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <button class="fe-save" [disabled]="saving" (click)="save()">
+    <ion-icon name="save-outline"></ion-icon>
+    {{ uploading ? 'Uploading video…' : saving ? 'Saving…' : 'Save' }}
+  </button>
+</div>

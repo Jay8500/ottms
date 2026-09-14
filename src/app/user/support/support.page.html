@@ -13,7 +13,7 @@
 
   <!-- Contact -->
   <div class="contact-row">
-    <button class="contact" (click)="openChat()">
+    <button class="contact" *ngIf="inAppChatEnabled" (click)="openChat()">
       <div class="c-ico"><ion-icon name="chatbubbles-outline"></ion-icon></div>
       <span>In-App Chat</span>
     </button>
@@ -44,11 +44,27 @@
       </button>
 
       <div class="faq-a" *ngIf="f.open">
-        <p>{{ a(f) }}</p>
         <p class="fallback" *ngIf="untranslated(f)">Shown in English — not translated yet.</p>
-        <a class="watch" *ngIf="video(f)" [href]="video(f)" target="_blank" rel="noopener">
-          <ion-icon name="play-circle-outline"></ion-icon> Watch video
+
+        <!-- Both formats are offered up front, matching how the answer was
+             written in admin — a plain read, or the same thing on video. -->
+        <div class="fmt-row">
+          <button class="fmt" [class.on]="viewOf(f) === 'text'" (click)="setView(f, 'text')">
+            <ion-icon name="document-text-outline"></ion-icon> Read Text
+          </button>
+          <button class="fmt" *ngIf="video(f)" [class.on]="viewOf(f) === 'video'" (click)="setView(f, 'video')">
+            <ion-icon name="play-circle-outline"></ion-icon> Watch Video
+          </button>
+        </div>
+
+        <ul class="points" *ngIf="viewOf(f) === 'text'">
+          <li *ngFor="let p of points(f)">{{ p }}</li>
+        </ul>
+
+        <a class="watch" *ngIf="viewOf(f) === 'video' && videoLink[f.id]" [href]="videoLink[f.id]" target="_blank" rel="noopener">
+          <ion-icon name="play-circle-outline"></ion-icon> Open video
         </a>
+        <p class="fallback" *ngIf="viewOf(f) === 'video' && resolvingVideo && !videoLink[f.id]">Loading video…</p>
       </div>
     </div>
   </div>

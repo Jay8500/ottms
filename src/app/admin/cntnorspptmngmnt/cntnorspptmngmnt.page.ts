@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { IonContent, IonIcon, AlertController, ToastController, IonFooter } from '@ionic/angular/standalone';
+import {
+  IonContent, IonIcon, AlertController, ToastController, IonFooter, ModalController,
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   createOutline, trashOutline, addCircleOutline, saveOutline,
@@ -10,7 +12,10 @@ import {
 } from 'ionicons/icons';
 import { AdminHeaderComponent } from '../shared/admin-header.component';
 import { DataService } from '../../shared/data.service';
+import { SupabaseService } from '../../shared/supabase.service';
+import { humanError } from '../../shared/errors';
 import { FaqItem, LangCode } from '../../shared/models';
+import { FaqEditorComponent } from './faq-editor/faq-editor.component';
 
 /** 14 — Support. FAQ questions and answers in English, Hindi and Telugu,
  *  plus the explainer video for each language. */
@@ -27,6 +32,14 @@ export class CntnorspptmngmntPage implements OnInit {
   faqs: FaqItem[] = [];
   dirty = false;
 
+  // In-App Chat and the two extra languages had no admin control at all —
+  // both were unconditionally shown to every user. WhatsApp/CallUs already
+  // toggle through Admin -> Follow Us (they are social_links rows).
+  inAppChatEnabled = true;
+  hiEnabled = true;
+  teEnabled = true;
+  private savingChannels = false;
+
   readonly langs: { code: LangCode; label: string }[] = [
     { code: 'en', label: 'English' },
     { code: 'hi', label: 'Hindi' },
@@ -35,9 +48,11 @@ export class CntnorspptmngmntPage implements OnInit {
 
   constructor(
     private data: DataService,
+    private sb: SupabaseService,
     private route: ActivatedRoute,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
+    private modalCtrl: ModalController,
   ) {
     addIcons({
       createOutline, trashOutline, addCircleOutline, saveOutline,
@@ -46,7 +61,15 @@ export class CntnorspptmngmntPage implements OnInit {
   }
 
   async ngOnInit() {
-    this.faqs = await this.data.getFaqs();
+    const [faqs, settings] = await Promise.all([
+      this.data.getFaqs(),
+      this.data.getSettings(),
+    ]);
+    this.faqs = faqs;
+    this.inAppChatEnabled = settings['support_inapp_chat_enabled'] !== false;
+    this.hiEnabled = settings['support_lang_hi_enabled'] !== false;
+    this.teEnabled = settings['support_lang_te_enabled'] !== false;
+
     if (this.route.snapshot.queryParamMap.get('new')) this.add();
   }
 
@@ -59,28 +82,36 @@ export class CntnorspptmngmntPage implements OnInit {
     return (['en', 'hi', 'te'] as LangCode[]).filter(l => f.q[l]?.trim() && f.a[l]?.trim()).length;
   }
 
+  /** FAQs that have a video attached for the language currently selected —
+   *  "so I can see which video uploaded". */
+  get withVideo() {
+    return this.faqs.filter(f => f.videoUrl?.[this.lang]?.trim());
+  }
+
   async editItem(f: FaqItem) {
-    const alert = await this.alertCtrl.create({
-      header: `Edit — ${this.langs.find(l => l.code === this.lang)?.label}`,
-      inputs: [
-        { name: 'q', type: 'textarea', value: f.q[this.lang] ?? '', placeholder: 'Question' },
-        { name: 'a', type: 'textarea', value: f.a[this.lang] ?? '', placeholder: 'Answer' },
-      ],
-      buttons: [
-        { text: 'Cancel', role: 'cancel' },
-        {
-          text: 'Save',
-          handler: (d) => {
-            if (!d.q?.trim()) return false;
-            f.q[this.lang] = d.q.trim();
-            f.a[this.lang] = d.a?.trim() ?? '';
-            this.dirty = true;
-            return true;
-          },
-        },
-      ],
+    const modal = await this.modalCtrl.create({
+      component: FaqEditorComponent,
+      componentProps: { faq: f, lang: this.lang, langLabel: this.langLabel },
+      breakpoints: [0, 0.92],
+      initialBreakpoint: 0.92,
+      handle: false,
     });
-    await alert.present();
+    await modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+    if (role !== 'save' || !data) return;
+
+    f.q[this.lang] = data.question;
+    f.a[this.lang] = data.answer;
+    if (data.videoPath !== undefined) {
+      f.videoUrl = f.videoUrl ?? { en: '', hi: '', te: '' };
+      f.videoUrl[this.lang] = data.videoPath ?? '';
+    }
+    this.dirty = true;
+    // Video uploads land in storage immediately, independent of Save below —
+    // persist the row now so a page reload before Save does not lose it.
+    try { await this.data.saveFaq(f); this.dirty = false; }
+    catch (e) { this.toast(humanError(e, 'Saved locally — tap Save to sync')); }
   }
 
   async add() {
@@ -101,6 +132,7 @@ export class CntnorspptmngmntPage implements OnInit {
               id: this.data.newId('faq'),
               q: { en: d.q.trim(), hi: '', te: '' },
               a: { en: d.a?.trim() ?? '', hi: '', te: '' },
+              videoUrl: { en: '', hi: '', te: '' },
               position: this.faqs.length + 1,
             });
             this.dirty = true;
@@ -130,16 +162,38 @@ export class CntnorspptmngmntPage implements OnInit {
     await alert.present();
   }
 
-  onVideo(e: Event) {
-    const file = (e.target as HTMLInputElement).files?.[0];
-    if (!file) return;
-    this.toast(`“${file.name}” selected — video hosting is not connected yet`);
-  }
-
   async save() {
     for (const f of this.faqs) await this.data.saveFaq(f);
     this.dirty = false;
     this.toast('Support content saved');
+  }
+
+  // ── Channel toggles ──────────────────────────────────────────────────
+
+  async toggleInAppChat() {
+    this.inAppChatEnabled = !this.inAppChatEnabled;
+    await this.saveChannel('support_inapp_chat_enabled', this.inAppChatEnabled);
+  }
+
+  async toggleLang(code: 'hi' | 'te') {
+    if (code === 'hi') this.hiEnabled = !this.hiEnabled;
+    else this.teEnabled = !this.teEnabled;
+    await this.saveChannel(
+      code === 'hi' ? 'support_lang_hi_enabled' : 'support_lang_te_enabled',
+      code === 'hi' ? this.hiEnabled : this.teEnabled,
+    );
+  }
+
+  private async saveChannel(key: string, value: boolean) {
+    if (this.savingChannels) return;
+    this.savingChannels = true;
+    try {
+      await this.data.saveSettings({ [key]: value });
+    } catch (e) {
+      this.toast(humanError(e, 'Could not save'));
+    } finally {
+      this.savingChannels = false;
+    }
   }
 
   private async toast(message: string) {

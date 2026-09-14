@@ -2,6 +2,33 @@
 
 .sp-content { --background: #{$gray-50}; }
 
+// ── Channel toggles ──────────────────────────────────────────────────────
+.chan-card {
+  margin: 0 $sp-lg $sp-lg; padding: $sp-lg;
+  background: $white; border: 1px solid $gray-200;
+  border-radius: $r-lg; box-shadow: $shadow-sm;
+}
+.chan-h { font-size: $font-base; font-weight: 800; color: $black; margin: 0 0 $sp-md; }
+.chan-row {
+  @include flex-between; padding: 8px 0;
+  & + .chan-row { border-top: 1px solid $gray-100; }
+  span { font-size: $font-sm; font-weight: 600; color: $black; }
+}
+.chan-note { font-size: $font-xs; color: $gray-600; margin: $sp-md 0 0; line-height: 1.5; }
+
+.sw {
+  width: 46px; height: 26px; border-radius: $r-pill; border: none;
+  background: $gray-300; position: relative; cursor: pointer; flex-shrink: 0;
+  transition: background 0.18s;
+  i {
+    position: absolute; top: 3px; left: 3px; width: 20px; height: 20px;
+    border-radius: 50%; background: $white; transition: transform 0.18s;
+    box-shadow: $shadow-sm;
+  }
+  &.on { background: $success; i { transform: translateX(20px); } }
+}
+@media (prefers-reduced-motion: reduce) { .sw, .sw i { transition: none; } }
+
 // ── Language / mode ────────────────────────────────────────────────────────
 .lang-row { display: flex; gap: $sp-sm; padding: 0 $sp-lg $sp-md; }
 
@@ -56,10 +83,17 @@
 }
 
 .faq-cov {
-  display: inline-block; margin-top: 8px;
+  display: inline-block; margin-top: 8px; margin-right: 6px;
   font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: $r-sm;
   background: $red-light; color: $red;
   &.done { background: $green-light; color: $green; }
+}
+
+.faq-vid {
+  display: inline-flex; align-items: center; gap: 3px; margin-top: 8px;
+  font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: $r-sm;
+  background: $info-bg; color: $info;
+  ion-icon { font-size: 12px; }
 }
 
 .faq-tools { position: absolute; top: $sp-md; right: $sp-md; display: flex; gap: 6px; }
@@ -96,12 +130,10 @@
   p { font-size: $font-sm; color: $gray-600; margin: 0; }
 }
 
-.vid-up {
-  @include yellow-btn; width: 100%; height: 48px; margin-top: $sp-md;
-  ion-icon { font-size: 20px; }
-}
-
-.vid-note {
-  font-size: $font-xs; color: $gray-600; margin: $sp-md 0 0;
-  line-height: 1.5; text-align: center;
+.vid-item {
+  display: flex; align-items: center; gap: $sp-sm;
+  padding: $sp-md; border-radius: $r-md; background: $gray-50;
+  margin-bottom: $sp-sm;
+  ion-icon:first-child { font-size: 24px; color: $info; flex-shrink: 0; }
+  p { flex: 1; min-width: 0; font-size: $font-sm; font-weight: 600; color: $black; margin: 0; }
 }

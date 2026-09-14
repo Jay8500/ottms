@@ -82,6 +82,23 @@
   .fallback { font-size: $font-xs; color: $gray-400; font-style: italic; margin-top: 6px; }
 }
 
+.fmt-row {
+  display: flex; gap: $sp-sm; margin-bottom: $sp-sm;
+  .fmt {
+    height: 34px; padding: 0 $sp-md; border-radius: $r-pill;
+    border: 1.5px solid $gray-300; background: $white; cursor: pointer;
+    font-family: inherit; font-size: $font-xs; font-weight: 700; color: $gray-700;
+    display: flex; align-items: center; gap: 5px;
+    ion-icon { font-size: 15px; }
+    &.on { background: $yellow-light; border-color: $yellow-dark; color: $black; }
+  }
+}
+
+.points {
+  margin: 0; padding-left: 18px;
+  li { font-size: $font-sm; color: $gray-700; line-height: 1.6; margin-bottom: 4px; }
+}
+
 .watch {
   display: inline-flex; align-items: center; gap: 5px; margin-top: $sp-sm;
   font-size: $font-sm; font-weight: 700; color: $blue; text-decoration: none;

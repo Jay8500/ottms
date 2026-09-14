@@ -1,0 +1,65 @@
+@import '../../../../global.scss';
+
+:host { display: block; }
+
+.fe-sheet {
+  background: $white;
+  border-radius: $r-xl $r-xl 0 0;
+  max-height: 88vh;
+  display: flex; flex-direction: column;
+  padding-bottom: var(--ion-safe-area-bottom, 0px);
+}
+
+.fe-head {
+  @include flex-between; padding: $sp-lg $sp-lg $sp-md;
+  border-bottom: 1px solid $gray-100; flex-shrink: 0;
+  h2 { font-size: $font-lg; font-weight: 800; color: $black; margin: 0; }
+  .fe-x {
+    width: 32px; height: 32px; border-radius: 50%; border: none;
+    background: $gray-100; color: $gray-700; @include flex-center; cursor: pointer;
+  }
+}
+
+.fe-body { padding: $sp-lg; overflow-y: auto; flex: 1; }
+
+.fl {
+  display: block; font-size: $font-sm; font-weight: 700; color: $gray-700;
+  margin: $sp-md 0 6px;
+  .fl-hint { display: block; font-size: $font-xs; font-weight: 500; color: $gray-600; margin-top: 2px; }
+}
+
+.fi {
+  width: 100%; padding: 10px $sp-md; border: 1.5px solid $gray-300;
+  border-radius: $r-sm; font-family: inherit; font-size: $font-base;
+  color: $black; outline: none; background: $white; resize: vertical; line-height: 1.5;
+  &:focus { border-color: $yellow-dark; }
+}
+
+.video-box {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  padding: $sp-lg $sp-md; text-align: center; cursor: pointer;
+  border: 1.5px dashed $gray-400; border-radius: $r-md; background: $gray-50;
+  ion-icon { font-size: 30px; color: $gray-400; }
+  p { margin: 0; font-size: $font-sm; font-weight: 700; color: $gray-700; }
+  .sub { font-weight: 500; color: $gray-600; font-size: $font-xs; }
+}
+
+.video-set {
+  video { width: 100%; border-radius: $r-md; background: $black; max-height: 200px; }
+  .video-actions { display: flex; gap: $sp-sm; margin-top: $sp-sm; }
+  button {
+    flex: 1; height: 38px; border-radius: $r-sm; border: 1.5px solid $gray-300;
+    background: $white; font-family: inherit; font-size: $font-sm; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .v-remove { color: $danger; border-color: $danger-line; }
+}
+
+.fe-save {
+  flex-shrink: 0; margin: $sp-md $sp-lg calc(#{$sp-md} + var(--ion-safe-area-bottom, 0px));
+  height: 48px; border: none; border-radius: $r-md;
+  background: $yellow; color: $black; font-family: inherit;
+  font-size: $font-base; font-weight: 800; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  &:disabled { opacity: 0.6; }
+}

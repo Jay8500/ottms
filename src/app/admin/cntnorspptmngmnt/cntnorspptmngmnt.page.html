@@ -1,6 +1,30 @@
 <ion-content class="sp-content" [scrollY]="true">
   <app-admin-header title="Support" trailing="options"></app-admin-header>
 
+  <!-- Channel toggles -->
+  <div class="chan-card">
+    <p class="chan-h">Support Channels</p>
+    <div class="chan-row">
+      <span>In-App Chat</span>
+      <button class="sw" [class.on]="inAppChatEnabled" (click)="toggleInAppChat()"
+              [attr.aria-pressed]="inAppChatEnabled"><i></i></button>
+    </div>
+    <div class="chan-row">
+      <span>Hindi</span>
+      <button class="sw" [class.on]="hiEnabled" (click)="toggleLang('hi')"
+              [attr.aria-pressed]="hiEnabled"><i></i></button>
+    </div>
+    <div class="chan-row">
+      <span>Telugu</span>
+      <button class="sw" [class.on]="teEnabled" (click)="toggleLang('te')"
+              [attr.aria-pressed]="teEnabled"><i></i></button>
+    </div>
+    <p class="chan-note">
+      WhatsApp and Call Us are edited in Follow Us — this only covers the
+      channels built into the Support screen itself.
+    </p>
+  </div>
+
   <!-- Language -->
   <div class="lang-row">
     <button class="lang" *ngFor="let l of langs" [class.on]="lang === l.code"
@@ -22,7 +46,7 @@
 
   <!-- FAQ -->
   <div class="faq-card" *ngIf="mode === 'text'">
-    <p class="faq-h">What Is ShareOTT's?</p>
+    <p class="faq-h">Questions — {{ langLabel }}</p>
 
     <div class="faq" *ngFor="let f of faqs; let i = index">
       <span class="faq-n">{{ i + 1 }}</span>
@@ -31,6 +55,9 @@
         <p class="faq-a"><b>A:</b> {{ f.a[lang] || '— not translated —' }}</p>
         <span class="faq-cov" [class.done]="filledCount(f) === 3">
           {{ filledCount(f) }}/3 languages
+        </span>
+        <span class="faq-vid" *ngIf="f.videoUrl?.[lang]">
+          <ion-icon name="play-circle-outline"></ion-icon> Has video
         </span>
       </div>
       <div class="faq-tools">
@@ -44,20 +71,23 @@
     </button>
   </div>
 
-  <!-- Video -->
+  <!-- Watch Video: every FAQ that has a video attached in this language,
+       so admin can see at a glance what has been uploaded. Uploading itself
+       happens from the question's own editor — this is the overview. -->
   <div class="vid-card" *ngIf="mode === 'video'">
-    <div class="vid-box">
+    <p class="faq-h">Videos attached — {{ langLabel }}</p>
+
+    <div class="vid-item" *ngFor="let f of withVideo">
       <ion-icon name="play-circle-outline"></ion-icon>
-      <p>No video uploaded for {{ langLabel }}</p>
+      <p>{{ f.q[lang] }}</p>
+      <button class="ft edit" (click)="editItem(f)"><ion-icon name="create-outline"></ion-icon></button>
     </div>
-    <label class="vid-up">
-      <ion-icon name="cloud-upload-outline"></ion-icon> Upload Video
-      <input type="file" accept="video/*" hidden (change)="onVideo($event)" />
-    </label>
-    <p class="vid-note">
-      Video hosting is not connected yet — the picker works, but files are not stored.
-      This lands with the database work.
-    </p>
+
+    <div class="vid-box" *ngIf="!withVideo.length">
+      <ion-icon name="play-circle-outline"></ion-icon>
+      <p>No {{ langLabel }} videos uploaded yet</p>
+      <p class="sub">Open a question under Read Text and attach one there.</p>
+    </div>
   </div>
 
   <div style="height:120px"></div>
