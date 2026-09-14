@@ -67,6 +67,7 @@ export class DataService {
       subName: r.sub_name ?? '', brand: r.brand, color: r.color, icon: r.icon,
       imageUrl: r.image_url ?? undefined, position: r.position, active: r.active,
       startingPrice: Number(r.starting_price ?? 0),
+      instructions: r.instructions ?? undefined,
       sellers: 0, available: 0,
       tiers: (r.ott_plan_tiers ?? [])
         .sort((a: any, b: any) => a.position - b.position)
@@ -807,6 +808,7 @@ export class DataService {
       id: this.idOrNull(a.id), category_id: a.categoryId, title: a.title,
       sub_name: a.subName, brand: a.brand, color: a.color, icon: a.icon,
       image_url: a.imageUrl, starting_price: a.startingPrice,
+      instructions: a.instructions ?? null,
       position: a.position, active: a.active,
     });
 

@@ -34,6 +34,11 @@
       </button>
     </div>
 
+    <div class="grp-instr" *ngIf="app?.instructions">
+      <ion-icon name="information-circle-outline"></ion-icon>
+      <p>{{ app?.instructions }}</p>
+    </div>
+
     <label class="fl">Select Plan</label>
     <div class="tier-row">
       <button class="tier" *ngFor="let t of app?.tiers"

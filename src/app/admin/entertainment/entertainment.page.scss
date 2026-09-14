@@ -52,6 +52,7 @@
   font-family: inherit; font-size: $font-base; color: $black; outline: none;
   &::placeholder { color: $gray-400; }
   &:focus { border-color: $yellow; }
+  &.ee-ta { height: auto; padding: 10px $sp-md; resize: vertical; line-height: 1.5; }
 }
 
 .hint { font-size: $font-xs; color: $gray-600; margin: 5px 0 0; }

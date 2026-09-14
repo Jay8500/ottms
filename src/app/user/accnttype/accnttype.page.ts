@@ -7,6 +7,7 @@ import { addIcons } from 'ionicons';
 import {
   cartOutline, peopleOutline, arrowBackOutline, optionsOutline,
   cloudUploadOutline, calendarOutline, chatboxEllipsesOutline, closeOutline,
+  informationCircleOutline,
 } from 'ionicons/icons';
 import { Auth } from '../../auth';
 import { DataService } from '../../shared/data.service';
@@ -49,6 +50,7 @@ export class AccnttypePage implements OnInit {
     addIcons({
       cartOutline, peopleOutline, arrowBackOutline, optionsOutline,
       cloudUploadOutline, calendarOutline, chatboxEllipsesOutline, closeOutline,
+      informationCircleOutline,
     });
   }
 

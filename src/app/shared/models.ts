@@ -58,6 +58,7 @@ export interface OttApp extends CmsEntity {
   sellers: number;
   startingPrice: number;
   available: number;
+  instructions?: string;   // shown to a seller creating a group on this platform
 }
 
 // ── People ────────────────────────────────────────────────────────────────

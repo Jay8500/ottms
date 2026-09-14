@@ -57,6 +57,11 @@
     <label class="ee-lbl">Starting price (₹)</label>
     <input class="ee-input" type="number" inputmode="numeric" [(ngModel)]="editing.startingPrice" />
 
+    <label class="ee-lbl">Instructions for sellers</label>
+    <textarea class="ee-input ee-ta" rows="3" [(ngModel)]="editing.instructions"
+              placeholder="e.g. Share the password, not your email — changing it locks the buyer out."></textarea>
+    <p class="hint">Shown to a seller while they are creating a group on this platform.</p>
+
     <label class="ee-lbl">Plans &amp; screen limits</label>
     <div class="tier" *ngFor="let t of editing.tiers">
       <input class="t-name" [(ngModel)]="t.label" placeholder="Plan name e.g. Premium" />

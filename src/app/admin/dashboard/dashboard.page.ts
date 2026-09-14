@@ -41,21 +41,27 @@ export class DashboardPage implements OnInit {
     { n: 2,  label: 'Home',                 icon: 'home-outline',            tint: '#2563EB', accent: '#22C55E', route: '/admin/homemgnmt' },
     { n: 3,  label: 'Categories',           icon: 'grid-outline',            tint: '#8B5CF6', accent: '#F97316', route: '/admin/categorymngmnt' },
     { n: 4,  label: 'Entertainment',        icon: 'film-outline',            tint: '#F97316', accent: '#F97316', route: '/admin/entertainment' },
-    { n: 5,  label: 'Commerce',             icon: 'cart-outline',            tint: '#8B5CF6', accent: '#8B5CF6', route: '/admin/commerce' },
-    { n: 6,  label: 'Validity',             icon: 'calendar-outline',        tint: '#2563EB', accent: '#F9D54B', route: '/admin/validity' },
-    { n: 7,  label: "User's Data",          icon: 'id-card-outline',         tint: '#2563EB', accent: '#2563EB', route: '/admin/usermngmnt' },
-    { n: 8,  label: "Group's",              icon: 'people-outline',          tint: '#22C55E', accent: '#22C55E', route: '/admin/groupapprovals' },
-    { n: 9,  label: 'Wallet',               icon: 'wallet-outline',          tint: '#2563EB', accent: '#F9D54B', route: '/admin/walletadmin' },
-    { n: 10, label: 'Transections',         icon: 'swap-horizontal-outline', tint: '#8B5CF6', accent: '#EC4899', route: '/admin/transactions' },
-    { n: 11, label: "Payment's",            icon: 'card-outline',            tint: '#8B5CF6', accent: '#EC4899', route: '/admin/paymentaprpovals' },
-    { n: 12, label: "Chat's",               icon: 'chatbubbles-outline',     tint: '#2563EB', accent: '#38BDF8', route: '/admin/chats' },
-    { n: 13, label: 'Payment Form',         icon: 'document-text-outline',   tint: '#8B5CF6', accent: '#8B5CF6', route: '/admin/paymentform' },
-    { n: 14, label: 'Support',              icon: 'headset-outline',         tint: '#2563EB', accent: '#38BDF8', route: '/admin/cntnorspptmngmnt' },
-    { n: 15, label: 'Ratings',              icon: 'star-outline',            tint: '#EAB308', accent: '#F9D54B', route: '/admin/ratings' },
-    { n: 16, label: 'Follow Us',            icon: 'people-circle-outline',   tint: '#F97316', accent: '#F97316', route: '/admin/followus' },
-    { n: 17, label: 'Refer Friends',        icon: 'share-social-outline',    tint: '#22C55E', accent: '#22C55E', route: '/admin/refer' },
-    { n: 18, label: 'Terms & Conditions',   icon: 'shield-checkmark-outline',tint: '#2563EB', accent: '#2563EB', route: '/admin/terms' },
-    { n: 19, label: 'Notifications',        icon: 'notifications-outline',   tint: '#EC4899', accent: '#EC4899', route: '/admin/notifications' },
+    // Same screen as Entertainment (OTT + plans + instructions), surfaced
+    // under the name the client asked for: "select the OTT and Add Plans,
+    // Validities, and Instructions ... reflected in the Normal App for
+    // users to Create Groups." Validity stays a separate card below —
+    // merging the two into one screen is a bigger change than a shortcut.
+    { n: 5,  label: 'Create Groups',        icon: 'add-circle-outline',      tint: '#16A34A', accent: '#16A34A', route: '/admin/entertainment' },
+    { n: 6,  label: 'Commerce',             icon: 'cart-outline',            tint: '#8B5CF6', accent: '#8B5CF6', route: '/admin/commerce' },
+    { n: 7,  label: 'Validity',             icon: 'calendar-outline',        tint: '#2563EB', accent: '#F9D54B', route: '/admin/validity' },
+    { n: 8,  label: "User's Data",          icon: 'id-card-outline',         tint: '#2563EB', accent: '#2563EB', route: '/admin/usermngmnt' },
+    { n: 9,  label: "Group's",              icon: 'people-outline',          tint: '#22C55E', accent: '#22C55E', route: '/admin/groupapprovals' },
+    { n: 10, label: 'Wallet',               icon: 'wallet-outline',          tint: '#2563EB', accent: '#F9D54B', route: '/admin/walletadmin' },
+    { n: 11, label: 'Transections',         icon: 'swap-horizontal-outline', tint: '#8B5CF6', accent: '#EC4899', route: '/admin/transactions' },
+    { n: 12, label: "Payment's",            icon: 'card-outline',            tint: '#8B5CF6', accent: '#EC4899', route: '/admin/paymentaprpovals' },
+    { n: 13, label: "Chat's",               icon: 'chatbubbles-outline',     tint: '#2563EB', accent: '#38BDF8', route: '/admin/chats' },
+    { n: 14, label: 'Payment Form',         icon: 'document-text-outline',   tint: '#8B5CF6', accent: '#8B5CF6', route: '/admin/paymentform' },
+    { n: 15, label: 'Support',              icon: 'headset-outline',         tint: '#2563EB', accent: '#38BDF8', route: '/admin/cntnorspptmngmnt' },
+    { n: 16, label: 'Ratings',              icon: 'star-outline',            tint: '#EAB308', accent: '#F9D54B', route: '/admin/ratings' },
+    { n: 17, label: 'Follow Us',            icon: 'people-circle-outline',   tint: '#F97316', accent: '#F97316', route: '/admin/followus' },
+    { n: 18, label: 'Refer Friends',        icon: 'share-social-outline',    tint: '#22C55E', accent: '#22C55E', route: '/admin/refer' },
+    { n: 19, label: 'Terms & Conditions',   icon: 'shield-checkmark-outline',tint: '#2563EB', accent: '#2563EB', route: '/admin/terms' },
+    { n: 20, label: 'Notifications',        icon: 'notifications-outline',   tint: '#EC4899', accent: '#EC4899', route: '/admin/notifications' },
   ];
 
   filtered: Feature[] = [...this.features];
