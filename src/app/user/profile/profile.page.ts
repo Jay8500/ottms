@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -11,6 +11,7 @@ import {
   arrowBackOutline, personOutline, callOutline, mailOutline, calendarOutline,
   businessOutline, cardOutline, shieldOutline, cashOutline, checkmarkCircle,
   lockClosedOutline, saveOutline, createOutline, warningOutline, storefrontOutline,
+  cameraOutline,
 } from 'ionicons/icons';
 import { Auth } from '../../auth';
 import { DataService } from '../../shared/data.service';
@@ -35,13 +36,21 @@ import { AppUser } from '../../shared/models';
   ],
 })
 export class ProfilePage implements ViewWillEnter {
+  @ViewChild('avatarInput') avatarInput!: ElementRef<HTMLInputElement>;
+
   me: AppUser | null = null;
   loading = true;
   saving = false;
   pendingChange = false;
+  uploadingAvatar = false;
+
+  /** Profile and payout details are separate tabs — they used to be one
+   *  long scroll, which made the two easy to confuse. */
+  tab: 'profile' | 'bank' = 'profile';
 
   editing = false;
-  form = { holderName: '', upiId: '', accountNo: '', ifsc: '' };
+  readonly paymentApps = ['PhonePe', 'GPay', 'Paytm', 'Bank'];
+  form = { holderName: '', upiId: '', accountNo: '', ifsc: '', paymentApp: '' };
 
   constructor(
     private auth: Auth,
@@ -54,6 +63,7 @@ export class ProfilePage implements ViewWillEnter {
       arrowBackOutline, personOutline, callOutline, mailOutline, calendarOutline,
       businessOutline, cardOutline, shieldOutline, cashOutline, checkmarkCircle,
       lockClosedOutline, saveOutline, createOutline, warningOutline, storefrontOutline,
+      cameraOutline,
     });
   }
 
@@ -73,6 +83,7 @@ export class ProfilePage implements ViewWillEnter {
           upiId: this.me.bank.upiId,
           accountNo: this.me.bank.accountNo,
           ifsc: this.me.bank.ifsc,
+          paymentApp: this.me.bank.paymentApp,
         };
       } else {
         this.form.holderName = this.me?.name ?? '';
@@ -120,6 +131,7 @@ export class ProfilePage implements ViewWillEnter {
         upiId: this.form.upiId.trim() || undefined,
         accountNo: this.form.accountNo.trim() || undefined,
         ifsc: this.form.ifsc.trim() || undefined,
+        paymentApp: this.form.paymentApp || undefined,
       };
 
       if (this.hasBank) {
@@ -166,7 +178,28 @@ export class ProfilePage implements ViewWillEnter {
         upiId: this.me.bank.upiId,
         accountNo: this.me.bank.accountNo,
         ifsc: this.me.bank.ifsc,
+        paymentApp: this.me.bank.paymentApp,
       };
+    }
+  }
+
+  pickAvatar() { this.avatarInput?.nativeElement.click(); }
+
+  async onAvatarSelected(e: Event) {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    (e.target as HTMLInputElement).value = '';
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { this.toast('Photo must be under 5MB'); return; }
+
+    this.uploadingAvatar = true;
+    try {
+      const url = await this.auth.updateAvatar(file);
+      if (this.me) this.me.avatarUrl = url;
+      this.toast('Photo updated');
+    } catch (e) {
+      this.toast(humanError(e, 'Could not upload the photo'));
+    } finally {
+      this.uploadingAvatar = false;
     }
   }
 

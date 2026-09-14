@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonContent, IonIcon, IonSpinner, ToastController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
-  tvOutline, personOutline, callOutline, mailOutline,
+  tvOutline, personOutline, callOutline, mailOutline, cameraOutline, addOutline,
   happyOutline, lockClosedOutline, eyeOutline, eyeOffOutline, idCardOutline,
 } from 'ionicons/icons';
 import { Auth } from '../../auth';
@@ -21,6 +21,8 @@ import { FormField } from '../../shared/models';
   imports: [CommonModule, FormsModule, IonContent, IonIcon, IonSpinner],
 })
 export class CreateaccntPage implements OnInit {
+  @ViewChild('avatarInput') avatarInput!: ElementRef<HTMLInputElement>;
+
   /** Driven by the admin Form Builder rather than hardcoded. */
   fields: FormField[] = [];
   values: Record<string, string> = {};
@@ -29,6 +31,11 @@ export class CreateaccntPage implements OnInit {
   loading = false;
   error = '';
 
+  /** Kept in memory only — there is no account to upload to until signUp()
+   *  succeeds, so the actual upload happens right after that. */
+  avatarPreview: string | null = null;
+  private avatarFile: File | null = null;
+
   constructor(
     private auth: Auth,
     private data: DataService,
@@ -36,7 +43,7 @@ export class CreateaccntPage implements OnInit {
     private toastCtrl: ToastController,
   ) {
     addIcons({
-      tvOutline, personOutline, callOutline, mailOutline,
+      tvOutline, personOutline, callOutline, mailOutline, cameraOutline, addOutline,
       happyOutline, lockClosedOutline, eyeOutline, eyeOffOutline, idCardOutline,
     });
   }
@@ -85,6 +92,18 @@ export class CreateaccntPage implements OnInit {
 
   get isValid() { return this.fields.length > 0 && this.validate() === null; }
 
+  pickAvatar() { this.avatarInput?.nativeElement.click(); }
+
+  onAvatarSelected(e: Event) {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { this.error = 'Photo must be under 5MB'; return; }
+    this.avatarFile = file;
+    const reader = new FileReader();
+    reader.onload = () => (this.avatarPreview = reader.result as string);
+    reader.readAsDataURL(file);
+  }
+
   async createAccount() {
     this.error = '';
 
@@ -110,11 +129,19 @@ export class CreateaccntPage implements OnInit {
     try {
       const { needsLogin } = await this.auth.signUp(mobile, password, name, email || undefined);
 
+      // Only reachable once a real session exists — signUp() has already
+      // loaded the profile by then, so currentUser.uniqueNumber is set.
+      if (!needsLogin && this.avatarFile) {
+        try { await this.auth.updateAvatar(this.avatarFile); }
+        catch { /* the account is created either way; the photo can be added later from Profile */ }
+      }
+
+      const uid = this.auth.currentUser?.uniqueNumber;
       const t = await this.toastCtrl.create({
         message: needsLogin
           ? 'Account created. Please sign in.'
-          : `Welcome, ${name.split(' ')[0]}!`,
-        duration: 2500, position: 'bottom', color: 'success',
+          : `Welcome, ${name.split(' ')[0]}! Your User ID is ${uid}.`,
+        duration: 3200, position: 'bottom', color: 'success',
       });
       await t.present();
 

@@ -10,15 +10,50 @@
 .who {
   display: flex; flex-direction: column; align-items: center; gap: 4px;
   padding: $sp-md 0 $sp-lg;
-  .w-av {
+
+  .w-av-btn {
+    position: relative; width: 82px; height: 82px; border-radius: 50%;
+    border: none; padding: 0; background: none; cursor: pointer;
+  }
+  .w-av, .w-av-img {
     width: 82px; height: 82px; border-radius: 50%;
     @include flex-center; background: $yellow-light; color: $black;
     font-size: 34px; font-weight: 800; border: 3px solid $yellow;
   }
+  .w-av-img { object-fit: cover; }
+  .w-av-edit {
+    position: absolute; right: -2px; bottom: -2px;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: $black; color: $white; @include flex-center;
+    border: 2px solid $white; font-size: 14px;
+  }
+
   .w-name { font-size: $font-2xl; font-weight: 800; color: $black; margin: 8px 0 0; }
   .w-uid {
     font-size: $font-xs; font-weight: 700; color: $black;
     background: $yellow; padding: 3px 12px; border-radius: $r-pill;
+  }
+}
+
+// ── Profile / Bank tabs ─────────────────────────────────────────────────────
+.pr-tabs {
+  display: flex; gap: $sp-sm; margin: 0 $sp-lg $sp-lg;
+  button {
+    flex: 1; padding: 10px; border: none; border-radius: $r-md;
+    background: $white; color: $gray-600; font-weight: 700;
+    box-shadow: $shadow-sm; cursor: pointer;
+    &.on { background: $black; color: $white; }
+  }
+}
+
+// ── Preferred payment app ───────────────────────────────────────────────────
+.app-row {
+  display: flex; gap: $sp-sm; flex-wrap: wrap; margin: 4px 0 $sp-md;
+  button {
+    padding: 8px 14px; border-radius: $r-pill; border: 1px solid $gray-200;
+    background: $white; color: $black; font-weight: 600; font-size: $font-sm;
+    cursor: pointer;
+    &.on { background: $yellow; border-color: $yellow-dark; }
   }
 }
 

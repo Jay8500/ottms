@@ -22,9 +22,10 @@
 --    chat-images      {thread_id}/...               — not a user id; ownership
 --                     is "am I one of the two people in this thread"
 --    support-videos   admin-managed, not yet built; policy added ready for it
---    avatars          upload control removed 2026-08-12 (silently discarded
---                     the file); no policy yet — decide the read model
---                     (owner-only vs visible to other users) before building
+--    avatars          {user_id}/... — added 2026-08-13 once the upload was
+--                     rebuilt. avatar_url is not rendered anywhere else in
+--                     the app yet, so private (owner + admin only) is safe;
+--                     revisit if avatars are ever shown to other users.
 -- ════════════════════════════════════════════════════════════════════════
 
 -- ── payment-proofs: add-fund screenshots ───────────────────────────────
@@ -114,13 +115,35 @@ create policy "support-videos: only admin deletes"
   on storage.objects for delete to authenticated
   using (bucket_id = 'support-videos' and is_admin());
 
+-- ── avatars: profile photo ──────────────────────────────────────────────
+create policy "avatars: owner uploads to their own folder"
+  on storage.objects for insert to authenticated
+  with check (
+    bucket_id = 'avatars'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+create policy "avatars: owner may replace their own photo"
+  on storage.objects for update to authenticated
+  using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text)
+  with check (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
+create policy "avatars: owner and admin can view"
+  on storage.objects for select to authenticated
+  using (
+    bucket_id = 'avatars'
+    and ((storage.foldername(name))[1] = auth.uid()::text or is_admin())
+  );
+
 -- ── Admin can manage anything in the three user buckets too ────────────
 -- Covers removing an inappropriate screenshot etc.
 create policy "user-content buckets: admin manages everything"
   on storage.objects for all to authenticated
   using (
-    bucket_id in ('payment-proofs', 'group-proofs', 'chat-images') and is_admin()
+    bucket_id in ('payment-proofs', 'group-proofs', 'chat-images', 'avatars')
+    and is_admin()
   )
   with check (
-    bucket_id in ('payment-proofs', 'group-proofs', 'chat-images') and is_admin()
+    bucket_id in ('payment-proofs', 'group-proofs', 'chat-images', 'avatars')
+    and is_admin()
   );

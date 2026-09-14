@@ -5,10 +5,14 @@
       <h1 class="brand-title">Create <span class="blue">Account</span></h1>
     </div>
 
-    <!-- The photo picker is removed until it actually uploads. It only ever
-         set a local preview — the file was discarded on submit, so the user
-         chose a picture and silently got no picture. Restoring it needs a
-         storage bucket, an upload, and avatar_url written to the profile. -->
+    <!-- Kept in memory only until sign-up succeeds and there is an account
+         to attach the photo to; see createAccount() for the actual upload. -->
+    <button class="avatar-btn" type="button" (click)="pickAvatar()" aria-label="Add a photo">
+      <img *ngIf="avatarPreview" [src]="avatarPreview" alt="Your photo" />
+      <ion-icon *ngIf="!avatarPreview" name="camera-outline"></ion-icon>
+      <span class="av-plus"><ion-icon name="add-outline"></ion-icon></span>
+    </button>
+    <input type="file" #avatarInput hidden accept="image/*" (change)="onAvatarSelected($event)" />
 
     <div class="form-card">
       <div class="input-row" *ngFor="let f of fields">

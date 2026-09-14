@@ -125,7 +125,8 @@ export class DataService {
       badges: allBadges.slice(0, Number(stat?.badge_count ?? 0)),
       bank: bank ? {
         holderName: bank.holder_name, upiId: bank.upi_id ?? '',
-        accountNo: bank.account_no ?? '', ifsc: bank.ifsc ?? '', locked: bank.locked,
+        accountNo: bank.account_no ?? '', ifsc: bank.ifsc ?? '',
+        paymentApp: bank.payment_app ?? '', locked: bank.locked,
       } : undefined,
       walletAmount: Number(r.wallet_locked) + Number(r.wallet_unlocked),
       lockedAmount: Number(r.wallet_locked),
@@ -683,7 +684,7 @@ export class DataService {
    * requestBankChange() and needs admin approval (Q4).
    */
   async saveBankDetails(input: {
-    holderName: string; upiId?: string; accountNo?: string; ifsc?: string;
+    holderName: string; upiId?: string; accountNo?: string; ifsc?: string; paymentApp?: string;
   }) {
     const userId = await this.sb.currentUserId();
     if (!userId) throw new Error('Not signed in');
@@ -697,6 +698,7 @@ export class DataService {
       upi_id: input.upiId ?? null,
       account_no: input.accountNo ?? null,
       ifsc: input.ifsc ?? null,
+      payment_app: input.paymentApp ?? null,
       locked: true,
     });
     if (error) throw error;
@@ -716,7 +718,7 @@ export class DataService {
 
   /** Raised by the user from their profile; needs admin sign-off to apply. */
   async requestBankChange(input: {
-    holderName: string; upiId?: string; accountNo?: string; ifsc?: string;
+    holderName: string; upiId?: string; accountNo?: string; ifsc?: string; paymentApp?: string;
   }) {
     const userId = await this.sb.currentUserId();
     if (!userId) throw new Error('Not signed in');
@@ -730,6 +732,7 @@ export class DataService {
       upi_id: input.upiId ?? null,
       account_no: input.accountNo ?? null,
       ifsc: input.ifsc ?? null,
+      payment_app: input.paymentApp ?? null,
     });
     if (error) throw error;
   }

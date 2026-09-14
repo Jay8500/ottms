@@ -67,6 +67,7 @@ export interface BankDetails {
   upiId: string;
   accountNo: string;
   ifsc: string;
+  paymentApp: string;   // which app admin should pay the withdrawal through
   locked: boolean;      // set once at signup, then immutable
 }
 

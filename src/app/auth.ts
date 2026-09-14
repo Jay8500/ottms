@@ -86,6 +86,16 @@ export class Auth {
       throw new Error('Your account exists but its profile is missing. Contact support.');
     }
 
+    // avatar_url stored on the row is a path inside the private `avatars`
+    // bucket, not a browsable URL — it has to be signed before it can be
+    // shown, and a signed link expires, so this happens on every load
+    // rather than being cached anywhere.
+    let avatarUrl: string | undefined;
+    if (data.avatar_url) {
+      try { avatarUrl = await this.sb.signedUrl('avatars', data.avatar_url); }
+      catch { /* photo removed or bucket unreachable — show the initial instead */ }
+    }
+
     const profile: UserProfile = {
       id: data.id,
       name: data.name,
@@ -95,7 +105,7 @@ export class Auth {
       email: data.email ?? '',
       role: data.role,
       isSeller: data.is_seller,
-      avatarUrl: data.avatar_url ?? undefined,
+      avatarUrl,
       lockedAmount: Number(data.wallet_locked),
       unlockedAmount: Number(data.wallet_unlocked),
       walletAmount: Number(data.wallet_locked) + Number(data.wallet_unlocked),
@@ -123,6 +133,27 @@ export class Auth {
       .from('profiles').update({ is_seller: isSeller }).eq('id', user.id);
     if (error) throw error;
     this._user.next({ ...user, isSeller });
+  }
+
+  /**
+   * Uploads a profile photo and points the profile at it. The `avatars`
+   * bucket is private — only the owner and admin can read it — because
+   * avatar_url is not shown to any other user anywhere in the app today.
+   */
+  async updateAvatar(file: File): Promise<string> {
+    const user = this.currentUser;
+    if (!user) throw new Error('Not signed in');
+
+    const ext = file.name.split('.').pop() ?? 'jpg';
+    const path = await this.sb.upload('avatars', `${user.id}/${Date.now()}.${ext}`, file);
+
+    const { error } = await this.sb.client
+      .from('profiles').update({ avatar_url: path }).eq('id', user.id);
+    if (error) throw error;
+
+    const url = await this.sb.signedUrl('avatars', path);
+    this._user.next({ ...user, avatarUrl: url });
+    return url;
   }
 
   async logout(): Promise<void> {
