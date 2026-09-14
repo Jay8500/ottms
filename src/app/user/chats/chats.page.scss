@@ -11,6 +11,22 @@
   text-align: center; margin: $sp-xs 0 $sp-lg;
 }
 
+.search-row {
+  display: flex; align-items: center; gap: $sp-sm;
+  margin: 0 $sp-lg $sp-md; padding: 10px $sp-md;
+  background: $white; border: 1.5px solid $gray-200; border-radius: $r-pill;
+  ion-icon { font-size: 18px; color: $gray-400; flex-shrink: 0; }
+  input {
+    flex: 1; border: none; outline: none; background: none;
+    font-family: inherit; font-size: $font-sm; color: $black;
+    &::placeholder { color: $gray-400; }
+  }
+  .clear {
+    border: none; background: none; padding: 0; cursor: pointer;
+    display: flex; ion-icon { color: $gray-600; }
+  }
+}
+
 .thread-list { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-sm; }
 
 .thread {

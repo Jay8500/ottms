@@ -1,0 +1,64 @@
+@import '../../../global.scss';
+
+:host {
+  display: block;
+  --background: transparent;
+}
+
+.am-sheet {
+  background: $white;
+  border-radius: $r-xl $r-xl 0 0;
+  padding-bottom: calc(#{$sp-lg} + var(--ion-safe-area-bottom, 0px));
+  box-shadow: $shadow-lg;
+}
+
+.am-grab {
+  width: 40px; height: 4px; border-radius: $r-pill;
+  background: $gray-300; margin: 10px auto 4px;
+}
+
+.am-head {
+  display: flex; align-items: center; gap: $sp-md;
+  padding: $sp-md $sp-lg $sp-lg;
+  border-bottom: 1px solid $gray-100;
+
+  .am-av {
+    width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+    background: $yellow-light; border: 2px solid $yellow;
+    @include flex-center; font-size: $font-lg; font-weight: 800; color: $black;
+  }
+  .am-who { flex: 1; min-width: 0; }
+  .am-name { font-size: $font-lg; font-weight: 800; color: $black; margin: 0; }
+  .am-id { font-size: $font-xs; font-weight: 700; color: $gray-600; margin: 2px 0 0; }
+
+  .am-close {
+    width: 32px; height: 32px; border-radius: 50%; border: none;
+    background: $gray-100; color: $gray-700; @include flex-center;
+    flex-shrink: 0; cursor: pointer;
+    ion-icon { font-size: 18px; }
+  }
+}
+
+.am-rows {
+  padding: $sp-sm $sp-md;
+  & + .am-rows { border-top: 1px solid $gray-100; }
+}
+
+.am-row {
+  width: 100%; display: flex; align-items: center; gap: $sp-md;
+  padding: 12px $sp-sm; border: none; background: none; cursor: pointer;
+  border-radius: $r-md; text-align: left;
+  &:active { background: $gray-50; }
+
+  .am-ico {
+    width: 36px; height: 36px; border-radius: $r-md; flex-shrink: 0;
+    background: $yellow-light; color: $black; @include flex-center;
+    ion-icon { font-size: 19px; }
+  }
+  .am-text { font-size: $font-base; font-weight: 700; color: $black; }
+
+  &.danger {
+    .am-ico { background: $danger-bg; color: $danger; }
+    .am-text { color: $danger; }
+  }
+}

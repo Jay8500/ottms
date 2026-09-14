@@ -13,8 +13,17 @@
 
   <h1 class="page-title">Chat's</h1>
 
+  <div class="search-row" *ngIf="threads.length">
+    <ion-icon name="search-outline"></ion-icon>
+    <input [(ngModel)]="term" (ngModelChange)="applySearch()"
+           placeholder="Search by Customer ID, Name, OTT or Validity" />
+    <button *ngIf="term" class="clear" (click)="clearSearch()" aria-label="Clear search">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+  </div>
+
   <div class="thread-list">
-    <button class="thread" *ngFor="let c of threads" (click)="open(c)">
+    <button class="thread" *ngFor="let c of shown" (click)="open(c)">
       <app-ott-logo *ngIf="c.isGroup" [brand]="c.brand || ''" [size]="50" [radius]="10"></app-ott-logo>
       <div class="t-av" *ngIf="!c.isGroup">{{ c.peerName?.charAt(0) }}</div>
 
@@ -49,6 +58,12 @@
     <p>No conversations yet.</p>
     <p class="sub">A chat opens automatically when you buy or sell a screen.</p>
     <button class="retry" (click)="browse()">Browse platforms</button>
+  </div>
+
+  <div class="state" *ngIf="!loading && !error && threads.length && !shown.length">
+    <ion-icon name="search-outline"></ion-icon>
+    <p>No chats match “{{ term }}”.</p>
+    <button class="retry" (click)="clearSearch()">Clear search</button>
   </div>
 
   <div style="height:80px"></div>

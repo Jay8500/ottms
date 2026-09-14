@@ -7,7 +7,7 @@ import {
   ViewWillEnter, ViewWillLeave,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { lockClosedOutline, chatbubblesOutline, optionsOutline } from 'ionicons/icons';
+import { lockClosedOutline, chatbubblesOutline, optionsOutline, searchOutline, closeOutline } from 'ionicons/icons';
 import { DataService } from '../../shared/data.service';
 import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
 import { AppMenuService } from '../../shared/app-menu.service';
@@ -29,13 +29,15 @@ export class UserChatsPage implements ViewWillEnter, ViewWillLeave {
   openMenu() { this.appMenu.open(); }
 
   threads: ChatThread[] = [];
+  shown: ChatThread[] = [];
+  term = '';
   loading = true;
   error = '';
 
   private unsubscribe?: () => void;
 
   constructor(private router: Router, private data: DataService) {
-    addIcons({ lockClosedOutline, chatbubblesOutline, optionsOutline });
+    addIcons({ lockClosedOutline, chatbubblesOutline, optionsOutline, searchOutline, closeOutline });
   }
 
   /** Refresh on every visit — a purchase may have opened a new thread. */
@@ -56,6 +58,7 @@ export class UserChatsPage implements ViewWillEnter, ViewWillLeave {
     this.error = '';
     try {
       this.threads = await this.data.getThreads();
+      this.applySearch();
     } catch (e) {
       if (!quiet) this.error = 'Could not load your chats.';
       console.error(e);
@@ -63,6 +66,20 @@ export class UserChatsPage implements ViewWillEnter, ViewWillLeave {
       this.loading = false;
     }
   }
+
+  /** By Customer ID, name, OTT platform or validity — whichever matches. */
+  applySearch() {
+    const t = this.term.trim().toLowerCase();
+    if (!t) { this.shown = this.threads; return; }
+    this.shown = this.threads.filter(c => [
+      c.peerName, c.peerUniqueNum?.toString(),
+      c.sellerName, c.sellerUniqueNum?.toString(),
+      c.ottName, c.tierLabel,
+      c.months ? `${c.months}m` : undefined, c.months ? `${c.months} month` : undefined,
+    ].some(v => v?.toLowerCase().includes(t)));
+  }
+
+  clearSearch() { this.term = ''; this.applySearch(); }
 
   /** Pull-to-refresh. */
   async refresh(ev: CustomEvent) {

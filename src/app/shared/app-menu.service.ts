@@ -1,45 +1,42 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { ActionSheetController, AlertController } from '@ionic/angular/standalone';
+import { AlertController, ModalController } from '@ionic/angular/standalone';
 import { Auth } from '../auth';
+import { AppMenuComponent } from './app-menu/app-menu.component';
 
 /**
  * The options button in the top-right of every user screen.
  *
- * One place so the menu cannot drift between pages — it was previously
- * rendered on every screen and wired to nothing.
+ * One place so the menu cannot drift between pages. Presents
+ * AppMenuComponent as a bottom-sheet modal — every other screen in this app
+ * is fully custom-styled, and a native ActionSheet was the one place still
+ * wearing the OS's plain button list ("Make Menu sections look
+ * professional").
  */
 @Injectable({ providedIn: 'root' })
 export class AppMenuService {
   private router = inject(Router);
   private auth = inject(Auth);
-  private sheetCtrl = inject(ActionSheetController);
+  private modalCtrl = inject(ModalController);
   private alertCtrl = inject(AlertController);
 
   async open() {
-    const sheet = await this.sheetCtrl.create({
-      header: this.auth.currentUser?.name ?? 'Menu',
-      subHeader: this.auth.currentUser
-        ? `User ID ${this.auth.currentUser.uniqueNumber}`
-        : undefined,
-      buttons: [
-        { text: 'Profile',            icon: 'person-outline',      handler: () => this.go('/user/profile') },
-        { text: 'Payments & Wallet',  icon: 'wallet-outline',      handler: () => this.go('/user/wallet') },
-        { text: 'Bank Details',       icon: 'business-outline',    handler: () => this.go('/user/profile') },
-        { text: 'My Groups',          icon: 'people-outline',      handler: () => this.go('/user/groups') },
-        { text: 'Order History',      icon: 'receipt-outline',     handler: () => this.go('/user/wallet') },
-        { text: 'Invite Friends',     icon: 'gift-outline',        handler: () => this.go('/user/refer') },
-        { text: 'Support',            icon: 'headset-outline',     handler: () => this.go('/user/support') },
-        { text: 'Terms & Conditions', icon: 'document-text-outline', handler: () => this.go('/user/terms') },
-        { text: 'Logout',             icon: 'log-out-outline', role: 'destructive',
-          handler: () => { this.confirmLogout(); } },
-        { text: 'Cancel', role: 'cancel' },
-      ],
+    const modal = await this.modalCtrl.create({
+      component: AppMenuComponent,
+      // A sheet sized to roughly fit the menu's own content (header + 9
+      // rows) rather than the full screen, with room to drag further open
+      // if a longer list is ever added.
+      breakpoints: [0, 0.62, 1],
+      initialBreakpoint: 0.62,
+      handle: false,   // the component draws its own grab handle
+      cssClass: 'am-modal',
     });
-    await sheet.present();
-  }
+    await modal.present();
 
-  private go(url: string) { this.router.navigateByUrl(url); }
+    const { data } = await modal.onWillDismiss();
+    if (data?.action === 'go' && data.url) this.router.navigateByUrl(data.url);
+    if (data?.action === 'logout') this.confirmLogout();
+  }
 
   private async confirmLogout() {
     const alert = await this.alertCtrl.create({
