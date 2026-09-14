@@ -63,6 +63,9 @@
   outline: none; background: $white;
   &:focus { border-color: $yellow; }
   &.ta { height: auto; padding: 10px $sp-md; resize: vertical; line-height: 1.5; }
+  // Thicker, coloured border once there is something written — a plain grey
+  // box looked empty/inactive even with text in it.
+  &.ta.filled { border-width: 2px; border-color: $yellow-dark; background: $yellow-light; }
 }
 
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: $sp-sm; }

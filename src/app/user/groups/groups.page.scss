@@ -11,6 +11,17 @@
   text-align: center; margin: $sp-xs 0 $sp-md;
 }
 
+// ── Sale breakdown ───────────────────────────────────────────────────────
+.sale-split {
+  display: flex; gap: $sp-sm; margin: -4px $sp-lg $sp-md;
+  .sp {
+    flex: 1; text-align: center; padding: 6px; border-radius: $r-sm;
+    font-size: $font-xs; font-weight: 700;
+    &.active { background: $success-bg; color: $success-ink; }
+    &.sold   { background: $gray-100;   color: $gray-700; }
+  }
+}
+
 // ── Tabs ───────────────────────────────────────────────────────────────────
 .tabs {
   display: flex; gap: 4px; margin: 0 $sp-lg $sp-md;

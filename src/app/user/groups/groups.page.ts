@@ -85,6 +85,11 @@ export class UserGroupsPage implements ViewWillEnter {
   get pending() { return this.mine.filter(g => g.status === 'pending' || g.status === 'rejected'); }
   get sold()    { return this.mine.filter(g => g.status === 'approved' || g.status === 'full'); }
 
+  /** Still has open seats. */
+  get activeForSale() { return this.mine.filter(g => g.status === 'approved'); }
+  /** Every seat taken. */
+  get soldOut()        { return this.mine.filter(g => g.status === 'full'); }
+
   get shown(): GroupScreen[] {
     if (this.tab === 'joined')  return this.joined;
     if (this.tab === 'pending') return this.pending;

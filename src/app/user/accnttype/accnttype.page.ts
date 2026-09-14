@@ -13,7 +13,7 @@ import { DataService } from '../../shared/data.service';
 import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
 import { humanError } from '../../shared/errors';
 import { AppMenuService } from '../../shared/app-menu.service';
-import { CommerceOption, OttApp } from '../../shared/models';
+import { CommerceOption, OttApp, ValidityPlan } from '../../shared/models';
 
 @Component({
   selector: 'app-accnttype',
@@ -29,13 +29,14 @@ export class AccnttypePage implements OnInit {
   ottId = '';
   app: OttApp | null = null;
   options: CommerceOption[] = [];
+  validityPlans: ValidityPlan[] = [];
   loading = true;
   error = '';
 
   /** Create Group form — opens inline once Share is tapped. */
   showGroupForm = false;
   submitting = false;
-  groupForm = { tierId: '', dateFrom: '', dateTo: '', proofName: '', comment: '' };
+  groupForm = { tierId: '', validityId: '', dateFrom: '', dateTo: '', proofName: '', comment: '' };
   private proofFile: File | null = null;
 
   constructor(
@@ -79,12 +80,14 @@ export class AccnttypePage implements OnInit {
     this.loading = true;
     this.error = '';
     try {
-      const [app, options] = await Promise.all([
+      const [app, options, plans] = await Promise.all([
         this.data.getOttApp(this.ottId),
         this.data.getCommerceOptions(),
+        this.data.getValidityPlans(),
       ]);
       this.app = app;
       this.options = options.filter(o => o.active);
+      this.validityPlans = plans.filter(p => p.active).sort((a, b) => a.months - b.months);
       if (!app) this.error = 'That platform is no longer available.';
     } catch (e) {
       this.error = 'Could not load this platform.';
@@ -92,6 +95,20 @@ export class AccnttypePage implements OnInit {
     } finally {
       this.loading = false;
     }
+  }
+
+  /**
+   * Picking a validity fills in the dates for you, rather than asking the
+   * seller to work out a date range by hand. Formats as YYYY-MM-DD, what
+   * <input type="date"> and the server both expect.
+   */
+  pickValidity(p: ValidityPlan) {
+    this.groupForm.validityId = p.id;
+    const from = new Date();
+    const to = new Date();
+    to.setMonth(to.getMonth() + p.months);
+    this.groupForm.dateFrom = from.toISOString().slice(0, 10);
+    this.groupForm.dateTo = to.toISOString().slice(0, 10);
   }
 
   back() { this.router.navigate(['/user/ottplatforms']); }
@@ -111,7 +128,7 @@ export class AccnttypePage implements OnInit {
     // — even for a different platform — showed the last attempt's leftovers.
     // Reported as "content should be auto removed but it showing".
     this.showGroupForm = false;
-    this.groupForm = { tierId: '', dateFrom: '', dateTo: '', proofName: '', comment: '' };
+    this.groupForm = { tierId: '', validityId: '', dateFrom: '', dateTo: '', proofName: '', comment: '' };
     this.proofFile = null;
   }
 
@@ -129,10 +146,8 @@ export class AccnttypePage implements OnInit {
 
   private validate(): string | null {
     const f = this.groupForm;
-    if (!f.tierId)   return 'Choose which plan you are sharing';
-    if (!f.dateFrom) return 'Enter the start date';
-    if (!f.dateTo)   return 'Enter the end date';
-    if (new Date(f.dateTo) <= new Date(f.dateFrom)) return 'The end date must be after the start date';
+    if (!f.tierId)     return 'Choose which plan you are sharing';
+    if (!f.validityId) return 'Choose how long the validity is';
     if (!this.proofFile) return 'Upload a screenshot of your subscription';
     return null;
   }
@@ -157,7 +172,7 @@ export class AccnttypePage implements OnInit {
 
       this.toast('Group submitted for approval');
       this.showGroupForm = false;
-      this.groupForm = { tierId: '', dateFrom: '', dateTo: '', proofName: '', comment: '' };
+      this.groupForm = { tierId: '', validityId: '', dateFrom: '', dateTo: '', proofName: '', comment: '' };
       this.proofFile = null;
     } catch (e: any) {
       // Test the raw error; humanError() has already replaced the text.

@@ -16,15 +16,21 @@
   <h1 class="page-title">My Groups</h1>
 
   <div class="tabs">
-    <button [class.on]="tab === 'joined'" (click)="tab = 'joined'">
-      Joined <span class="n">{{ joined.length }}</span>
-    </button>
     <button [class.on]="tab === 'pending'" (click)="tab = 'pending'">
       Pending <span class="n">{{ pending.length }}</span>
     </button>
     <button [class.on]="tab === 'sold'" (click)="tab = 'sold'">
-      Selling <span class="n">{{ sold.length }}</span>
+      Sale <span class="n">{{ sold.length }}</span>
     </button>
+    <button [class.on]="tab === 'joined'" (click)="tab = 'joined'">
+      Joined <span class="n">{{ joined.length }}</span>
+    </button>
+  </div>
+
+  <!-- Active vs Sold breakdown, only meaningful on the Sale tab -->
+  <div class="sale-split" *ngIf="tab === 'sold'">
+    <span class="sp active">Active for sale: {{ activeForSale.length }}</span>
+    <span class="sp sold">Sold out: {{ soldOut.length }}</span>
   </div>
 
   <div class="list">

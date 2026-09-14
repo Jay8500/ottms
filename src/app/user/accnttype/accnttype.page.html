@@ -44,16 +44,18 @@
       </button>
     </div>
 
-    <div class="two-col">
-      <div>
-        <label class="fl">Date From</label>
-        <input class="fi" type="date" [(ngModel)]="groupForm.dateFrom" />
-      </div>
-      <div>
-        <label class="fl">Date To</label>
-        <input class="fi" type="date" [(ngModel)]="groupForm.dateTo" />
-      </div>
+    <label class="fl">Validity</label>
+    <div class="tier-row">
+      <button class="tier" *ngFor="let p of validityPlans"
+              [class.on]="groupForm.validityId === p.id"
+              (click)="pickValidity(p)">
+        <span class="t-name">{{ p.months }} Month{{ p.months === 1 ? '' : 's' }}</span>
+        <span class="t-seats">₹{{ p.amount | number }}</span>
+      </button>
     </div>
+    <p class="grp-note" *ngIf="groupForm.dateFrom">
+      {{ groupForm.dateFrom }} – {{ groupForm.dateTo }}, starting today
+    </p>
 
     <label class="fl">Upload Subscription Screenshot</label>
     <label class="upload">
@@ -64,7 +66,7 @@
     </label>
 
     <label class="fl">Comments</label>
-    <textarea class="fi ta" rows="3" [(ngModel)]="groupForm.comment"
+    <textarea class="fi ta" [class.filled]="groupForm.comment" rows="4" [(ngModel)]="groupForm.comment"
               placeholder="Anything the buyer should know"></textarea>
 
     <p class="grp-note" *ngIf="seatsForTier">
