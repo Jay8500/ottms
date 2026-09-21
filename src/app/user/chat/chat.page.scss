@@ -50,12 +50,9 @@
              &.on { background: $success; } }
       .lk { font-size: 13px; }
     }
-    .p-stats {
-      display: flex; align-items: center; gap: 6px; margin-top: 3px;
-      .p-stars { font-size: $font-xs; font-weight: 700; color: #B45309;
-                 .dim { color: rgba(0,0,0,0.5); font-weight: 500; } }
-      .p-badge { font-size: 12px; width: 18px; height: 18px; border-radius: 50%;
-                 display: inline-flex; align-items: center; justify-content: center; }
+    button.p-state {
+      border: none; background: none; padding: 0; font-family: inherit; cursor: pointer;
+      .p-caret { font-size: 14px; margin-left: 1px; }
     }
   }
   .p-rate {
@@ -65,28 +62,36 @@
   }
 }
 
-// ── Notice ─────────────────────────────────────────────────────────────────
-.admin-note {
-  flex-shrink: 0; margin: 0 $sp-lg $sp-sm; padding: 8px $sp-md;
-  background: #FEF3C7; border-radius: $r-sm; border: 1px solid #FDE68A;
+// ── Combined info panel: ratings, badges, admin note ────────────────────────
+// "Ratings and batches on drag down" — collapsed by default, opened from
+// the peer-card's own caret rather than each piece having its own toggle.
+.info-panel {
+  flex-shrink: 0; margin: 0 $sp-lg $sp-sm; padding: $sp-sm $sp-md;
+  background: $yellow-light; border-radius: $r-md; border: 1px solid $gray-200;
 }
-.an-head {
-  width: 100%; display: flex; align-items: center; gap: 6px;
-  border: none; background: none; cursor: pointer; padding: 0;
+.p-stats {
+  display: flex; align-items: center; gap: 6px;
+  .p-stars { font-size: $font-sm; font-weight: 700; color: #B45309;
+             .dim { color: rgba(0,0,0,0.5); font-weight: 500; } }
+  .p-badge { font-size: 13px; width: 22px; height: 22px; border-radius: 50%;
+             display: inline-flex; align-items: center; justify-content: center; }
+}
+.info-empty { font-size: $font-xs; color: $gray-600; margin: 0; font-style: italic; }
+
+.admin-note {
+  margin-top: $sp-sm; padding-top: $sp-sm; border-top: 1px dashed $gray-300;
+  &:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+}
+.an-lbl {
+  display: flex; align-items: center; gap: 6px; margin: 0 0 6px;
   font-size: $font-xs; font-weight: 700; color: #92400E;
   ion-icon { font-size: 14px; flex-shrink: 0; }
-  span { text-align: left; }
-  .an-saving { font-weight: 500; font-style: italic; opacity: 0.7; }
-  .an-caret { margin-left: auto; }
+  .an-saving { margin-left: auto; font-weight: 500; font-style: italic; opacity: 0.7; }
 }
 .an-box {
-  width: 100%; margin-top: 6px; padding: 8px; resize: vertical;
+  width: 100%; padding: 8px; resize: vertical;
   border: 1px solid #FDE68A; border-radius: $r-sm; background: $white;
   font-family: inherit; font-size: $font-xs; color: $black; outline: none;
-}
-.an-preview {
-  margin: 4px 0 0; font-size: $font-xs; color: #92400E;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
 .notice {

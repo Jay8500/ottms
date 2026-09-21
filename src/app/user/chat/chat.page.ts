@@ -40,8 +40,11 @@ export class ChatPage implements OnInit, OnDestroy {
   /** "I can able to add notes because i need to make note on them" —
    *  admin only, never shown to the user themselves. */
   adminNote = '';
-  adminNoteOpen = false;
   savingNote = false;
+  /** "Ratings and badges on drag down" — one panel instead of two separate
+   *  pieces (ratings/badges, and admin's private note) each with their own
+   *  toggle. Collapsed by default, same reasoning as the notice below. */
+  infoOpen = false;
   private noteSaveTimer?: ReturnType<typeof setTimeout>;
   /** Collapsed by default — "Notice should be Slightly visible ... Make
    *  more space for Chat". Full text is one tap away, not removed. */
@@ -152,6 +155,13 @@ export class ChatPage implements OnInit, OnDestroy {
   }
 
   get isAdmin() { return this.auth.role === 'admin'; }
+
+  /** Whether the peer-card's drop-down caret shows at all — admin always
+   *  has the note option, everyone else only when there's something to see. */
+  get hasInfoPanel(): boolean {
+    if (this.isAdmin) return true;
+    return !this.isSupportThread && !!(this.thread?.reviewCount || this.thread?.badges?.length);
+  }
 
   /** Saves a moment after typing stops, rather than on every keystroke. */
   onNoteChange() {

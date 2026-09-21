@@ -26,18 +26,21 @@
           {{ thread.isGroup ? thread.sellerName : thread.peerName }}
           <span class="uid">({{ thread.isGroup ? thread.sellerUniqueNum : thread.peerUniqueNum }})</span>
         </p>
-        <div class="p-state">
+
+        <!-- "Ratings and batches on drag down" — one tap opens ratings,
+             badges and the admin note together, instead of two separate
+             pieces each with its own toggle. Collapsed by default to keep
+             the chat itself the main thing on screen. -->
+        <button class="p-state" *ngIf="hasInfoPanel" (click)="infoOpen = !infoOpen" [attr.aria-expanded]="infoOpen">
           <span class="dot" [class.on]="thread.isOnline"></span>
           <span>{{ thread.isOnline ? 'Online' : 'Offline' }}</span>
           <ion-icon name="lock-closed-outline" *ngIf="thread.locked" class="lk"></ion-icon>
-        </div>
-        <div class="p-stats" *ngIf="!isSupportThread && (thread.reviewCount || thread.badges?.length)">
-          <span class="p-stars" *ngIf="thread.reviewCount">
-            ★ {{ thread.rating }} <span class="dim">({{ thread.reviewCount }})</span>
-          </span>
-          <span class="p-badge" *ngFor="let b of thread.badges" [style.background]="b.color" [title]="b.label">
-            {{ b.emoji }}
-          </span>
+          <ion-icon class="p-caret" [name]="infoOpen ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+        </button>
+        <div class="p-state" *ngIf="!hasInfoPanel">
+          <span class="dot" [class.on]="thread.isOnline"></span>
+          <span>{{ thread.isOnline ? 'Online' : 'Offline' }}</span>
+          <ion-icon name="lock-closed-outline" *ngIf="thread.locked" class="lk"></ion-icon>
         </div>
       </div>
       <button class="p-rate" *ngIf="!isAdmin" (click)="openRating()">
@@ -45,19 +48,30 @@
       </button>
     </div>
 
-    <!-- Admin's own note on this person — "I can able to add notes
-         because i need to make note on them". Never shown to the user. -->
-    <div class="admin-note" *ngIf="isAdmin">
-      <button class="an-head" (click)="adminNoteOpen = !adminNoteOpen">
-        <ion-icon name="document-text-outline"></ion-icon>
-        <span>{{ adminNote ? 'Note' : 'Add a note about this person' }}</span>
-        <span class="an-saving" *ngIf="savingNote">saving…</span>
-        <ion-icon class="an-caret" [name]="adminNoteOpen ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
-      </button>
-      <textarea *ngIf="adminNoteOpen" class="an-box" rows="3"
-                [(ngModel)]="adminNote" (ngModelChange)="onNoteChange()"
-                placeholder="Only admins can see this — e.g. 'asked about a refund on 12 Aug'"></textarea>
-      <p class="an-preview" *ngIf="!adminNoteOpen && adminNote">{{ adminNote }}</p>
+    <div class="info-panel" *ngIf="infoOpen && hasInfoPanel">
+      <div class="p-stats" *ngIf="!isSupportThread && (thread.reviewCount || thread.badges?.length)">
+        <span class="p-stars" *ngIf="thread.reviewCount">
+          ★ {{ thread.rating }} <span class="dim">({{ thread.reviewCount }})</span>
+        </span>
+        <span class="p-badge" *ngFor="let b of thread.badges" [style.background]="b.color" [title]="b.label">
+          {{ b.emoji }}
+        </span>
+      </div>
+      <p class="info-empty" *ngIf="!isSupportThread && isAdmin && !thread.reviewCount && !thread.badges?.length">
+        No ratings or badges yet.
+      </p>
+
+      <!-- Admin's own note on this person — "I can able to add notes
+           because i need to make note on them". Never shown to the user. -->
+      <div class="admin-note" *ngIf="isAdmin">
+        <p class="an-lbl">
+          <ion-icon name="document-text-outline"></ion-icon> Note about this person
+          <span class="an-saving" *ngIf="savingNote">saving…</span>
+        </p>
+        <textarea class="an-box" rows="3"
+                  [(ngModel)]="adminNote" (ngModelChange)="onNoteChange()"
+                  placeholder="Only admins can see this — e.g. 'asked about a refund on 12 Aug'"></textarea>
+      </div>
     </div>
 
     <!-- Notice — collapsed by default, "Slightly visible ... make more
