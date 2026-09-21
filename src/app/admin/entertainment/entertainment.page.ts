@@ -44,6 +44,23 @@ export class AdminEntertainmentPage implements OnInit {
 
   readonly icons = ['tv-outline', 'film-outline', 'musical-notes-outline', 'game-controller-outline'];
 
+  /** The built-in brand marks OttLogoComponent knows how to draw — same
+   *  keys, kept in step by hand since the component does not expose its
+   *  own list. "Logo key" used to be a blind text box with no indication
+   *  of what a valid value even was — reported as "Not showing Logo
+   *  selection". */
+  readonly logoKeys = [
+    'netflix', 'prime', 'hotstar', 'zee5', 'sonyliv', 'voot',
+    'aha', 'discovery', 'appletv', 'sunnxt', 'hoichoi', 'lionsgate',
+  ];
+
+  /** Clicking the logo that is already selected clears it, rather than
+   *  leaving no way back to "use the uploaded image instead". */
+  pickLogo(key: string) {
+    if (!this.editing) return;
+    this.editing.brand = this.editing.brand === key ? '' : key;
+  }
+
   constructor(
     private data: DataService,
     private route: ActivatedRoute,

@@ -80,10 +80,18 @@
     </button>
 
     <ng-container *ngIf="showAdvanced">
-      <label class="ee-lbl">Logo key</label>
-      <input class="ee-input" [(ngModel)]="editing.brand"
-             placeholder="netflix, prime, hotstar…" />
-      <p class="hint">Picks the built-in logo. Leave blank to use the uploaded image instead.</p>
+      <label class="ee-lbl">Logo</label>
+      <div class="logo-grid">
+        <button type="button" class="logo-tile" *ngFor="let key of logoKeys"
+                [class.on]="editing.brand === key" (click)="pickLogo(key)"
+                [attr.aria-label]="key" [attr.aria-pressed]="editing.brand === key">
+          <app-ott-logo [brand]="key" [size]="44" [radius]="8"></app-ott-logo>
+        </button>
+      </div>
+      <p class="hint">
+        Tap to pick a built-in logo — tap the same one again to clear it and
+        use the uploaded image above instead.
+      </p>
 
       <label class="ee-lbl">Starting price (₹)</label>
       <input class="ee-input" type="number" inputmode="numeric" [(ngModel)]="editing.startingPrice" />
