@@ -61,6 +61,21 @@
           <ion-icon name="close-outline"></ion-icon>
         </button>
       </div>
+
+      <!-- "Select from preset image sizes after uploading a logo" — shown
+           only right after picking a new file, since re-cropping an image
+           already saved from a previous session would need the original,
+           uncropped file, which isn't kept around. -->
+      <div class="ee-preset-row" *ngIf="hasFreshUpload">
+        <button type="button" class="preset" [class.on]="imgPreset === 'square'"
+                (click)="setPreset('square')">
+          <span class="p-box p-sq"></span> Square icon
+        </button>
+        <button type="button" class="preset" [class.on]="imgPreset === 'wide'"
+                (click)="setPreset('wide')">
+          <span class="p-box p-wd"></span> Wide banner
+        </button>
+      </div>
     </ng-container>
 
     <ng-container *ngIf="showPosition">

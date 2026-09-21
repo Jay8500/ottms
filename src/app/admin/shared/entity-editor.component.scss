@@ -97,6 +97,19 @@ select.ee-input { appearance: none; background-image: none; }
   ion-icon { font-size: 16px; }
 }
 
+.ee-preset-row { display: flex; gap: $sp-sm; margin-top: $sp-sm; }
+.preset {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px;
+  padding: $sp-sm; border: 1.5px solid $gray-300; border-radius: $r-md;
+  background: $white; font-family: inherit; font-size: $font-xs; font-weight: 700;
+  color: $gray-700; cursor: pointer;
+  &.on { border-color: $yellow-dark; background: $yellow-light; color: $black; }
+
+  .p-box { display: block; border: 1.5px solid currentColor; border-radius: 3px; }
+  .p-sq  { width: 22px; height: 22px; }
+  .p-wd  { width: 30px; height: 17px; }
+}
+
 .ee-toggle-row {
   @include flex-between;
   margin-top: $sp-lg;

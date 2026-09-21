@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -25,7 +25,7 @@ import { CmsEntity } from '../../shared/models';
   templateUrl: './entity-editor.component.html',
   styleUrls: ['./entity-editor.component.scss'],
 })
-export class EntityEditorComponent {
+export class EntityEditorComponent implements OnChanges {
   @Input() open = false;
   @Input() heading = 'Create New';
   @Input() model: CmsEntity | null = null;
@@ -63,12 +63,59 @@ export class EntityEditorComponent {
     });
   }
 
+  /** The raw, uncropped upload — kept only in memory so switching between
+   *  preset sizes re-crops from the original instead of cropping an
+   *  already-cropped image down further each time. */
+  private originalImg: HTMLImageElement | null = null;
+  imgPreset: 'square' | 'wide' = 'square';
+  get hasFreshUpload() { return !!this.originalImg; }
+
+  /** Each edit()/create() in the parent hands in a new model object — reset
+   *  the leftover in-memory upload state so it doesn't leak into the next
+   *  item opened in the same sheet. */
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['model']) {
+      this.originalImg = null;
+      this.imgPreset = 'square';
+    }
+  }
+
   onImage(e: Event) {
     const file = (e.target as HTMLInputElement).files?.[0];
     if (!file || !this.model) return;
     const reader = new FileReader();
-    reader.onload = () => { if (this.model) this.model.imageUrl = reader.result as string; };
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => { this.originalImg = img; this.applyPreset(); };
+      img.src = reader.result as string;
+    };
     reader.readAsDataURL(file);
+  }
+
+  /** "Select from preset image sizes after uploading a logo." Square for
+   *  an icon-style logo, wide for a banner — center-cropped so nothing
+   *  gets stretched or squashed. */
+  setPreset(p: 'square' | 'wide') {
+    this.imgPreset = p;
+    this.applyPreset();
+  }
+
+  private applyPreset() {
+    if (!this.originalImg || !this.model) return;
+    const ratio = this.imgPreset === 'square' ? 1 : 16 / 9;
+    const img = this.originalImg;
+
+    let sx = 0, sy = 0, sw = img.width, sh = img.height;
+    if (sw / sh > ratio) { sw = sh * ratio; sx = (img.width - sw) / 2; }
+    else { sh = sw / ratio; sy = (img.height - sh) / 2; }
+
+    const outW = this.imgPreset === 'square' ? 400 : 640;
+    const outH = Math.round(outW / ratio);
+    const canvas = document.createElement('canvas');
+    canvas.width = outW;
+    canvas.height = outH;
+    canvas.getContext('2d')!.drawImage(img, sx, sy, sw, sh, 0, 0, outW, outH);
+    this.model.imageUrl = canvas.toDataURL('image/jpeg', 0.9);
   }
 
   /** Reported as "no delete option after uploading pic" — clicking the
@@ -79,6 +126,7 @@ export class EntityEditorComponent {
     e.preventDefault();
     e.stopPropagation();
     if (this.model) this.model.imageUrl = undefined;
+    this.originalImg = null;
   }
 
   onSave() {
