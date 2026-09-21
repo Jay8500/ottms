@@ -81,7 +81,10 @@
     </p>
 
     <div class="composer">
-      <button class="c-lock" [class.on]="iUnlocked" (click)="toggleMedia()"
+      <!-- Nothing to toggle once photos are already open — either both
+           sides have already unlocked, or this is a support/admin
+           conversation where the lock never applied in the first place. -->
+      <button class="c-lock" *ngIf="!mediaOpen" [class.on]="iUnlocked" (click)="toggleMedia()"
               [disabled]="thread.locked"
               [attr.aria-pressed]="iUnlocked" aria-label="Allow photos">
         <ion-icon [name]="iUnlocked ? 'lock-open-outline' : 'lock-closed-outline'"></ion-icon>

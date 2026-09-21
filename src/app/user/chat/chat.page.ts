@@ -26,6 +26,8 @@ export class ChatPage implements OnInit, OnDestroy {
   @ViewChild('imgInput') imgInput!: ElementRef<HTMLInputElement>;
 
   private unsubscribe?: () => void;
+  private unsubscribeThread?: () => void;
+  private unsubscribePresence?: () => void;
 
   thread: ChatThread | null = null;
   messages: ChatMessage[] = [];
@@ -51,7 +53,6 @@ export class ChatPage implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.data.setPresence(true);
     await this.enter();
   }
 
@@ -103,14 +104,45 @@ export class ChatPage implements OnInit, OnDestroy {
       this.messages.push(m);
       setTimeout(() => this.scrollArea?.scrollToBottom(200), 60);
     });
+
+    // Reported as "after opposite person unlock, still it taking time to
+    // update... every time had to go back and reopen". onNewMessage() only
+    // fires for new messages — a change to the thread row itself (media
+    // unlock) was invisible until the page reloaded.
+    this.unsubscribeThread?.();
+    this.unsubscribeThread = this.data.onThreadUpdate(threadId, async () => {
+      const fresh = await this.data.getThread(threadId);
+      if (fresh) this.thread = fresh;
+    });
+
+    // Online dot lives on profiles, a different table, so it needs its own
+    // subscription — see onPeerPresence().
+    this.unsubscribePresence?.();
+    if (this.thread?.peerId) {
+      this.unsubscribePresence = this.data.onPeerPresence(this.thread.peerId, (online) => {
+        if (this.thread) this.thread.isOnline = online;
+      });
+    }
   }
 
-  /** Both sides must unlock before photos or voice are allowed (Q5). */
+  get isAdmin() { return this.auth.role === 'admin'; }
+
+  /**
+   * Both sides must unlock before photos or voice are allowed (Q5) — but
+   * only for a trade, where the mutual-unlock dance exists to stop either
+   * side rushing a photo through before they mean to. A support
+   * conversation with the App Team is not a trade, and there is nothing
+   * for admin to protect themselves from in their own inbox. Reported as
+   * "Unlock all no Lock option required" (admin) and "No restrictions for
+   * Admin".
+   */
   get mediaOpen() {
+    if (this.isSupportThread || this.isAdmin) return true;
     return !!this.thread?.buyerMediaUnlocked && !!this.thread?.sellerMediaUnlocked;
   }
 
   get iUnlocked() {
+    if (this.mediaOpen) return true;
     if (!this.thread) return false;
     return this.thread.iAmBuyer
       ? this.thread.buyerMediaUnlocked
@@ -138,7 +170,18 @@ export class ChatPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.unsubscribe?.();
-    this.data.setPresence(false);
+    this.unsubscribeThread?.();
+    this.unsubscribePresence?.();
+    // Presence itself is handled once, app-wide, by the appStateChange
+    // listener in native.service.ts — online while the app is open,
+    // offline once it is backgrounded. This page used to also flip it
+    // on mount/unmount, so leaving the chat for any other screen in the
+    // app (not backgrounding it) incorrectly marked the user offline,
+    // fighting the correct app-wide signal. Reported as "Not updating
+    // Immediately" and "should show Green [while backgrounded], Offline
+    // [once removed from background]" — that behaviour already exists in
+    // native.service.ts; this page was overriding it.
+    //
     // Q5 — closing the conversation re-locks media, so a one-off unlock
     // does not stay open for the next visit.
     if (this.thread && this.iUnlocked) {

@@ -182,6 +182,8 @@ export interface GroupScreen {
 export interface ChatThread {
   id: string;
   isGroup: boolean;
+  /** The other person's real id — "the other side", from my perspective. */
+  peerId?: string;
   peerName?: string;
   peerUniqueNum?: number;
   peerAvatarUrl?: string;

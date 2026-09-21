@@ -341,6 +341,7 @@ export class DataService {
       // group_id, and the templates showed sellerName explicitly for those.
       // A private thread with no group (support chat included) needs this
       // to actually depend on who is asking.
+      peerId: r.buyer_id === me ? r.seller_id : r.buyer_id,
       peerName: r.buyer_id === me ? r.seller?.name : r.buyer?.name,
       peerUniqueNum: r.buyer_id === me ? r.seller?.unique_number : r.buyer?.unique_number,
       ottName: r.groups?.ott_apps?.title,
@@ -483,6 +484,42 @@ export class DataService {
   }
 
   /** Live updates to the thread list — new conversations, last message, lock state. */
+  /**
+   * Live updates to the thread row itself — media unlock, online status,
+   * closed/locked — as opposed to onNewMessage(), which only fires for new
+   * messages. Without this, unlocking media on one phone was invisible on
+   * the other until that person left the conversation and reopened it.
+   */
+  onThreadUpdate(threadId: string, handler: () => void): () => void {
+    const channel = this.db
+      .channel(`thread-row:${threadId}`)
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'chat_threads', filter: `id=eq.${threadId}` },
+        () => handler(),
+      )
+      .subscribe();
+    return () => { this.db.removeChannel(channel); };
+  }
+
+  /**
+   * The other person's online dot, live. Reported as "Not updating
+   * Immediately — Need to go back and reopen" — presence lives on
+   * profiles.is_online, a different table from chat_threads, so the
+   * thread-row subscription above never caught it.
+   */
+  onPeerPresence(peerId: string, handler: (isOnline: boolean) => void): () => void {
+    const channel = this.db
+      .channel(`presence:${peerId}`)
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${peerId}` },
+        (payload: any) => handler(!!payload.new?.is_online),
+      )
+      .subscribe();
+    return () => { this.db.removeChannel(channel); };
+  }
+
   onThreadChange(handler: () => void): () => void {
     const channel = this.db
       .channel('threads')

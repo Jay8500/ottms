@@ -54,6 +54,11 @@
   padding: 10px $sp-md; resize: vertical;
   border: 1.5px solid $gray-300; border-radius: $r-sm;
   font-family: inherit; font-size: $font-base; color: $black;
+  // Missing here — every other .fi in this app sets it explicitly. Without
+  // it, a device in dark mode renders the native dark textarea background
+  // with the black text this rule forces on top of it: "Rating - Text box
+  // was Dark colored".
+  background: $white;
   outline: none; line-height: 1.5;
   &::placeholder { color: $gray-400; }
   &:focus { border-color: $yellow; }
