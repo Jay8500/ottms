@@ -355,6 +355,29 @@ export class DataService {
     });
   }
 
+  /**
+   * The other person's rating and badges, for "Show Ratings and Batches on
+   * Top User details of oposit person on chats". Kept out of getThreads()
+   * itself — that query already runs for the whole chat list on every
+   * page load, and this is only ever shown on the single-conversation
+   * screen, for one person at a time.
+   */
+  async getPeerStats(peerId: string): Promise<{ rating: number; reviewCount: number; badges: Badge[] }> {
+    const [{ data: stat }, { data: awards }] = await Promise.all([
+      this.db.from('user_stats').select('rating_avg, review_count').eq('user_id', peerId).maybeSingle(),
+      this.db.from('badge_awards').select('badges(*)').eq('user_id', peerId),
+    ]);
+    return {
+      rating: Math.round(Number(stat?.rating_avg ?? 0)),
+      reviewCount: Number(stat?.review_count ?? 0),
+      badges: (awards ?? [])
+        .filter((a: any) => a.badges)
+        .map((a: any) => ({
+          id: a.badges.id, label: a.badges.label, emoji: a.badges.emoji, color: a.badges.color,
+        })),
+    };
+  }
+
   // ══ Chat ════════════════════════════════════════════════════════════════
 
   async getThreads(): Promise<ChatThread[]> {

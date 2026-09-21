@@ -31,6 +31,14 @@
           <span>{{ thread.isOnline ? 'Online' : 'Offline' }}</span>
           <ion-icon name="lock-closed-outline" *ngIf="thread.locked" class="lk"></ion-icon>
         </div>
+        <div class="p-stats" *ngIf="!isSupportThread && (thread.reviewCount || thread.badges?.length)">
+          <span class="p-stars" *ngIf="thread.reviewCount">
+            ★ {{ thread.rating }} <span class="dim">({{ thread.reviewCount }})</span>
+          </span>
+          <span class="p-badge" *ngFor="let b of thread.badges" [style.background]="b.color" [title]="b.label">
+            {{ b.emoji }}
+          </span>
+        </div>
       </div>
       <button class="p-rate" (click)="openRating()">
         <ion-icon name="star-outline"></ion-icon>

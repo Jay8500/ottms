@@ -89,6 +89,14 @@ export class ChatPage implements OnInit, OnDestroy {
       this.messages = await this.data.getMessages(this.thread.id);
       setTimeout(() => this.scrollArea?.scrollToBottom(0), 80);
       this.listen(this.thread.id);
+
+      // "Show Ratings and Batches on Top User details of oposit person".
+      // Best-effort — the conversation itself must not fail to open over this.
+      if (this.thread.peerId) {
+        this.data.getPeerStats(this.thread.peerId)
+          .then(s => { if (this.thread) Object.assign(this.thread, s); })
+          .catch(() => {});
+      }
     } catch (e) {
       this.error = 'Could not load this chat.';
       console.error(e);
