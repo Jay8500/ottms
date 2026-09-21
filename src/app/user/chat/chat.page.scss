@@ -60,13 +60,19 @@
 
 // ── Notice ─────────────────────────────────────────────────────────────────
 .notice {
-  flex-shrink: 0; margin: 0 $sp-lg $sp-sm; padding: $sp-md;
-  background: $gray-100; border-radius: $r-md;
+  display: block; width: calc(100% - #{$sp-lg} * 2); flex-shrink: 0;
+  margin: 0 $sp-lg $sp-sm; padding: 6px $sp-md;
+  background: $gray-100; border-radius: $r-sm; border: none; cursor: pointer;
+  &.open { padding: $sp-sm $sp-md; }
+
   .n-title {
-    text-align: center; font-size: $font-sm; font-weight: 800;
-    color: $gray-700; text-decoration: underline; margin: 0 0 6px;
+    display: flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 700; color: $gray-600; margin: 0;
+    ion-icon { font-size: 13px; flex-shrink: 0; }
+    .n-caret { margin-left: auto; }
   }
-  p { font-size: $font-xs; color: $gray-700; line-height: 1.5; margin: 0 0 3px; text-align: center; }
+  .n-body { margin-top: 6px; }
+  p { font-size: $font-xs; color: $gray-700; line-height: 1.5; margin: 0 0 3px; text-align: left; }
 }
 
 // ── Messages ───────────────────────────────────────────────────────────────

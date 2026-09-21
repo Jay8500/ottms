@@ -37,14 +37,20 @@
       </button>
     </div>
 
-    <!-- Frozen notice -->
-    <div class="notice">
-      <p class="n-title">NOTICE</p>
-      <p>1). Do not share personal details like Mobile No, WhatsApp No, Mail Id or social media.</p>
-      <p>2). Do not involve into any arguments.</p>
-      <p>3). Do not use unprofessional / vulgar language.</p>
-      <p>4). Sharing details may lead to fraudulent activities.</p>
-    </div>
+    <!-- Notice — collapsed by default, "Slightly visible ... make more
+         space for Chat". Full text still one tap away, not removed. -->
+    <button class="notice" [class.open]="noticeOpen" (click)="noticeOpen = !noticeOpen">
+      <p class="n-title">
+        <ion-icon name="warning-outline"></ion-icon> Do not share personal details
+        <ion-icon class="n-caret" [name]="noticeOpen ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+      </p>
+      <div class="n-body" *ngIf="noticeOpen">
+        <p>1). Do not share personal details like Mobile No, WhatsApp No, Mail Id or social media.</p>
+        <p>2). Do not involve into any arguments.</p>
+        <p>3). Do not use unprofessional / vulgar language.</p>
+        <p>4). Sharing details may lead to fraudulent activities.</p>
+      </div>
+    </button>
   </ng-container>
 
   <!-- Messages -->

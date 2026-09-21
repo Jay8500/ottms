@@ -7,6 +7,7 @@ import { addIcons } from 'ionicons';
 import {
   arrowBackOutline, ellipsisVerticalOutline, sendOutline, imageOutline,
   starOutline, lockClosedOutline, chevronForwardOutline, flagOutline,
+  warningOutline, chevronUpOutline, chevronDownOutline,
 } from 'ionicons/icons';
 import { DataService } from '../../shared/data.service';
 import { Auth } from '../../auth';
@@ -35,6 +36,9 @@ export class ChatPage implements OnInit, OnDestroy {
   sending = false;
   loading = true;
   error = '';
+  /** Collapsed by default — "Notice should be Slightly visible ... Make
+   *  more space for Chat". Full text is one tap away, not removed. */
+  noticeOpen = false;
 
   readonly quickReplies = ['👋 Hi,', 'Credentials ?', 'Validity ?', 'OTP ?', 'Thank you!'];
 
@@ -49,6 +53,7 @@ export class ChatPage implements OnInit, OnDestroy {
     addIcons({
       arrowBackOutline, ellipsisVerticalOutline, sendOutline, imageOutline,
       starOutline, lockClosedOutline, chevronForwardOutline, flagOutline,
+      warningOutline, chevronUpOutline, chevronDownOutline,
     });
   }
 

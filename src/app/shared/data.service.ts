@@ -463,17 +463,28 @@ export class DataService {
         group_member_id: memberId,
       });
     }
+
+    // "After rating it should come on that chat" — posted as a normal
+    // message rather than a new schema/message type, so it shows up in the
+    // existing thread with no other change needed. Best-effort: the rating
+    // itself is already saved above, and a closed/locked thread correctly
+    // refuses new messages — that should not undo a rating that succeeded.
+    try {
+      const stars = '⭐'.repeat(input.stars);
+      const note = input.body?.trim() ? ` — "${input.body.trim()}"` : '';
+      await this.sendMessage(input.threadId, `Rated ${stars}${note}`);
+    } catch { /* thread may be locked/closed — the rating itself still saved */ }
+  }
+
+  /** Opens (or reuses) the user's one conversation with the App Team. */
+  async startSupportChat(): Promise<string> {
+    return this.sb.rpc<string>('get_or_create_support_thread');
   }
 
   /**
    * Flags a thread for admin review. This is the only thing that lets an
    * admin read its messages — see the messages_read policy in 0002.
    */
-  /** Opens (or reuses) the user's one conversation with the App Team. */
-  async startSupportChat(): Promise<string> {
-    return this.sb.rpc<string>('get_or_create_support_thread');
-  }
-
   async reportThread(threadId: string, note?: string) {
     const { error } = await this.db.from('chat_threads')
       .update({ reported: true, report_note: note ?? null })
