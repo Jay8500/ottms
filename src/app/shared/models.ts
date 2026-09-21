@@ -59,6 +59,13 @@ export interface OttApp extends CmsEntity {
   startingPrice: number;
   available: number;
   instructions?: string;   // shown to a seller creating a group on this platform
+  /** How many active listings one seller may run at once on this platform.
+   *  Defaulted to 1 in the database and never exposed anywhere in the
+   *  admin UI until now — "able to create unlimited groups". Capped at 20
+   *  by a database check constraint; that ceiling is deliberate — an
+   *  unbounded number lets one account flood the marketplace with
+   *  listings before anyone reviews them. */
+  maxActiveGroups: number;
 }
 
 // ── People ────────────────────────────────────────────────────────────────

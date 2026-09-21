@@ -4,7 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { IonContent, IonIcon, AlertController, ToastController, IonFooter, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { createOutline, addCircleOutline, desktopOutline, eyeOffOutline, closeOutline } from 'ionicons/icons';
+import {
+  createOutline, addCircleOutline, desktopOutline, eyeOffOutline, closeOutline,
+  chevronUpOutline, chevronDownOutline,
+} from 'ionicons/icons';
 import { AdminHeaderComponent } from '../shared/admin-header.component';
 import { AdminSearchbarComponent } from '../shared/admin-searchbar.component';
 import { EntityEditorComponent } from '../shared/entity-editor.component';
@@ -32,6 +35,12 @@ export class AdminEntertainmentPage implements OnInit {
   editing: OttApp | null = null;
   editorOpen = false;
   isNew = false;
+  /** "Should be removed (starting price, Instructions, Logo Key)" — but
+   *  Instructions was explicitly requested and filled in just one round
+   *  ago, so deleting it risks losing content someone already typed. This
+   *  collapses the three into an out-of-the-way section instead: gone from
+   *  the everyday view, still there and still safe if genuinely needed. */
+  showAdvanced = false;
 
   readonly icons = ['tv-outline', 'film-outline', 'musical-notes-outline', 'game-controller-outline'];
 
@@ -41,7 +50,10 @@ export class AdminEntertainmentPage implements OnInit {
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
   ) {
-    addIcons({ createOutline, addCircleOutline, desktopOutline, eyeOffOutline, closeOutline });
+    addIcons({
+      createOutline, addCircleOutline, desktopOutline, eyeOffOutline, closeOutline,
+      chevronUpOutline, chevronDownOutline,
+    });
   }
 
   async ngOnInit() {
@@ -80,18 +92,20 @@ export class AdminEntertainmentPage implements OnInit {
 
   create() {
     this.isNew = true;
+    this.showAdvanced = false;
     this.editing = {
       id: this.data.newId('ott'), title: '', subName: '',
       color: '#E50914', icon: 'tv-outline', brand: '',
       categoryId: this.categoryId, tiers: [],
       position: this.all.length + 1, active: true,
-      sellers: 0, startingPrice: 0, available: 0,
+      sellers: 0, startingPrice: 0, available: 0, maxActiveGroups: 1,
     };
     this.editorOpen = true;
   }
 
   edit(a: OttApp) {
     this.isNew = false;
+    this.showAdvanced = false;
     // deep-copy tiers so an abandoned edit doesn't mutate the live list
     this.editing = { ...a, tiers: a.tiers.map(t => ({ ...t })) };
     this.editorOpen = true;

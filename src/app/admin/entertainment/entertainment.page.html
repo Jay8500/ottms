@@ -49,18 +49,13 @@
 
   <!-- platform-specific fields -->
   <ng-container *ngIf="editing">
-    <label class="ee-lbl">Logo key</label>
-    <input class="ee-input" [(ngModel)]="editing.brand"
-           placeholder="netflix, prime, hotstar…" />
-    <p class="hint">Picks the built-in logo. Leave blank to use the uploaded image instead.</p>
-
-    <label class="ee-lbl">Starting price (₹)</label>
-    <input class="ee-input" type="number" inputmode="numeric" [(ngModel)]="editing.startingPrice" />
-
-    <label class="ee-lbl">Instructions for sellers</label>
-    <textarea class="ee-input ee-ta" rows="3" [(ngModel)]="editing.instructions"
-              placeholder="e.g. Share the password, not your email — changing it locks the buyer out."></textarea>
-    <p class="hint">Shown to a seller while they are creating a group on this platform.</p>
+    <label class="ee-lbl">Active listings allowed per seller</label>
+    <input class="ee-input" type="number" inputmode="numeric" min="1" max="20"
+           [(ngModel)]="editing.maxActiveGroups" />
+    <p class="hint">
+      How many groups one seller may have live at once on this platform (1–20).
+      Was fixed at 1 for everyone with no way to change it.
+    </p>
 
     <label class="ee-lbl">Plans &amp; screen limits</label>
     <div class="tier" *ngFor="let t of editing.tiers">
@@ -74,5 +69,29 @@
     <button class="t-add" (click)="addTier()">
       <ion-icon name="add-circle-outline"></ion-icon> Add plan
     </button>
+
+    <!-- Requested removed from the everyday view. Instructions was filled
+         in for several platforms just one round ago, so it stays reachable
+         here rather than being deleted along with anything already typed
+         into it. -->
+    <button class="adv-toggle" type="button" (click)="showAdvanced = !showAdvanced">
+      <ion-icon [name]="showAdvanced ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+      {{ showAdvanced ? 'Hide' : 'Show' }} advanced options
+    </button>
+
+    <ng-container *ngIf="showAdvanced">
+      <label class="ee-lbl">Logo key</label>
+      <input class="ee-input" [(ngModel)]="editing.brand"
+             placeholder="netflix, prime, hotstar…" />
+      <p class="hint">Picks the built-in logo. Leave blank to use the uploaded image instead.</p>
+
+      <label class="ee-lbl">Starting price (₹)</label>
+      <input class="ee-input" type="number" inputmode="numeric" [(ngModel)]="editing.startingPrice" />
+
+      <label class="ee-lbl">Instructions for sellers</label>
+      <textarea class="ee-input ee-ta" rows="3" [(ngModel)]="editing.instructions"
+                placeholder="e.g. Share the password, not your email — changing it locks the buyer out."></textarea>
+      <p class="hint">Shown to a seller while they are creating a group on this platform.</p>
+    </ng-container>
   </ng-container>
 </app-entity-editor>

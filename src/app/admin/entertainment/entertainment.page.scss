@@ -57,6 +57,14 @@
 
 .hint { font-size: $font-xs; color: $gray-600; margin: 5px 0 0; }
 
+.adv-toggle {
+  width: 100%; margin-top: $sp-lg; padding: $sp-sm 0; border: none;
+  background: none; cursor: pointer; font-family: inherit;
+  font-size: $font-sm; font-weight: 700; color: $gray-600;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  ion-icon { font-size: 16px; }
+}
+
 .tier {
   display: flex; align-items: center; gap: 6px; margin-bottom: 8px;
 

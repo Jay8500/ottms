@@ -15,9 +15,21 @@
 }
 
 .sb-go {
-  @include yellow-btn; height: 46px; padding: 0 $sp-lg; flex-shrink: 0;
-  ion-icon { font-size: 18px; }
+  // Was flex-shrink: 0 with generous padding and both an icon and a text
+  // label — on a narrow phone it refused to shrink at all, and with
+  // .sb-input also fighting for space, the row's total width could exceed
+  // the screen, pushing this button past the visible edge instead of
+  // wrapping. Reported as "Search button going out from interface".
+  @include yellow-btn; height: 46px; padding: 0 $sp-md; flex-shrink: 1; min-width: 0;
+  ion-icon { font-size: 18px; flex-shrink: 0; }
   span { font-size: $font-base; }
+
+  // Below this, drop the label and stay icon-only rather than keep
+  // shrinking text into something unreadable.
+  @media (max-width: 360px) {
+    padding: 0 12px;
+    span { display: none; }
+  }
 }
 
 .sb-sort { display: flex; gap: $sp-sm; padding: 0 $sp-lg $sp-md; }
