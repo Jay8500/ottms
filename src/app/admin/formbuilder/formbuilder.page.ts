@@ -73,7 +73,13 @@ export class AdminFormbuilderPage implements OnInit {
   }
 
   async toggleRequired(f: FormField) {
-    if (!f.enabled) return;
+    // Silently doing nothing here looked like the button was broken —
+    // reported as "Profile pic ... Couldn't Work Required or Optional"
+    // for a field that had just been switched off.
+    if (!f.enabled) {
+      this.toast(`Turn "${f.label}" on first — a hidden field cannot be required`);
+      return;
+    }
 
     if (!f.required && f.type === 'text' && this.looksUnanswerable(f)) {
       const alert = await this.alertCtrl.create({
@@ -119,7 +125,7 @@ export class AdminFormbuilderPage implements OnInit {
   }
 
   toggleOtp(f: FormField) {
-    if (!f.otpCapable || !f.enabled) return;
+    if (!f.otpCapable || !f.enabled) return;   // this control is not even shown when disabled
     f.requireOtp = !f.requireOtp;
     this.dirty = true;
   }

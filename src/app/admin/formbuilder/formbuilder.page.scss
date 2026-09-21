@@ -41,7 +41,7 @@
 // ── Field row ──────────────────────────────────────────────────────────────
 .fld {
   border: 1.5px solid $gray-200; border-radius: $r-md;
-  padding: $sp-md; margin-bottom: $sp-md; position: relative;
+  padding: $sp-md; margin-bottom: $sp-md;
   &.off { opacity: 0.55; background: $gray-50; }
 }
 
@@ -104,8 +104,14 @@
 }
 
 .fld-tools {
-  position: absolute; right: $sp-md; bottom: 62px;
-  display: flex; gap: 6px;
+  // Was position: absolute with a fixed pixel offset from the bottom of
+  // the card, guessing how tall everything above it would be. A field
+  // without the OTP row (below) is shorter than one with it, so that guess
+  // did not always land in the same place — sometimes on top of the
+  // enable/disable switch in .fld-top. Normal flow needs no guess: this
+  // already sits right after .fld-preview in the markup.
+  display: flex; justify-content: flex-end; gap: 6px;
+  margin-top: $sp-sm;
 }
 
 .ft {
