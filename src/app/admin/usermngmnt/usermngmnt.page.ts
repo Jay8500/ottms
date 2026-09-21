@@ -63,11 +63,10 @@ export class UsermngmntPage implements OnInit {
 
   async ngOnInit() {
     const users = await this.data.getUsers();
-    const groups = await this.data.getGroups();
-    this.rows = users.map(u => ({
-      ...u, expanded: false,
-      joined: groups.filter(g => g.sellerId !== u.id).slice(0, 2),
-    }));
+    // "Groups Joined" used to be groups.filter(g => g.sellerId !== u.id) —
+    // every group this person did not list, unrelated to what they
+    // actually bought. Loaded properly per user, on demand, in toggle().
+    this.rows = users.map(u => ({ ...u, expanded: false, joined: [] }));
     this.apply();
   }
 
@@ -86,7 +85,13 @@ export class UsermngmntPage implements OnInit {
 
   setChip(k: string) { this.activeChip = k; this.apply(); }
 
-  toggle(u: UserRow) { u.expanded = !u.expanded; }
+  async toggle(u: UserRow) {
+    u.expanded = !u.expanded;
+    if (u.expanded && !u.joined.length && u.groupsJoined > 0) {
+      try { u.joined = (await this.data.getMembershipsFor(u.id)).slice(0, 5); }
+      catch { /* card still opens, just without the list */ }
+    }
+  }
 
   stars(n: number, kind: 'on' | 'off') {
     return Array(kind === 'on' ? n : Math.max(0, 5 - n)).fill(0);

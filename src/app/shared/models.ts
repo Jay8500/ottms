@@ -189,8 +189,13 @@ export interface GroupScreen {
 export interface ChatThread {
   id: string;
   isGroup: boolean;
-  /** The other person's real id — "the other side", from my perspective. */
+  /** The other person's real id — "the other side", from my perspective.
+   *  Meaningless for admin looking at a trade thread, since admin is
+   *  neither party — use buyerId/sellerId directly for "does this thread
+   *  involve user X at all", regardless of viewpoint. */
   peerId?: string;
+  buyerId?: string;
+  sellerId?: string;
   peerName?: string;
   peerUniqueNum?: number;
   peerAvatarUrl?: string;

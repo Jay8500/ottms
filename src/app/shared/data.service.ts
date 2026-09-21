@@ -96,28 +96,50 @@ export class DataService {
   async getUsers(): Promise<AppUser[]> {
     // user_stats (view, migration 0004) carries the real rating average and
     // activity counters — without it every profile reads as 0 reviews.
-    const [{ data, error }, { data: stats }] = await Promise.all([
+    const [{ data, error }, { data: stats }, { data: awards }] = await Promise.all([
       this.db.from('profiles').select('*, bank_details(*)').order('created_at'),
       this.db.from('user_stats').select('*'),
+      this.db.from('badge_awards').select('user_id, badges(*)'),
     ]);
     if (error) throw error;
 
     const byUser = new Map((stats ?? []).map(s => [s.user_id, s]));
-    const badges = await this.getBadges();
-    return (data ?? []).map(r => this.toUser(r, badges, byUser.get(r.id)));
+    const badgesByUser = this.groupAwardedBadges(awards ?? []);
+    return (data ?? []).map(r =>
+      this.toUser(r, badgesByUser.get(r.id) ?? [], byUser.get(r.id)));
   }
 
   async getUser(id: string): Promise<AppUser | null> {
-    const [{ data, error }, { data: stat }] = await Promise.all([
+    const [{ data, error }, { data: stat }, { data: awards }] = await Promise.all([
       this.db.from('profiles').select('*, bank_details(*)').eq('id', id).maybeSingle(),
       this.db.from('user_stats').select('*').eq('user_id', id).maybeSingle(),
+      this.db.from('badge_awards').select('user_id, badges(*)').eq('user_id', id),
     ]);
     if (error) throw error;
     if (!data) return null;
-    return this.toUser(data, await this.getBadges(), stat);
+    return this.toUser(data, this.groupAwardedBadges(awards ?? []).get(id) ?? [], stat);
   }
 
-  private toUser(r: any, allBadges: Badge[], stat?: any): AppUser {
+  /** badge_count on user_stats only ever fed allBadges.slice(0, n) — the
+   *  first N badges in the whole catalog, not the ones actually awarded to
+   *  that person. Two users with 2 badges each showed identical badges
+   *  regardless of which ones they had really earned. This reads the real
+   *  award rows instead. */
+  private groupAwardedBadges(rows: any[]): Map<string, Badge[]> {
+    const out = new Map<string, Badge[]>();
+    for (const r of rows) {
+      if (!r.badges) continue;
+      const b: Badge = {
+        id: r.badges.id, label: r.badges.label, emoji: r.badges.emoji, color: r.badges.color,
+      };
+      const list = out.get(r.user_id) ?? [];
+      list.push(b);
+      out.set(r.user_id, list);
+    }
+    return out;
+  }
+
+  private toUser(r: any, myBadges: Badge[], stat?: any): AppUser {
     const bank = Array.isArray(r.bank_details) ? r.bank_details[0] : r.bank_details;
     return {
       id: r.id, name: r.name, nickName: r.nick_name ?? '',
@@ -130,7 +152,7 @@ export class DataService {
       isOnline: r.is_online,
       rating: Math.round(Number(stat?.rating_avg ?? 0)),
       reviewCount: Number(stat?.review_count ?? 0),
-      badges: allBadges.slice(0, Number(stat?.badge_count ?? 0)),
+      badges: myBadges,
       bank: bank ? {
         holderName: bank.holder_name, upiId: bank.upi_id ?? '',
         accountNo: bank.account_no ?? '', ifsc: bank.ifsc ?? '',
@@ -287,11 +309,23 @@ export class DataService {
   async getMyMemberships(): Promise<GroupScreen[]> {
     const me = await this.sb.currentUserId();
     if (!me) return [];
+    return this.getMembershipsFor(me);
+  }
 
+  /**
+   * Admin's User's Data screen showed "Groups Joined" as
+   * groups.filter(g => g.sellerId !== u.id).slice(0, 2) — every group this
+   * person did not list, which on a marketplace of any size is nearly
+   * every group there is, entirely unrelated to what they actually bought.
+   * This is the real membership list for an arbitrary user, reusing
+   * getMyMemberships()'s own query with the id parameterised — admin has
+   * its own RLS grant on group_members for exactly this.
+   */
+  async getMembershipsFor(userId: string): Promise<GroupScreen[]> {
     const { data, error } = await this.db
       .from('group_members')
       .select('*, groups(*, ott_apps(title, brand), ott_plan_tiers(label), profiles!groups_seller_id_fkey(name, unique_number))')
-      .eq('buyer_id', me)
+      .eq('buyer_id', userId)
       .order('joined_on', { ascending: false });
     if (error) throw error;
 
@@ -343,6 +377,8 @@ export class DataService {
       // A private thread with no group (support chat included) needs this
       // to actually depend on who is asking.
       peerId: r.buyer_id === me ? r.seller_id : r.buyer_id,
+      buyerId: r.buyer_id,
+      sellerId: r.seller_id,
       peerName: r.buyer_id === me ? r.seller?.name : r.buyer?.name,
       peerUniqueNum: r.buyer_id === me ? r.seller?.unique_number : r.buyer?.unique_number,
       ottName: r.groups?.ott_apps?.title,

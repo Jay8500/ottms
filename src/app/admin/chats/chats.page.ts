@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { IonContent, IonIcon, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
+import { ActivatedRoute, Router } from '@angular/router';
+import { IonContent, IonIcon, IonRefresher, IonRefresherContent, ToastController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { lockClosedOutline, chatbubbleEllipsesOutline, eyeOutline, headsetOutline } from 'ionicons/icons';
 import { AdminHeaderComponent } from '../shared/admin-header.component';
@@ -36,13 +36,44 @@ export class AdminChatsPage implements OnInit {
     { key: 'private', label: 'Support',      tone: 'red' },
   ];
 
-  constructor(private data: DataService, private router: Router) {
+  constructor(
+    private data: DataService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private toastCtrl: ToastController,
+  ) {
     addIcons({ lockClosedOutline, chatbubbleEllipsesOutline, eyeOutline, headsetOutline });
   }
 
   async ngOnInit() {
     this.all = await this.data.getThreads();
     this.apply();
+
+    // Reached from a user's card in User's Data via "Chat" — the query
+    // param carried the user's id but this page never read it, so tapping
+    // Chat just landed here on the unfiltered list with no indication of
+    // who the admin meant to reach. Reported as "Chat button not
+    // available". Prefer the support thread if one exists — the most
+    // likely reason admin wants to talk to this person directly — else
+    // any thread this user is part of, as either buyer or seller.
+    const userId = this.route.snapshot.queryParamMap.get('user');
+    if (userId) await this.openForUser(userId);
+  }
+
+  private async openForUser(userId: string) {
+    const theirs = this.all.filter(t => t.buyerId === userId || t.sellerId === userId);
+    const support = theirs.find(t => !t.isGroup);
+    const target = support ?? theirs[0];
+
+    if (!target) {
+      const t = await this.toastCtrl.create({
+        message: 'This user has no conversation yet.',
+        duration: 2600, position: 'bottom',
+      });
+      t.present();
+      return;
+    }
+    this.openThread(target);
   }
 
   apply() {
