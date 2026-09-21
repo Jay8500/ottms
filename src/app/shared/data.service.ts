@@ -356,6 +356,18 @@ export class DataService {
   }
 
   /**
+   * "Remove Account" on User's Data. There is no client-reachable way to
+   * delete the actual auth.users row (needs the service-role key from a
+   * server context), so this soft-disables the profile instead — the RPC
+   * enforces wallet-settled and no-open-listing/membership itself, it does
+   * not just trust the confirm dialog's wording.
+   */
+  async disableUser(userId: string): Promise<void> {
+    const { error } = await this.db.rpc('admin_disable_user', { p_user: userId });
+    if (error) throw error;
+  }
+
+  /**
    * The other person's rating and badges, for "Show Ratings and Batches on
    * Top User details of oposit person on chats". Kept out of getThreads()
    * itself — that query already runs for the whole chat list on every

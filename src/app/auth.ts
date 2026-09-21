@@ -72,7 +72,7 @@ export class Auth {
   private async loadProfile(id: string, attempt = 0): Promise<UserProfile> {
     const { data, error } = await this.sb.client
       .from('profiles')
-      .select('id, name, nick_name, unique_number, mobile, email, role, is_seller, avatar_url, wallet_locked, wallet_unlocked')
+      .select('id, name, nick_name, unique_number, mobile, email, role, is_seller, avatar_url, wallet_locked, wallet_unlocked, is_disabled')
       .eq('id', id)
       .maybeSingle();
 
@@ -84,6 +84,16 @@ export class Auth {
         return this.loadProfile(id, attempt + 1);
       }
       throw new Error('Your account exists but its profile is missing. Contact support.');
+    }
+
+    // Removed by admin (User's Data → Remove Account). There is no
+    // service-role key here to ban the auth user outright, so this is the
+    // enforcement point — sign back out immediately rather than let a
+    // still-valid password carry them into the app.
+    if (data.is_disabled) {
+      await this.sb.signOut();
+      this._user.next(null);
+      throw new Error('This account has been removed. Contact support if this is a mistake.');
     }
 
     // avatar_url stored on the row is a path inside the private `avatars`

@@ -110,10 +110,20 @@ export class UsermngmntPage implements OnInit {
         { text: 'Cancel', role: 'cancel' },
         {
           text: 'Remove', role: 'destructive',
-          handler: () => {
-            this.rows = this.rows.filter(x => x.id !== u.id);
-            this.apply();
-            this.toast(`${u.name} removed`);
+          handler: async () => {
+            try {
+              // This used to only drop the row from the local list — the
+              // account itself stayed fully live and reappeared on the next
+              // refresh. admin_disable_user() actually blocks the person's
+              // sign-in, and refuses if their wallet or an open listing/
+              // membership was not settled first, rather than just saying so.
+              await this.data.disableUser(u.id);
+              this.rows = this.rows.filter(x => x.id !== u.id);
+              this.apply();
+              this.toast(`${u.name} removed`);
+            } catch (e: any) {
+              this.toast(e?.message ?? 'Could not remove this account');
+            }
           },
         },
       ],
