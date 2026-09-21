@@ -43,12 +43,18 @@
 
     <ng-container *ngIf="showImage">
       <label class="ee-lbl">Upload Image</label>
-      <label class="ee-upload">
-        <ion-icon name="cloud-upload-outline"></ion-icon>
-        <span *ngIf="!model.imageUrl">Click to upload image<br /><small>PNG, JPG up to 5MB</small></span>
-        <img *ngIf="model.imageUrl" [src]="model.imageUrl" alt="Preview" />
-        <input type="file" accept="image/*" hidden (change)="onImage($event)" />
-      </label>
+      <div class="ee-upload-wrap">
+        <label class="ee-upload">
+          <ion-icon name="cloud-upload-outline"></ion-icon>
+          <span *ngIf="!model.imageUrl">Click to upload image<br /><small>PNG, JPG up to 5MB</small></span>
+          <img *ngIf="model.imageUrl" [src]="model.imageUrl" alt="Preview" />
+          <input type="file" accept="image/*" hidden (change)="onImage($event)" />
+        </label>
+        <button class="ee-img-remove" *ngIf="model.imageUrl" type="button"
+                (click)="removeImage($event)" aria-label="Remove image">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
     </ng-container>
 
     <ng-container *ngIf="showPosition">

@@ -62,6 +62,8 @@ select.ee-input { appearance: none; background-image: none; }
   &.on { border-color: $yellow; border-width: 2px; background: $yellow-light; }
 }
 
+.ee-upload-wrap { position: relative; }
+
 .ee-upload {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 6px; width: 100%; min-height: 92px; padding: $sp-md;
@@ -70,6 +72,13 @@ select.ee-input { appearance: none; background-image: none; }
   ion-icon { font-size: 28px; color: $gray-400; }
   small { color: $gray-400; font-size: $font-xs; }
   img { max-height: 120px; max-width: 100%; border-radius: $r-sm; object-fit: contain; }
+}
+
+.ee-img-remove {
+  position: absolute; top: 8px; right: 8px;
+  width: 28px; height: 28px; border-radius: 50%; border: none;
+  background: $black; color: $white; @include flex-center; cursor: pointer;
+  ion-icon { font-size: 16px; }
 }
 
 .ee-toggle-row {

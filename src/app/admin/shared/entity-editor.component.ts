@@ -64,6 +64,16 @@ export class EntityEditorComponent {
     reader.readAsDataURL(file);
   }
 
+  /** Reported as "no delete option after uploading pic" — clicking the
+   *  preview only ever re-opened the file picker to replace it, with no
+   *  way to clear it back to empty. Shared by every admin page that
+   *  uploads an image, so fixed once here. */
+  removeImage(e: Event) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (this.model) this.model.imageUrl = undefined;
+  }
+
   onSave() {
     if (!this.model?.title?.trim()) return;
     this.save.emit(this.model);

@@ -8,7 +8,8 @@
   <div class="cm-list">
     <div class="cm-row" *ngFor="let c of items" [class.off]="!c.active">
       <div class="cm-tile" [style.background]="c.color">
-        <ion-icon [name]="c.icon"></ion-icon>
+        <img *ngIf="c.imageUrl" [src]="c.imageUrl" alt="" />
+        <ion-icon *ngIf="!c.imageUrl" [name]="c.icon"></ion-icon>
       </div>
 
       <div class="cm-mid">

@@ -16,7 +16,10 @@
             [class.locked]="!cat.active"
             [style.background]="cat.color"
             (click)="openCategory(cat)">
-      <div class="cat-ico"><ion-icon [name]="cat.icon"></ion-icon></div>
+      <div class="cat-ico">
+        <img *ngIf="cat.imageUrl" [src]="cat.imageUrl" alt="" />
+        <ion-icon *ngIf="!cat.imageUrl" [name]="cat.icon"></ion-icon>
+      </div>
       <div class="cat-info">
         <p class="cat-name">{{ cat.title }}</p>
         <p class="cat-sub">
