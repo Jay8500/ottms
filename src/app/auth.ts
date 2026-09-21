@@ -70,8 +70,12 @@ export class Auth {
    * because the trigger and the client's first read can race on sign-up.
    */
   private async loadProfile(id: string, attempt = 0): Promise<UserProfile> {
+    // profiles_public, not the raw table — authenticated no longer has
+    // column-level SELECT on wallet_locked/wallet_unlocked on `profiles`
+    // (migration 0032), so this is the only query that can still read them,
+    // and only because it's reading its own row.
     const { data, error } = await this.sb.client
-      .from('profiles')
+      .from('profiles_public')
       .select('id, name, nick_name, unique_number, mobile, email, role, is_seller, avatar_url, wallet_locked, wallet_unlocked, is_disabled')
       .eq('id', id)
       .maybeSingle();

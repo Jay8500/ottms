@@ -94,30 +94,37 @@ export class DataService {
   // ══ People ══════════════════════════════════════════════════════════════
 
   async getUsers(): Promise<AppUser[]> {
+    // profiles_public, not the raw table — authenticated no longer has
+    // column-level SELECT on wallet_locked/wallet_unlocked on `profiles`
+    // (migration 0032). A view can't carry bank_details' foreign-key embed,
+    // so that's fetched separately and merged in, same as stats/badges below.
     // user_stats (view, migration 0004) carries the real rating average and
     // activity counters — without it every profile reads as 0 reviews.
-    const [{ data, error }, { data: stats }, { data: awards }] = await Promise.all([
-      this.db.from('profiles').select('*, bank_details(*)').order('created_at'),
+    const [{ data, error }, { data: stats }, { data: awards }, { data: banks }] = await Promise.all([
+      this.db.from('profiles_public').select('*').order('created_at'),
       this.db.from('user_stats').select('*'),
       this.db.from('badge_awards').select('user_id, badges(*)'),
+      this.db.from('bank_details').select('*'),
     ]);
     if (error) throw error;
 
     const byUser = new Map((stats ?? []).map(s => [s.user_id, s]));
     const badgesByUser = this.groupAwardedBadges(awards ?? []);
+    const bankByUser = new Map((banks ?? []).map(b => [b.user_id, b]));
     return (data ?? []).map(r =>
-      this.toUser(r, badgesByUser.get(r.id) ?? [], byUser.get(r.id)));
+      this.toUser(r, badgesByUser.get(r.id) ?? [], byUser.get(r.id), bankByUser.get(r.id)));
   }
 
   async getUser(id: string): Promise<AppUser | null> {
-    const [{ data, error }, { data: stat }, { data: awards }] = await Promise.all([
-      this.db.from('profiles').select('*, bank_details(*)').eq('id', id).maybeSingle(),
+    const [{ data, error }, { data: stat }, { data: awards }, { data: bank }] = await Promise.all([
+      this.db.from('profiles_public').select('*').eq('id', id).maybeSingle(),
       this.db.from('user_stats').select('*').eq('user_id', id).maybeSingle(),
       this.db.from('badge_awards').select('user_id, badges(*)').eq('user_id', id),
+      this.db.from('bank_details').select('*').eq('user_id', id).maybeSingle(),
     ]);
     if (error) throw error;
     if (!data) return null;
-    return this.toUser(data, this.groupAwardedBadges(awards ?? []).get(id) ?? [], stat);
+    return this.toUser(data, this.groupAwardedBadges(awards ?? []).get(id) ?? [], stat, bank ?? undefined);
   }
 
   /** badge_count on user_stats only ever fed allBadges.slice(0, n) — the
@@ -139,8 +146,7 @@ export class DataService {
     return out;
   }
 
-  private toUser(r: any, myBadges: Badge[], stat?: any): AppUser {
-    const bank = Array.isArray(r.bank_details) ? r.bank_details[0] : r.bank_details;
+  private toUser(r: any, myBadges: Badge[], stat?: any, bank?: any): AppUser {
     return {
       id: r.id, name: r.name, nickName: r.nick_name ?? '',
       uniqueNumber: r.unique_number, mobile: r.mobile, email: r.email ?? '',
@@ -214,15 +220,27 @@ export class DataService {
   }
 
   async getWalletSummaries(): Promise<WalletSummary[]> {
-    const { data, error } = await this.db
-      .from('profiles')
-      .select('id, name, unique_number, avatar_url, wallet_locked, wallet_unlocked, wallet_transactions(tx_kind, status)')
-      .order('name');
+    // profiles_public, not the raw table — see getUsers() above. A view
+    // can't carry wallet_transactions' foreign-key embed either, so that's
+    // fetched separately and grouped in memory instead.
+    const [{ data, error }, { data: txs }] = await Promise.all([
+      this.db.from('profiles_public')
+        .select('id, name, unique_number, avatar_url, wallet_locked, wallet_unlocked')
+        .order('name'),
+      this.db.from('wallet_transactions').select('user_id, tx_kind, status'),
+    ]);
     if (error) throw error;
 
+    const txByUser = new Map<string, any[]>();
+    for (const t of txs ?? []) {
+      const list = txByUser.get(t.user_id) ?? [];
+      list.push(t);
+      txByUser.set(t.user_id, list);
+    }
+
     return (data ?? []).map(r => {
-      const txs = r.wallet_transactions ?? [];
-      const wd = txs.filter((t: any) => t.tx_kind === 'withdraw');
+      const rowTxs = txByUser.get(r.id) ?? [];
+      const wd = rowTxs.filter((t: any) => t.tx_kind === 'withdraw');
       const locked = Number(r.wallet_locked);
       const unlocked = Number(r.wallet_unlocked);
       return {
@@ -232,7 +250,7 @@ export class DataService {
         withdrawCount: wd.length,
         withdrawDeclined: wd.filter((t: any) => t.status === 'rejected').length,
         withdrawSuccess: wd.filter((t: any) => t.status === 'cleared').length,
-        fundsAdded: txs.filter((t: any) => t.tx_kind === 'addfund').length,
+        fundsAdded: rowTxs.filter((t: any) => t.tx_kind === 'addfund').length,
         net: 0,
       };
     });
