@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonContent, IonIcon, IonSpinner, ToastController } from '@ionic/angular/standalone';
+import { AlertController, IonContent, IonIcon, IonSpinner, ToastController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   tvOutline, personOutline, callOutline, mailOutline, cameraOutline, addOutline,
@@ -41,6 +41,7 @@ export class CreateaccntPage implements OnInit {
     private data: DataService,
     private router: Router,
     private toastCtrl: ToastController,
+    private alertCtrl: AlertController,
   ) {
     addIcons({
       tvOutline, personOutline, callOutline, mailOutline, cameraOutline, addOutline,
@@ -136,18 +137,25 @@ export class CreateaccntPage implements OnInit {
         catch { /* the account is created either way; the photo can be added later from Profile */ }
       }
 
-      const uid = this.auth.currentUser?.uniqueNumber;
-      const t = await this.toastCtrl.create({
-        message: needsLogin
-          ? 'Account created. Please sign in.'
-          : `Welcome, ${name.split(' ')[0]}! Your User ID is ${uid}.`,
-        duration: 3200, position: 'bottom', color: 'success',
-      });
-      await t.present();
-
       if (needsLogin) {
+        this.toast('Account created. Please sign in.');
         this.router.navigate(['/login'], { replaceUrl: true });
       } else {
+        // A toast disappears in a couple of seconds and the app was already
+        // navigating away under it — easy to miss the one number that
+        // cannot be shown again except from Profile. Reported as "Not
+        // showing Unique ID on Page while Creating Account". A dialog the
+        // user has to dismiss makes sure it is actually seen.
+        const uid = this.auth.currentUser?.uniqueNumber;
+        const alert = await this.alertCtrl.create({
+          header: `Welcome, ${name.split(' ')[0]}!`,
+          subHeader: `Your User ID is ${uid}`,
+          message: 'You will need this number when contacting support.',
+          backdropDismiss: false,
+          buttons: ['Continue'],
+        });
+        await alert.present();
+        await alert.onDidDismiss();
         this.router.navigate([`/${this.auth.role ?? 'user'}`], { replaceUrl: true });
       }
     } catch (e: any) {
@@ -158,4 +166,9 @@ export class CreateaccntPage implements OnInit {
   }
 
   goLogin() { this.router.navigate(['/login']); }
+
+  private async toast(message: string) {
+    const t = await this.toastCtrl.create({ message, duration: 2800, position: 'bottom', color: 'success' });
+    t.present();
+  }
 }
