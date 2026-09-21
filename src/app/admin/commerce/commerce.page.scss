@@ -42,16 +42,6 @@
   font-size: 16px; color: $gray-600;
 }
 
-.cx-validity {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  width: calc(100% - #{$sp-lg} * 2); height: 52px;
-  margin: $sp-xl $sp-lg 0;
-  border: none; border-radius: $r-md; cursor: pointer;
-  background: $yellow-dark; color: $black; font-family: inherit;
-  font-size: $font-lg; font-weight: 800;
-  ion-icon { font-size: 22px; }
-}
-
 .empty { text-align: center; color: $gray-600; font-size: $font-base; padding: $sp-xl; }
 
 // ── Editor extras ──────────────────────────────────────────────────────────

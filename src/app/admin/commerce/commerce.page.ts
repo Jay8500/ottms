@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { IonContent, IonIcon, AlertController, ToastController, IonFooter, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -37,7 +36,6 @@ export class AdminCommercePage implements OnInit {
 
   constructor(
     private data: DataService,
-    private router: Router,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
   ) {
@@ -66,8 +64,6 @@ export class AdminCommercePage implements OnInit {
     this.editing = { ...c };
     this.editorOpen = true;
   }
-
-  goValidity() { this.router.navigate(['/admin/validity']); }
 
   async onSave(e: CmsEntity) {
     await this.data.saveCommerceOption(e as CommerceOption);
