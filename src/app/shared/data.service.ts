@@ -499,6 +499,19 @@ export class DataService {
     } catch { /* thread may be locked/closed — the rating itself still saved */ }
   }
 
+  /** Admin's own private note on a user — never shown to the user themselves. */
+  async getUserNote(userId: string): Promise<string> {
+    const { data } = await this.db.from('user_notes').select('note').eq('user_id', userId).maybeSingle();
+    return data?.note ?? '';
+  }
+
+  async saveUserNote(userId: string, note: string) {
+    const me = await this.sb.currentUserId();
+    const { error } = await this.db.from('user_notes')
+      .upsert({ user_id: userId, note, updated_by: me, updated_at: new Date().toISOString() });
+    if (error) throw error;
+  }
+
   /** Opens (or reuses) the user's one conversation with the App Team. */
   async startSupportChat(): Promise<string> {
     return this.sb.rpc<string>('get_or_create_support_thread');

@@ -40,9 +40,24 @@
           </span>
         </div>
       </div>
-      <button class="p-rate" (click)="openRating()">
+      <button class="p-rate" *ngIf="!isAdmin" (click)="openRating()">
         <ion-icon name="star-outline"></ion-icon>
       </button>
+    </div>
+
+    <!-- Admin's own note on this person — "I can able to add notes
+         because i need to make note on them". Never shown to the user. -->
+    <div class="admin-note" *ngIf="isAdmin">
+      <button class="an-head" (click)="adminNoteOpen = !adminNoteOpen">
+        <ion-icon name="document-text-outline"></ion-icon>
+        <span>{{ adminNote ? 'Note' : 'Add a note about this person' }}</span>
+        <span class="an-saving" *ngIf="savingNote">saving…</span>
+        <ion-icon class="an-caret" [name]="adminNoteOpen ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+      </button>
+      <textarea *ngIf="adminNoteOpen" class="an-box" rows="3"
+                [(ngModel)]="adminNote" (ngModelChange)="onNoteChange()"
+                placeholder="Only admins can see this — e.g. 'asked about a refund on 12 Aug'"></textarea>
+      <p class="an-preview" *ngIf="!adminNoteOpen && adminNote">{{ adminNote }}</p>
     </div>
 
     <!-- Notice — collapsed by default, "Slightly visible ... make more

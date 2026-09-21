@@ -7,7 +7,7 @@ import { addIcons } from 'ionicons';
 import {
   arrowBackOutline, ellipsisVerticalOutline, sendOutline, imageOutline,
   starOutline, lockClosedOutline, chevronForwardOutline, flagOutline,
-  warningOutline, chevronUpOutline, chevronDownOutline,
+  warningOutline, chevronUpOutline, chevronDownOutline, documentTextOutline,
 } from 'ionicons/icons';
 import { DataService } from '../../shared/data.service';
 import { Auth } from '../../auth';
@@ -36,6 +36,13 @@ export class ChatPage implements OnInit, OnDestroy {
   sending = false;
   loading = true;
   error = '';
+
+  /** "I can able to add notes because i need to make note on them" —
+   *  admin only, never shown to the user themselves. */
+  adminNote = '';
+  adminNoteOpen = false;
+  savingNote = false;
+  private noteSaveTimer?: ReturnType<typeof setTimeout>;
   /** Collapsed by default — "Notice should be Slightly visible ... Make
    *  more space for Chat". Full text is one tap away, not removed. */
   noticeOpen = false;
@@ -53,7 +60,7 @@ export class ChatPage implements OnInit, OnDestroy {
     addIcons({
       arrowBackOutline, ellipsisVerticalOutline, sendOutline, imageOutline,
       starOutline, lockClosedOutline, chevronForwardOutline, flagOutline,
-      warningOutline, chevronUpOutline, chevronDownOutline,
+      warningOutline, chevronUpOutline, chevronDownOutline, documentTextOutline,
     });
   }
 
@@ -96,6 +103,12 @@ export class ChatPage implements OnInit, OnDestroy {
         this.data.getPeerStats(this.thread.peerId)
           .then(s => { if (this.thread) Object.assign(this.thread, s); })
           .catch(() => {});
+
+        if (this.isAdmin) {
+          this.data.getUserNote(this.thread.peerId)
+            .then(n => { this.adminNote = n; })
+            .catch(() => {});
+        }
       }
     } catch (e) {
       this.error = 'Could not load this chat.';
@@ -139,6 +152,18 @@ export class ChatPage implements OnInit, OnDestroy {
   }
 
   get isAdmin() { return this.auth.role === 'admin'; }
+
+  /** Saves a moment after typing stops, rather than on every keystroke. */
+  onNoteChange() {
+    if (!this.thread?.peerId) return;
+    clearTimeout(this.noteSaveTimer);
+    this.noteSaveTimer = setTimeout(async () => {
+      this.savingNote = true;
+      try { await this.data.saveUserNote(this.thread!.peerId!, this.adminNote); }
+      catch { /* best effort — a note is not worth interrupting the chat over */ }
+      finally { this.savingNote = false; }
+    }, 900);
+  }
 
   /**
    * Both sides must unlock before photos or voice are allowed (Q5) — but
@@ -185,6 +210,7 @@ export class ChatPage implements OnInit, OnDestroy {
     this.unsubscribe?.();
     this.unsubscribeThread?.();
     this.unsubscribePresence?.();
+    clearTimeout(this.noteSaveTimer);
     // Presence itself is handled once, app-wide, by the appStateChange
     // listener in native.service.ts — online while the app is open,
     // offline once it is backgrounded. This page used to also flip it
