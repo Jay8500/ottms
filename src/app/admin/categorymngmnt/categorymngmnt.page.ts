@@ -4,7 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonContent, IonIcon, AlertController, ToastController, IonFooter, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { createOutline, chevronForwardOutline, addCircleOutline, eyeOffOutline } from 'ionicons/icons';
+import {
+  createOutline, chevronForwardOutline, addCircleOutline, eyeOffOutline,
+  filmOutline, musicalNotesOutline, gameControllerOutline, bookOutline,
+  barbellOutline, pricetagOutline, tvOutline, headsetOutline, basketballOutline,
+  restaurantOutline, airplaneOutline, schoolOutline, newspaperOutline, giftOutline,
+  happyOutline, constructOutline, medkitOutline, shirtOutline, carOutline,
+} from 'ionicons/icons';
 import { AdminHeaderComponent } from '../shared/admin-header.component';
 import { EntityEditorComponent } from '../shared/entity-editor.component';
 import { DataService } from '../../shared/data.service';
@@ -26,9 +32,14 @@ export class CategorymngmntPage implements OnInit {
   editorOpen = false;
   isNew = false;
 
+  // "Create more icons" — six was thin for a category picker meant to
+  // cover everything from movies to fitness to kids' content.
   readonly icons = [
     'film-outline', 'musical-notes-outline', 'game-controller-outline',
     'book-outline', 'barbell-outline', 'pricetag-outline',
+    'tv-outline', 'headset-outline', 'basketball-outline', 'restaurant-outline',
+    'airplane-outline', 'school-outline', 'newspaper-outline', 'gift-outline',
+    'happy-outline', 'construct-outline', 'medkit-outline', 'shirt-outline', 'car-outline',
   ];
 
   constructor(
@@ -38,7 +49,13 @@ export class CategorymngmntPage implements OnInit {
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
   ) {
-    addIcons({ createOutline, chevronForwardOutline, addCircleOutline, eyeOffOutline });
+    addIcons({
+      createOutline, chevronForwardOutline, addCircleOutline, eyeOffOutline,
+      filmOutline, musicalNotesOutline, gameControllerOutline, bookOutline,
+      barbellOutline, pricetagOutline, tvOutline, headsetOutline, basketballOutline,
+      restaurantOutline, airplaneOutline, schoolOutline, newspaperOutline, giftOutline,
+      happyOutline, constructOutline, medkitOutline, shirtOutline, carOutline,
+    });
   }
 
   async ngOnInit() {

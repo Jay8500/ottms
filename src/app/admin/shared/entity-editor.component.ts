@@ -37,7 +37,12 @@ export class EntityEditorComponent {
   @Input() showPosition = true;
   @Input() showDelete = false;
 
-  @Input() colors = ['#F9D54B', '#EF4444', '#8B5CF6', '#3B82F6', '#10B981', '#F97316', '#9CA3AF'];
+  // "Create more icons and colors" — the presets are the quick-tap path,
+  // the custom picker below covers everything else.
+  @Input() colors = [
+    '#F9D54B', '#EF4444', '#8B5CF6', '#3B82F6', '#10B981', '#F97316', '#9CA3AF',
+    '#EC4899', '#14B8A6', '#6366F1', '#84CC16',
+  ];
   @Input() icons = [
     'film-outline', 'musical-notes-outline', 'game-controller-outline',
     'book-outline', 'barbell-outline', 'pricetag-outline',
