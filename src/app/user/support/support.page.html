@@ -37,34 +37,24 @@
     <p class="faq-h">Frequently Asked Questions</p>
 
     <div class="faq" *ngFor="let f of faqs; let i = index">
-      <button class="faq-q" (click)="f.open = !f.open">
+      <button class="faq-q" (click)="toggleOpen(f)">
         <span class="n">{{ i + 1 }}</span>
         <span class="q">{{ q(f) }}</span>
         <ion-icon [name]="f.open ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
       </button>
 
+      <!-- Text and video both shown together, not a tap-to-switch toggle —
+           reported as "show same like i sent pic ... show video also". -->
       <div class="faq-a" *ngIf="f.open">
         <p class="fallback" *ngIf="untranslated(f)">Shown in English — not translated yet.</p>
 
-        <!-- Both formats are offered up front, matching how the answer was
-             written in admin — a plain read, or the same thing on video. -->
-        <div class="fmt-row">
-          <button class="fmt" [class.on]="viewOf(f) === 'text'" (click)="setView(f, 'text')">
-            <ion-icon name="document-text-outline"></ion-icon> Read Text
-          </button>
-          <button class="fmt" *ngIf="video(f)" [class.on]="viewOf(f) === 'video'" (click)="setView(f, 'video')">
-            <ion-icon name="play-circle-outline"></ion-icon> Watch Video
-          </button>
-        </div>
-
-        <ul class="points" *ngIf="viewOf(f) === 'text'">
+        <ul class="points">
           <li *ngFor="let p of points(f)">{{ p }}</li>
         </ul>
 
-        <a class="watch" *ngIf="viewOf(f) === 'video' && videoLink[f.id]" [href]="videoLink[f.id]" target="_blank" rel="noopener">
-          <ion-icon name="play-circle-outline"></ion-icon> Open video
-        </a>
-        <p class="fallback" *ngIf="viewOf(f) === 'video' && resolvingVideo && !videoLink[f.id]">Loading video…</p>
+        <video *ngIf="videoLink[f.id]" [src]="videoLink[f.id]"
+               controls autoplay muted playsinline class="faq-video"></video>
+        <p class="fallback" *ngIf="video(f) && resolvingVideo && !videoLink[f.id]">Loading video…</p>
       </div>
     </div>
   </div>

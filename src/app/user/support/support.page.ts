@@ -6,7 +6,6 @@ import { addIcons } from 'ionicons';
 import {
   headsetOutline, chatbubblesOutline, logoWhatsapp, callOutline,
   chevronUpOutline, chevronDownOutline, arrowBackOutline, optionsOutline,
-  playCircleOutline, documentTextOutline,
 } from 'ionicons/icons';
 import { DataService } from '../../shared/data.service';
 import { SupabaseService } from '../../shared/supabase.service';
@@ -38,13 +37,10 @@ export class SupportPage implements OnInit {
     { code: 'te', label: 'తెలుగు' },
   ];
 
-  /** Which format is showing per FAQ — text is the default, matching what
-   *  most people tap first. */
-  view: Record<string, 'text' | 'video'> = {};
-
   /** video() on the FAQ gives back the storage path saved by admin, not
    *  something a browser can open — support-videos is a private bucket, so
-   *  it has to be signed. Resolved lazily, only for a video actually opened. */
+   *  it has to be signed. Resolved lazily, only once a question is opened,
+   *  not for every FAQ on page load. */
   videoLink: Record<string, string> = {};
   resolvingVideo = false;
 
@@ -52,7 +48,6 @@ export class SupportPage implements OnInit {
     addIcons({
       headsetOutline, chatbubblesOutline, logoWhatsapp, callOutline,
       chevronUpOutline, chevronDownOutline, arrowBackOutline, optionsOutline,
-      playCircleOutline, documentTextOutline,
     });
   }
 
@@ -89,18 +84,18 @@ export class SupportPage implements OnInit {
     return this.a(f).split('\n').map(s => s.trim()).filter(Boolean);
   }
 
-  viewOf(f: FaqItem) { return this.view[f.id] ?? 'text'; }
-
-  async setView(f: FaqItem, v: 'text' | 'video') {
-    this.view[f.id] = v;
-    f.open = true;
-    if (v !== 'video' || this.videoLink[f.id]) return;
+  /** Text and video show together now, not as a tap-to-switch choice —
+   *  resolving the video's real link happens here, the moment the question
+   *  is actually opened, rather than for every FAQ up front. */
+  async toggleOpen(f: FaqItem) {
+    f.open = !f.open;
+    if (!f.open || this.videoLink[f.id]) return;
 
     const path = this.video(f);
     if (!path) return;
     this.resolvingVideo = true;
     try { this.videoLink[f.id] = await this.sb.signedUrl('support-videos', path); }
-    catch { /* file removed or unreachable — the "Open video" link just stays hidden */ }
+    catch { /* file removed or unreachable — the player just stays hidden */ }
     finally { this.resolvingVideo = false; }
   }
 
