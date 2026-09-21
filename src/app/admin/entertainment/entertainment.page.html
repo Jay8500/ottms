@@ -12,7 +12,7 @@
   </app-admin-searchbar>
 
   <div class="en-grid">
-    <div class="en-tile" *ngFor="let a of shown" [class.off]="!a.active">
+    <div class="en-tile" *ngFor="let a of shown" [class.off]="!a.active" [style.--accent]="a.color">
       <app-ott-logo [brand]="a.brand" [imageUrl]="a.imageUrl" [size]="82" [radius]="14"></app-ott-logo>
       <span class="en-name">{{ a.title }}</span>
       <span class="en-seats">
@@ -22,7 +22,6 @@
       <button class="en-edit" (click)="edit(a)">
         <ion-icon name="create-outline"></ion-icon> Edit
       </button>
-      <span class="en-rule" [style.background]="a.color"></span>
       <ion-icon name="eye-off-outline" class="en-hidden" *ngIf="!a.active"></ion-icon>
     </div>
   </div>
@@ -58,10 +57,13 @@
     </p>
 
     <label class="ee-lbl">Plans &amp; screen limits</label>
-    <div class="tier" *ngFor="let t of editing.tiers">
+    <div class="tier" *ngFor="let t of editing.tiers; let i = index">
+      <span class="t-idx">{{ i + 1 }}</span>
       <input class="t-name" [(ngModel)]="t.label" placeholder="Plan name e.g. Premium" />
-      <input class="t-num" type="number" inputmode="numeric" min="1" [(ngModel)]="t.maxScreens" />
-      <span class="t-unit">screens</span>
+      <div class="t-screens">
+        <ion-icon name="desktop-outline"></ion-icon>
+        <input class="t-num" type="number" inputmode="numeric" min="1" [(ngModel)]="t.maxScreens" />
+      </div>
       <button class="t-x" (click)="removeTier(t)" aria-label="Remove plan">
         <ion-icon name="close-outline"></ion-icon>
       </button>

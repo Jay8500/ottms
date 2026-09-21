@@ -8,11 +8,20 @@
 }
 
 .en-tile {
-  position: relative;
+  position: relative; overflow: hidden;
   display: flex; flex-direction: column; align-items: center; gap: 6px;
-  padding: $sp-md 6px $sp-sm; background: $white;
+  padding: 14px 6px $sp-sm; background: $white;
   border: 1px solid $gray-200; border-radius: $r-lg; box-shadow: $shadow-sm;
+  transition: box-shadow 0.15s, transform 0.15s;
+  &:active { transform: scale(0.97); }
   &.off { opacity: 0.5; }
+
+  // Top accent strip in the platform's own colour, instead of a small bar
+  // buried below the name — the card reads as "branded" at a glance.
+  &::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--accent, #{$gray-300});
+  }
 
   .en-name {
     font-size: $font-sm; font-weight: 700; color: $black;
@@ -20,12 +29,12 @@
   }
   .en-seats {
     display: flex; align-items: center; gap: 3px;
-    font-size: 10px; color: $gray-600;
+    padding: 2px 8px; border-radius: $r-pill; background: $gray-100;
+    font-size: 10px; font-weight: 700; color: $gray-700;
     ion-icon { font-size: 12px; }
   }
-  .en-rule { width: 26px; height: 3px; border-radius: 2px; }
   .en-hidden {
-    position: absolute; top: 6px; right: 6px;
+    position: absolute; top: 10px; right: 8px;
     font-size: 15px; color: $gray-600;
   }
 }
@@ -76,21 +85,33 @@
 }
 
 .tier {
-  display: flex; align-items: center; gap: 6px; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+  padding: 8px; background: $gray-50; border: 1px solid $gray-200;
+  border-radius: $r-md;
 
+  .t-idx {
+    width: 24px; height: 24px; flex-shrink: 0; border-radius: 50%;
+    background: $yellow; color: $black; font-size: $font-xs; font-weight: 800;
+    @include flex-center;
+  }
   .t-name {
     flex: 1; min-width: 0; height: 44px; padding: 0 10px;
-    border: 1.5px solid $gray-300; border-radius: $r-sm;
+    border: 1.5px solid $gray-300; border-radius: $r-sm; background: $white;
     font-family: inherit; font-size: $font-sm; outline: none;
     &:focus { border-color: $yellow; }
   }
-  .t-num {
-    width: 58px; height: 44px; padding: 0 8px; text-align: center;
+  .t-screens {
+    display: flex; align-items: center; gap: 5px; flex-shrink: 0;
+    height: 44px; padding: 0 8px; background: $white;
     border: 1.5px solid $gray-300; border-radius: $r-sm;
-    font-family: inherit; font-size: $font-sm; font-weight: 700; outline: none;
-    &:focus { border-color: $yellow; }
+    ion-icon { font-size: 15px; color: $gray-600; }
+    &:focus-within { border-color: $yellow; }
   }
-  .t-unit { font-size: $font-xs; color: $gray-600; flex-shrink: 0; }
+  .t-num {
+    width: 30px; height: 100%; padding: 0; text-align: center;
+    border: none; background: transparent;
+    font-family: inherit; font-size: $font-sm; font-weight: 700; outline: none;
+  }
   .t-x {
     width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
     border: none; background: $red-light; @include flex-center; cursor: pointer;
