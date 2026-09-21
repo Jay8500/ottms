@@ -1,7 +1,40 @@
 import { Injectable, inject } from '@angular/core';
 import { createClient, SupabaseClient, Session } from '@supabase/supabase-js';
+import { Capacitor } from '@capacitor/core';
+import { Preferences } from '@capacitor/preferences';
 import { environment } from '../../environments/environment';
 import { LoadingService } from './loading.service';
+
+/**
+ * Session storage backed by native OS storage (SharedPreferences on
+ * Android) instead of the WebView's localStorage.
+ *
+ * Reported as "logging off every time" — the app was relying on
+ * supabase-js's default storage, which on a Capacitor WebView is
+ * localStorage. That is not the same durability guarantee as a real
+ * website's origin storage: Android is free to clear a WebView's data
+ * under storage pressure or across some OS/WebView-component updates,
+ * and unlike SharedPreferences it was never designed to be the
+ * authoritative store for something as load-bearing as a login session.
+ * This is the storage adapter Supabase's own Capacitor guidance
+ * recommends for exactly this symptom.
+ *
+ * Browser (`ng serve`) keeps using localStorage directly — Preferences
+ * has no meaningful native backing there, and this keeps local dev
+ * behaving as it always has.
+ */
+const capacitorAuthStorage = {
+  async getItem(key: string) {
+    const { value } = await Preferences.get({ key });
+    return value;
+  },
+  async setItem(key: string, value: string) {
+    await Preferences.set({ key, value });
+  },
+  async removeItem(key: string) {
+    await Preferences.remove({ key });
+  },
+};
 
 /**
  * The single Supabase connection.
@@ -38,6 +71,7 @@ export class SupabaseService {
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: false,   // Capacitor has no OAuth redirect to parse
+        storage: Capacitor.isNativePlatform() ? capacitorAuthStorage : undefined,
 
         // supabase-js coordinates token refresh across browser tabs using the
         // Web Locks API. Inside a Capacitor WebView there is only ever one

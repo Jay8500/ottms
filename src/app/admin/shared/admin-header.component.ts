@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
+import { Router } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -28,9 +29,21 @@ export class AdminHeaderComponent {
   @Output() options = new EventEmitter<void>();
   @Output() add = new EventEmitter<void>();
 
-  constructor(private location: Location) {
+  constructor(private location: Location, private router: Router) {
     addIcons({ arrowBackOutline, optionsOutline, menuOutline, downloadOutline, addOutline });
   }
 
-  back() { this.location.back(); }
+  /**
+   * Reported as "after editing any page, Back button not working". Location.
+   * back() does nothing if there is no history behind the current page —
+   * which happens whenever the app's own resume-where-you-left-off feature
+   * (native.service.ts) restores someone straight onto an admin page after
+   * the app was backgrounded and Android killed it, skipping the Dashboard
+   * entirely. Every admin route is reached from a fresh navigation, so
+   * history.length reliably tells the two cases apart.
+   */
+  back() {
+    if (window.history.length > 1) this.location.back();
+    else this.router.navigate(['/admin/dashboard']);
+  }
 }

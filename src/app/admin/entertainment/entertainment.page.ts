@@ -25,7 +25,7 @@ import { CmsEntity, OttApp, OttPlanTier } from '../../shared/models';
 })
 export class AdminEntertainmentPage implements OnInit {
   term = '';
-  categoryId = 'entertainment';
+  categoryId = '';
   all: OttApp[] = [];
   shown: OttApp[] = [];
 
@@ -45,9 +45,27 @@ export class AdminEntertainmentPage implements OnInit {
   }
 
   async ngOnInit() {
-    this.categoryId = this.route.snapshot.queryParamMap.get('cat') ?? 'entertainment';
+    // Reached from the dashboard with no ?cat= at all — the "Create
+    // Groups" and "Entertainment" cards both link straight here with no
+    // query param. categoryId used to default to the literal string
+    // 'entertainment', which is not a real id: creating a platform then
+    // tried to insert that into a uuid column and failed outright every
+    // time. Editing an existing platform never hit this, because edit()
+    // copies the real category_id already on the row — that is why this
+    // went unnoticed until someone tried to add a brand new platform.
+    const fromQuery = this.route.snapshot.queryParamMap.get('cat');
+    this.categoryId = fromQuery ?? await this.resolveDefaultCategoryId();
+
     await this.load();
     if (this.route.snapshot.queryParamMap.get('new')) this.create();
+  }
+
+  /** Falls back to the category literally titled "Entertainment", or the
+   *  first active one if that has been renamed. */
+  private async resolveDefaultCategoryId(): Promise<string> {
+    const cats = await this.data.getCategories();
+    const byTitle = cats.find(c => c.title.trim().toLowerCase() === 'entertainment');
+    return (byTitle ?? cats.find(c => c.active) ?? cats[0])?.id ?? '';
   }
 
   private async load() {
