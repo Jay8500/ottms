@@ -439,6 +439,45 @@ export class DataService {
   }
 
   /**
+   * Searches every message's text, not just the thread list's own fields
+   * (peer name, OTT name, last message preview). Built for "search Number
+   * search, because some sellers try to share their numbers ... Main is
+   * identifying the number sharing person" — the client already had a
+   * full-text index on chat_messages.body prepared for exactly this
+   * (0009), it just never had a search box wired to it. Works for any
+   * text, not only numbers.
+   */
+  async searchMessages(term: string): Promise<{
+    id: string; threadId: string; text: string; time: string;
+    senderName: string; senderUniqueNum: number;
+  }[]> {
+    const q = term.trim();
+    if (q.length < 3) return [];
+
+    // A substring match (ilike), not the prepared full-text index — someone
+    // sharing "9876543210" might only type or paste part of it, and full
+    // text search matches whole tokens, not a partial number inside one.
+    // Fine at this app's scale; admin-only, not called on every keystroke
+    // by anyone else.
+    const { data, error } = await this.db
+      .from('chat_messages')
+      .select('id, thread_id, body, created_at, sender:sender_id(name, unique_number)')
+      .not('body', 'is', null)
+      .ilike('body', `%${q}%`)
+      .order('created_at', { ascending: false })
+      .limit(50);
+    if (error) throw error;
+
+    return (data ?? []).map((r: any) => ({
+      id: r.id, threadId: r.thread_id, text: r.body ?? '',
+      time: new Date(r.created_at).toLocaleString('en-IN', {
+        day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit',
+      }),
+      senderName: r.sender?.name ?? 'Unknown', senderUniqueNum: r.sender?.unique_number ?? 0,
+    }));
+  }
+
+  /**
    * A rating left after a completed deal. Ties to the membership so the RLS
    * policy can verify the rater was actually part of it, and so the unique
    * constraint stops the same deal being rated twice.

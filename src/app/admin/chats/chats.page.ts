@@ -11,6 +11,11 @@ import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
 import { DataService } from '../../shared/data.service';
 import { ChatThread } from '../../shared/models';
 
+interface MessageHit {
+  id: string; threadId: string; text: string; time: string;
+  senderName: string; senderUniqueNum: number;
+}
+
 /** 12 — Chat's. Live group (trade) chats and support conversations with
  *  the App Team. Every non-group thread is a support chat — nothing else
  *  creates one, since purchase_screen() always attaches a group. */
@@ -29,6 +34,16 @@ export class AdminChatsPage implements OnInit {
   activeChip = 'all';
   all: ChatThread[] = [];
   shown: ChatThread[] = [];
+
+  /** "search Number search, because some sellers try to share their
+   *  numbers ... Main is identifying the number sharing person" — a search
+   *  across every message's actual text, not just the thread list's own
+   *  fields. Kept separate from `shown` since these are individual
+   *  messages, not conversations, and a term short enough to be a normal
+   *  name search should not also fire this. */
+  messageHits: MessageHit[] = [];
+  searchingMessages = false;
+  private searchDebounce?: ReturnType<typeof setTimeout>;
 
   chips: FilterChip[] = [
     { key: 'all',     label: 'All Chats',    tone: 'plain' },
@@ -85,6 +100,21 @@ export class AdminChatsPage implements OnInit {
       return [c.peerName, c.sellerName, c.ottName, c.lastMessage]
         .some(v => v?.toLowerCase().includes(t));
     });
+
+    // Runs alongside the thread filter above, not instead of it — a search
+    // is as likely to be a name as a number, and both should work.
+    clearTimeout(this.searchDebounce);
+    if (this.term.trim().length < 3) { this.messageHits = []; return; }
+    this.searchDebounce = setTimeout(async () => {
+      this.searchingMessages = true;
+      try { this.messageHits = await this.data.searchMessages(this.term); }
+      catch { this.messageHits = []; }
+      finally { this.searchingMessages = false; }
+    }, 400);
+  }
+
+  openHit(hit: MessageHit) {
+    this.router.navigate(['/admin/chat'], { queryParams: { thread: hit.threadId } });
   }
 
   setChip(k: string) { this.activeChip = k; this.apply(); }

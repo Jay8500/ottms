@@ -2,6 +2,25 @@
 
 .ac-content { --background: #{$gray-50}; }
 
+.hit-list {
+  margin: 0 $sp-lg $sp-md; padding: $sp-sm;
+  background: #FEF3C7; border: 1px solid #FDE68A; border-radius: $r-md;
+}
+.hit-h {
+  font-size: $font-xs; font-weight: 700; color: #92400E; margin: 2px 6px 6px;
+}
+.hit-row {
+  width: 100%; text-align: left; padding: 8px; border-radius: $r-sm;
+  border: none; background: $white; cursor: pointer; margin-bottom: 6px;
+  &:last-child { margin-bottom: 0; }
+}
+.hit-text {
+  font-size: $font-sm; color: $black; margin: 0 0 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.hit-meta { font-size: 10px; color: $gray-600; margin: 0; }
+.hit-loading { text-align: center; font-size: $font-xs; color: $gray-600; margin: 0 0 $sp-sm; }
+
 .ac-list { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-sm; }
 
 .ac-row {
