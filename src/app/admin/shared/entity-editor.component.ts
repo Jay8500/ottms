@@ -8,6 +8,7 @@ import {
   filmOutline, musicalNotesOutline, gameControllerOutline, bookOutline,
   barbellOutline, pricetagOutline, tvOutline, headsetOutline, calendarOutline,
   personOutline, cartOutline, cashOutline, chatbubblesOutline, starOutline,
+  colorPaletteOutline,
 } from 'ionicons/icons';
 import { CmsEntity } from '../../shared/models';
 
@@ -53,6 +54,7 @@ export class EntityEditorComponent {
       filmOutline, musicalNotesOutline, gameControllerOutline, bookOutline,
       barbellOutline, pricetagOutline, tvOutline, headsetOutline, calendarOutline,
       personOutline, cartOutline, cashOutline, chatbubblesOutline, starOutline,
+      colorPaletteOutline,
     });
   }
 

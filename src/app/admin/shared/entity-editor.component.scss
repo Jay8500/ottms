@@ -54,6 +54,22 @@ select.ee-input { appearance: none; background-image: none; }
   &.on { border-color: $black; }
 }
 
+// "Able to create more colors" — a real colour picker alongside the fixed
+// presets, rather than being limited to only those seven.
+.sw-custom {
+  position: relative; border: 2px dashed $gray-400;
+  ion-icon {
+    // A plain white circle behind the glyph, so it reads regardless of
+    // whatever colour is currently picked underneath it.
+    background: rgba(255, 255, 255, 0.85); color: $black;
+    border-radius: 50%; padding: 3px; font-size: 16px;
+  }
+  input[type='color'] {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    opacity: 0; cursor: pointer; border: none; padding: 0;
+  }
+}
+
 .ee-icons { display: flex; gap: $sp-sm; flex-wrap: wrap; }
 .ic {
   width: 54px; height: 54px; border-radius: $r-md; background: $white;

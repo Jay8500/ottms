@@ -28,6 +28,12 @@
                 [attr.aria-label]="'Colour ' + c">
           <ion-icon name="checkmark-outline" *ngIf="model.color === c"></ion-icon>
         </button>
+        <!-- "Able to create more colors" — the presets stay for quick
+             access, this opens the full picker for anything else. -->
+        <label class="sw sw-custom" [style.background]="model.color" aria-label="Pick a custom colour">
+          <ion-icon name="color-palette-outline"></ion-icon>
+          <input type="color" [(ngModel)]="model.color" />
+        </label>
       </div>
     </ng-container>
 
