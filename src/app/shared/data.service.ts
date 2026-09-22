@@ -76,19 +76,68 @@ export class DataService {
     };
   }
 
-  async getValidityPlans(): Promise<ValidityPlan[]> {
+  /**
+   * "Each platform having different plans, validity and prices" — the
+   * schema already supported this (plan_prices.ott_app_id, left null to
+   * mean "the shared list"); nothing in the app ever set a platform-specific
+   * row, so every platform showed the same global price. Called with an
+   * ottId, this returns that platform's own list once admin has entered
+   * one (only the durations actually priced for it, in case a platform
+   * doesn't offer all of them) — falling back to the shared global list
+   * for any platform admin hasn't customised yet, so nothing already
+   * working breaks the moment this ships.
+   */
+  async getValidityPlans(ottId?: string): Promise<ValidityPlan[]> {
     const { data, error } = await this.db
       .from('validity_plans')
-      .select('*, plan_prices(amount, save_upto)')
+      .select('*, plan_prices(amount, save_upto, ott_app_id)')
       .order('position');
     if (error) throw error;
-    return (data ?? []).map(r => ({
-      id: r.id, title: r.title, subName: r.sub_name ?? '',
-      color: r.color, icon: r.icon, imageUrl: r.image_url ?? undefined,
-      position: r.position, active: r.active, months: r.months,
-      amount: Number(r.plan_prices?.[0]?.amount ?? 0),
-      saveUpto: Number(r.plan_prices?.[0]?.save_upto ?? 0),
-    }));
+
+    const rows = data ?? [];
+    const hasOverride = !!ottId && rows.some(r =>
+      (r.plan_prices ?? []).some((p: any) => p.ott_app_id === ottId));
+
+    const out: ValidityPlan[] = [];
+    for (const r of rows) {
+      const prices = r.plan_prices ?? [];
+      const scoped = ottId ? prices.find((p: any) => p.ott_app_id === ottId) : undefined;
+      const global = prices.find((p: any) => p.ott_app_id === null);
+      const price = hasOverride ? scoped : (scoped ?? global);
+      if (ottId && !price) continue; // not offered for this platform
+
+      out.push({
+        id: r.id, title: r.title, subName: r.sub_name ?? '',
+        color: r.color, icon: r.icon, imageUrl: r.image_url ?? undefined,
+        position: r.position, active: r.active, months: r.months,
+        amount: Number(price?.amount ?? 0),
+        saveUpto: Number(price?.save_upto ?? 0),
+      });
+    }
+    return out;
+  }
+
+  /** All platform-specific prices for one platform, keyed by validity_plan_id
+   *  — used to prefill the pricing rows in the Entertainment editor. */
+  async getPlatformPricing(ottId: string): Promise<Record<string, { amount: number; saveUpto: number }>> {
+    const { data, error } = await this.db
+      .from('plan_prices').select('validity_plan_id, amount, save_upto')
+      .eq('ott_app_id', ottId).is('ott_plan_tier_id', null);
+    if (error) throw error;
+    const out: Record<string, { amount: number; saveUpto: number }> = {};
+    for (const r of data ?? []) out[r.validity_plan_id] = { amount: Number(r.amount), saveUpto: Number(r.save_upto) };
+    return out;
+  }
+
+  /** Replaces this platform's own pricing set — rows with no amount mean
+   *  "not offered on this platform", same as never having created one. */
+  async savePlatformPricing(ottId: string, prices: { validityPlanId: string; amount: number; saveUpto: number }[]) {
+    await this.db.from('plan_prices').delete().eq('ott_app_id', ottId).is('ott_plan_tier_id', null);
+    const rows = prices.filter(p => p.amount > 0)
+      .map(p => ({ ott_app_id: ottId, ott_plan_tier_id: null, validity_plan_id: p.validityPlanId, amount: p.amount, save_upto: p.saveUpto }));
+    if (!rows.length) return;
+    const { error } = await this.db.from('plan_prices').insert(rows);
+    if (error) throw error;
   }
 
   // ══ People ══════════════════════════════════════════════════════════════

@@ -54,7 +54,7 @@ export class ValidityPage implements OnInit {
     try {
       const [app, plans] = await Promise.all([
         this.data.getOttApp(this.ottId),
-        this.data.getValidityPlans(),
+        this.data.getValidityPlans(this.ottId),
       ]);
       this.app = app;
       this.plans = plans.filter(p => p.active);

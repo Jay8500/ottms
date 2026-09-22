@@ -13,7 +13,7 @@ import { AdminSearchbarComponent } from '../shared/admin-searchbar.component';
 import { EntityEditorComponent } from '../shared/entity-editor.component';
 import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
 import { DataService } from '../../shared/data.service';
-import { CmsEntity, OttApp, OttPlanTier } from '../../shared/models';
+import { CmsEntity, OttApp, OttPlanTier, ValidityPlan } from '../../shared/models';
 
 /** 4 — Entertainment. The OTT platforms inside a category, and the seat limit
  *  admin sets for each plan tier. */
@@ -41,6 +41,12 @@ export class AdminEntertainmentPage implements OnInit {
    *  collapses the three into an out-of-the-way section instead: gone from
    *  the everyday view, still there and still safe if genuinely needed. */
   showAdvanced = false;
+
+  /** "Each platform having different plans, validity and prices" — one row
+   *  per global validity duration, editable per platform. Leaving the
+   *  amount at 0 means this platform doesn't offer that duration. */
+  validityPlans: ValidityPlan[] = [];
+  pricing: { validityPlanId: string; title: string; amount: number; saveUpto: number }[] = [];
 
   readonly icons = ['tv-outline', 'film-outline', 'musical-notes-outline', 'game-controller-outline'];
 
@@ -86,7 +92,16 @@ export class AdminEntertainmentPage implements OnInit {
     this.categoryId = fromQuery ?? await this.resolveDefaultCategoryId();
 
     await this.load();
+    this.validityPlans = await this.data.getValidityPlans();
     if (this.route.snapshot.queryParamMap.get('new')) this.create();
+  }
+
+  private buildPricingRows(existing: Record<string, { amount: number; saveUpto: number }>) {
+    this.pricing = this.validityPlans.map(v => ({
+      validityPlanId: v.id, title: v.title,
+      amount: existing[v.id]?.amount ?? 0,
+      saveUpto: existing[v.id]?.saveUpto ?? 0,
+    }));
   }
 
   /** Falls back to the category literally titled "Entertainment", or the
@@ -117,14 +132,16 @@ export class AdminEntertainmentPage implements OnInit {
       position: this.all.length + 1, active: true,
       sellers: 0, startingPrice: 0, available: 0, maxActiveGroups: 1,
     };
+    this.buildPricingRows({});
     this.editorOpen = true;
   }
 
-  edit(a: OttApp) {
+  async edit(a: OttApp) {
     this.isNew = false;
     this.showAdvanced = false;
     // deep-copy tiers so an abandoned edit doesn't mutate the live list
     this.editing = { ...a, tiers: a.tiers.map(t => ({ ...t })) };
+    this.buildPricingRows(await this.data.getPlatformPricing(a.id));
     this.editorOpen = true;
   }
 
@@ -147,7 +164,8 @@ export class AdminEntertainmentPage implements OnInit {
     // Default the logo key to the id so the mark resolves even if left blank.
     if (!app.brand?.trim()) app.brand = app.id;
 
-    await this.data.saveOttApp(app);
+    const row = await this.data.saveOttApp(app);
+    await this.data.savePlatformPricing(row.id, this.pricing);
     await this.load();
     this.editorOpen = false;
     this.toast(this.isNew ? 'Platform added' : 'Platform updated');

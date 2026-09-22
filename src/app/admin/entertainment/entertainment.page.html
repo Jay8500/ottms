@@ -72,6 +72,22 @@
       <ion-icon name="add-circle-outline"></ion-icon> Add plan
     </button>
 
+    <!-- "Each platform having different plans, validity and prices" —
+         leave a duration's price at 0 to not offer it on this platform. -->
+    <label class="ee-lbl">Pricing per duration</label>
+    <div class="price-row" *ngFor="let p of pricing">
+      <span class="p-name">{{ p.title }}</span>
+      <div class="p-amt">
+        <span class="p-rs">₹</span>
+        <input type="number" inputmode="numeric" min="0" [(ngModel)]="p.amount" placeholder="Not offered" />
+      </div>
+      <div class="p-save">
+        <input type="number" inputmode="numeric" min="0" [(ngModel)]="p.saveUpto" placeholder="Save ₹0" />
+      </div>
+    </div>
+    <p class="hint" *ngIf="!pricing.length">No validity plans exist yet — add one in Validity first.</p>
+    <p class="hint" *ngIf="pricing.length">Leave a price at 0 to not offer that duration on this platform.</p>
+
     <!-- Requested removed from the everyday view. Instructions was filled
          in for several platforms just one round ago, so it stays reachable
          here rather than being deleted along with anything already typed
