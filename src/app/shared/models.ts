@@ -20,6 +20,16 @@ export type ExitReason = 'personal' | 'faulty';
 
 export type LangCode = 'en' | 'hi' | 'te';
 
+/** Admin-managed chat quick-reply button. */
+export interface QuickReply {
+  id: string;
+  text: string;
+  forRole: 'all' | 'user' | 'seller' | 'admin';
+  maxUses?: number;   // undefined = unlimited, per conversation
+  position: number;
+  active: boolean;
+}
+
 /** Anything the admin can create/edit/reorder through the shared editor sheet. */
 export interface CmsEntity {
   id: string;

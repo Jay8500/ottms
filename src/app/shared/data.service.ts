@@ -4,7 +4,7 @@ import {
   AppUser, Badge, BadgeAward, BankChangeRequest, Category, ChatMessage,
   ChatThread, CommerceOption, ExitRequest,
   FaqItem, FormField, GroupScreen, HomeButton, LangCode, Localized,
-  NotificationRule, Offer, OttApp, PaymentConfig, Referral, SocialLink, UserRating,
+  NotificationRule, Offer, OttApp, PaymentConfig, QuickReply, Referral, SocialLink, UserRating,
   ValidityPlan, WalletSummary, WalletTx,
 } from './models';
 
@@ -867,6 +867,23 @@ export class DataService {
       position: r.position,
     }));
   }
+
+  async getQuickReplies(): Promise<QuickReply[]> {
+    const { data, error } = await this.db.from('quick_replies').select('*').order('position');
+    if (error) throw error;
+    return (data ?? []).map(r => ({
+      id: r.id, text: r.text, forRole: r.for_role,
+      maxUses: r.max_uses ?? undefined, position: r.position, active: r.active,
+    }));
+  }
+
+  async saveQuickReply(q: QuickReply) {
+    return this.upsert('quick_replies', {
+      id: this.idOrNull(q.id), text: q.text, for_role: q.forRole,
+      max_uses: q.maxUses ?? null, position: q.position, active: q.active,
+    });
+  }
+  async deleteQuickReply(id: string) { return this.del('quick_replies', id); }
 
   async getFaqs(): Promise<FaqItem[]> {
     const { data, error } = await this.db

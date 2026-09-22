@@ -103,6 +103,10 @@ export const routes: Routes = [
         path: 'refer',              // 17 — Refer Friends
         loadComponent: () => import('../refer/refer.page').then(m => m.AdminReferPage),
       },
+      {
+        path: 'quickreplies',       // Chat quick-reply buttons
+        loadComponent: () => import('../quickreplies/quickreplies.page').then(m => m.AdminQuickrepliesPage),
+      },
     ],
   },
 ];

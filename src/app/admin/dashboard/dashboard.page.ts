@@ -11,6 +11,7 @@ import {
   swapHorizontalOutline, cardOutline, chatbubblesOutline, documentTextOutline,
   headsetOutline, starOutline, peopleCircleOutline, shareSocialOutline,
   shieldCheckmarkOutline, logOutOutline, notificationsOutline, pricetagOutline,
+  chatbubbleEllipsesOutline,
 } from 'ionicons/icons';
 import { AdminHeaderComponent } from '../shared/admin-header.component';
 import { DataService } from '../../shared/data.service';
@@ -63,6 +64,7 @@ export class DashboardPage implements OnInit {
     { n: 19, label: 'Terms & Conditions',   icon: 'shield-checkmark-outline',tint: '#2563EB', accent: '#2563EB', route: '/admin/terms' },
     { n: 20, label: 'Notifications',        icon: 'notifications-outline',   tint: '#EC4899', accent: '#EC4899', route: '/admin/notifications' },
     { n: 21, label: 'New Offers',           icon: 'pricetag-outline',        tint: '#DC2626', accent: '#DC2626', route: '/admin/offers' },
+    { n: 22, label: 'Quick Replies',        icon: 'chatbubble-ellipses-outline', tint: '#2563EB', accent: '#38BDF8', route: '/admin/quickreplies' },
   ];
 
   filtered: Feature[] = [...this.features];
@@ -80,6 +82,7 @@ export class DashboardPage implements OnInit {
       swapHorizontalOutline, cardOutline, chatbubblesOutline, documentTextOutline,
       headsetOutline, starOutline, peopleCircleOutline, shareSocialOutline,
       shieldCheckmarkOutline, logOutOutline, notificationsOutline, pricetagOutline,
+      chatbubbleEllipsesOutline,
     });
   }
 

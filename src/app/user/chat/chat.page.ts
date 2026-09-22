@@ -13,7 +13,7 @@ import { DataService } from '../../shared/data.service';
 import { Auth } from '../../auth';
 import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
 import { humanError } from '../../shared/errors';
-import { ChatMessage, ChatThread } from '../../shared/models';
+import { ChatMessage, ChatThread, QuickReply } from '../../shared/models';
 
 @Component({
   selector: 'app-chat',
@@ -50,7 +50,31 @@ export class ChatPage implements OnInit, OnDestroy {
    *  more space for Chat". Full text is one tap away, not removed. */
   noticeOpen = false;
 
-  readonly quickReplies = ['👋 Hi,', 'Credentials ?', 'Validity ?', 'OTP ?', 'Thank you!'];
+  /** "Put Quick reply customly i admin can create what User, seller or
+   *  admin can use and put no of times usage count" — admin-managed now
+   *  (see /admin/quickreplies), was five hardcoded strings shown to everyone. */
+  private allQuickReplies: QuickReply[] = [];
+
+  get myRoleInThread(): 'user' | 'seller' | 'admin' {
+    if (this.isAdmin) return 'admin';
+    return this.thread?.iAmBuyer === false ? 'seller' : 'user';
+  }
+
+  /** Filtered to this person's role in this thread, and to ones not yet
+   *  used up in this conversation — "no of times usage count" is per
+   *  conversation, counted from messages already loaded here, not a
+   *  separate stored counter. */
+  get quickReplies(): string[] {
+    const role = this.myRoleInThread;
+    return this.allQuickReplies
+      .filter(q => q.active && (q.forRole === 'all' || q.forRole === role))
+      .filter(q => {
+        if (!q.maxUses) return true;
+        const used = this.messages.filter(m => m.isMine && m.text === q.text).length;
+        return used < q.maxUses;
+      })
+      .map(q => q.text);
+  }
 
   constructor(
     private route: ActivatedRoute,
@@ -87,6 +111,9 @@ export class ChatPage implements OnInit, OnDestroy {
     this.loading = true;
     this.error = '';
     try {
+      if (!this.allQuickReplies.length) {
+        this.data.getQuickReplies().then(q => this.allQuickReplies = q).catch(() => {});
+      }
       const threads = await this.data.getThreads();
       this.thread = threadId
         ? threads.find(t => t.id === threadId) ?? null

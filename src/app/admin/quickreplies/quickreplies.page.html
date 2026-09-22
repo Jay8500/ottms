@@ -1,0 +1,57 @@
+<ion-content class="qr-content" [scrollY]="true">
+  <app-admin-header title="Quick Replies"></app-admin-header>
+
+  <p class="qr-note">
+    Shown as tap-to-send buttons above the chat keyboard. Choose who sees each
+    one, and how many times it can be used inside one conversation.
+  </p>
+
+  <div class="qr-list">
+    <div class="qr-row" *ngFor="let q of items; let i = index" [class.off]="!q.active">
+      <div class="qr-order">
+        <button (click)="move(q, -1)" [disabled]="i === 0" aria-label="Move up">
+          <ion-icon name="arrow-up-outline"></ion-icon>
+        </button>
+        <button (click)="move(q, 1)" [disabled]="i === items.length - 1" aria-label="Move down">
+          <ion-icon name="arrow-down-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="qr-body">
+        <button class="qr-text" (click)="rename(q)">
+          <ion-icon name="chatbubble-ellipses-outline"></ion-icon> {{ q.text }}
+        </button>
+
+        <div class="qr-roles">
+          <button *ngFor="let r of roles" class="qr-role" [class.on]="q.forRole === r.key"
+                  (click)="setRole(q, r.key)">{{ r.label }}</button>
+        </div>
+
+        <div class="qr-bottom">
+          <label class="qr-uses">
+            <span>Max uses / chat</span>
+            <input type="number" inputmode="numeric" min="1" [(ngModel)]="q.maxUses"
+                   (ngModelChange)="onMaxUsesChange()" placeholder="Unlimited" />
+          </label>
+          <button class="sw" [class.on]="q.active" (click)="toggleActive(q)"
+                  [attr.aria-pressed]="q.active" aria-label="Show this quick reply"><i></i></button>
+          <button class="qr-del" (click)="remove(q)" aria-label="Remove">
+            <ion-icon name="trash-outline"></ion-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="qr-add" (click)="add()">
+    <ion-icon name="add-outline"></ion-icon> Add Quick Reply
+  </button>
+
+  <div style="height:120px"></div>
+</ion-content>
+
+<ion-footer class="cta-footer">
+  <button class="cta-btn" [disabled]="!dirty" (click)="save()">
+    <ion-icon name="save-outline"></ion-icon> Save Changes
+  </button>
+</ion-footer>

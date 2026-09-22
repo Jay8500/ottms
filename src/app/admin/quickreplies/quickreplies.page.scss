@@ -1,0 +1,83 @@
+@import '../../../global.scss';
+
+.qr-content { --background: #{$gray-50}; }
+
+.qr-note {
+  margin: 0 $sp-lg $sp-md; font-size: $font-sm; color: $gray-600; line-height: 1.4;
+}
+
+.qr-list { padding: 0 $sp-lg; display: flex; flex-direction: column; gap: $sp-md; }
+
+.qr-row {
+  display: flex; gap: $sp-sm;
+  background: $white; border: 1px solid $gray-200; border-radius: $r-md;
+  padding: $sp-md; box-shadow: $shadow-sm;
+  &.off { opacity: 0.55; }
+}
+
+.qr-order {
+  display: flex; flex-direction: column; gap: 4px; flex-shrink: 0;
+  button {
+    width: 28px; height: 28px; border: none; border-radius: $r-sm;
+    background: $gray-100; @include flex-center; cursor: pointer;
+    ion-icon { font-size: 15px; color: $gray-700; }
+    &:disabled { opacity: 0.3; }
+  }
+}
+
+.qr-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+
+.qr-text {
+  text-align: left; border: none; background: none; padding: 0;
+  display: flex; align-items: center; gap: 6px;
+  font-family: inherit; font-size: $font-base; font-weight: 700; color: $black; cursor: pointer;
+  ion-icon { font-size: 16px; color: $gray-600; flex-shrink: 0; }
+}
+
+.qr-roles { display: flex; gap: 5px; flex-wrap: wrap; }
+.qr-role {
+  padding: 4px 10px; border-radius: $r-pill; border: 1.5px solid $gray-300;
+  background: $white; font-family: inherit; font-size: $font-xs; font-weight: 700;
+  color: $gray-700; cursor: pointer;
+  &.on { border-color: $yellow-dark; background: $yellow-light; color: $black; }
+}
+
+.qr-bottom { display: flex; align-items: center; gap: $sp-sm; margin-top: 2px; }
+
+.qr-uses {
+  flex: 1; display: flex; flex-direction: column; gap: 2px;
+  span { font-size: 10px; color: $gray-600; font-weight: 600; }
+  input {
+    width: 100px; height: 34px; padding: 0 8px; border: 1.5px solid $gray-300;
+    border-radius: $r-sm; font-family: inherit; font-size: $font-sm; font-weight: 700;
+    outline: none;
+    &:focus { border-color: $yellow; }
+  }
+}
+
+.sw {
+  width: 44px; height: 25px; border-radius: $r-pill; border: none;
+  background: $gray-300; position: relative; cursor: pointer; flex-shrink: 0;
+  transition: background 0.18s;
+  i {
+    position: absolute; top: 3px; left: 3px; width: 19px; height: 19px;
+    border-radius: 50%; background: $white; transition: transform 0.18s;
+    box-shadow: $shadow-sm;
+  }
+  &.on { background: $success; i { transform: translateX(19px); } }
+}
+
+.qr-del {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  border: none; background: $red-light; @include flex-center; cursor: pointer;
+  ion-icon { font-size: 16px; color: $red; }
+}
+
+.qr-add {
+  width: calc(100% - #{$sp-lg} * 2); margin: $sp-md $sp-lg 0;
+  height: 46px; border: 1.5px dashed $gray-400; border-radius: $r-md;
+  background: transparent; cursor: pointer; font-family: inherit;
+  font-size: $font-sm; font-weight: 700; color: $gray-700;
+  @include flex-center; gap: 6px;
+  ion-icon { font-size: 18px; }
+}
