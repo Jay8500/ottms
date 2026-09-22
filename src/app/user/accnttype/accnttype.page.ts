@@ -85,7 +85,7 @@ export class AccnttypePage implements OnInit {
       const [app, options, plans] = await Promise.all([
         this.data.getOttApp(this.ottId),
         this.data.getCommerceOptions(),
-        this.data.getValidityPlans(),
+        this.data.getValidityPlans(this.ottId),
       ]);
       this.app = app;
       this.options = options.filter(o => o.active);

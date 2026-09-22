@@ -1256,8 +1256,12 @@ export class DataService {
       throw new Error(`${tier.label} only has ${tier.maxScreens} screen(s) — none left to share`);
     }
 
-    // Price for this duration, falling back to the platform's starting price.
-    const plans = await this.getValidityPlans();
+    // Price for this duration on this platform, falling back to the
+    // platform's starting price. Must be platform-scoped, same as what the
+    // seller was actually shown when picking a duration in accnttype.page —
+    // the old unscoped lookup here would have silently priced the group off
+    // the shared list even when this platform has its own price.
+    const plans = await this.getValidityPlans(input.ottAppId);
     const match = plans.find(p => p.months === months);
     const price = match?.amount ?? app?.startingPrice ?? 0;
 
