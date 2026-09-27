@@ -1,0 +1,82 @@
+<div class="ie-backdrop" *ngIf="file"></div>
+
+<div class="ie-sheet" *ngIf="file">
+  <div class="ie-head">
+    <button class="ie-x" (click)="cancelled.emit()" aria-label="Cancel">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+    <span class="ie-title">Edit photo</span>
+    <button class="ie-ok" [disabled]="!ready" (click)="confirm()" aria-label="Use this photo">
+      <ion-icon name="checkmark-outline"></ion-icon>
+    </button>
+  </div>
+
+  <div class="ie-stage" #stage
+       (pointermove)="onStageMove($event)" (pointerup)="onStageUp()" (pointerleave)="onStageUp()">
+    <img #baseImg class="ie-img" [src]="imgUrl" (load)="onImgLoad()" alt="Photo being edited" />
+
+    <canvas #penCanvas class="ie-pen"
+            [class.active]="tool === 'pen'"
+            (pointerdown)="onPenDown($event)"></canvas>
+
+    <button *ngFor="let o of overlays" class="ie-overlay" [class.text]="o.kind === 'text'"
+            [style.left.%]="o.xPct" [style.top.%]="o.yPct"
+            (pointerdown)="onOverlayDown($event, o)"
+            (dblclick)="removeOverlay(o.id)"
+            [attr.aria-label]="o.kind === 'text' ? o.text : o.emoji">
+      <span *ngIf="o.kind === 'sticker'" class="ie-emoji">{{ o.emoji }}</span>
+      <span *ngIf="o.kind === 'text'" class="ie-text" [style.color]="o.color">{{ o.text }}</span>
+    </button>
+
+    <ng-container *ngIf="tool === 'crop'">
+      <div class="ie-crop-mask"
+           [style.clip-path]="'polygon(0% 0%, 0% 100%, ' + crop.x + '% 100%, ' + crop.x + '% ' + crop.y + '%, '
+             + (crop.x + crop.w) + '% ' + crop.y + '%, ' + (crop.x + crop.w) + '% ' + (crop.y + crop.h) + '%, '
+             + crop.x + '% ' + (crop.y + crop.h) + '%, ' + crop.x + '% 100%, 100% 100%, 100% 0%)'"></div>
+      <div class="ie-crop-box"
+           [style.left.%]="crop.x" [style.top.%]="crop.y" [style.width.%]="crop.w" [style.height.%]="crop.h"
+           (pointerdown)="onCropBodyDown($event)">
+        <span class="ie-crop-handle" (pointerdown)="onCropHandleDown($event)"></span>
+      </div>
+    </ng-container>
+
+    <div class="ie-text-prompt" *ngIf="addingText">
+      <input [(ngModel)]="draftText" placeholder="Type a note…" autofocus />
+      <button (click)="confirmText()">Add</button>
+    </div>
+  </div>
+
+  <div class="ie-tool-options" *ngIf="tool === 'pen'">
+    <button *ngFor="let c of penColors" class="ie-swatch" [style.background]="c"
+            [class.on]="penColor === c" (click)="penColor = c" aria-label="Pen colour"></button>
+    <button class="ie-undo" (click)="undoPen()" aria-label="Undo last stroke">
+      <ion-icon name="arrow-undo-outline"></ion-icon>
+    </button>
+  </div>
+
+  <div class="ie-tool-options" *ngIf="tool === 'sticker'">
+    <button *ngFor="let s of stickers" class="ie-sticker-btn" (click)="addSticker(s)">{{ s }}</button>
+  </div>
+
+  <p class="ie-hint" *ngIf="tool === 'text' && !addingText">Tap "Add text" below, then drag it into place.</p>
+  <div class="ie-tool-options" *ngIf="tool === 'text' && !addingText">
+    <button class="ie-add-text" (click)="startText()">
+      <ion-icon name="text-outline"></ion-icon> Add text
+    </button>
+  </div>
+
+  <div class="ie-toolbar">
+    <button [class.on]="tool === 'crop'" (click)="pickTool('crop')">
+      <ion-icon name="crop-outline"></ion-icon><span>Crop</span>
+    </button>
+    <button [class.on]="tool === 'sticker'" (click)="pickTool('sticker')">
+      <ion-icon name="happy-outline"></ion-icon><span>Sticker</span>
+    </button>
+    <button [class.on]="tool === 'text'" (click)="pickTool('text')">
+      <ion-icon name="text-outline"></ion-icon><span>Text</span>
+    </button>
+    <button [class.on]="tool === 'pen'" (click)="pickTool('pen')">
+      <ion-icon name="brush-outline"></ion-icon><span>Pen</span>
+    </button>
+  </div>
+</div>

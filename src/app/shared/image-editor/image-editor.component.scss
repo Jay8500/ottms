@@ -1,0 +1,106 @@
+@import '../../../global.scss';
+
+.ie-backdrop {
+  position: fixed; inset: 0; background: $black; z-index: 950;
+}
+
+.ie-sheet {
+  position: fixed; inset: 0; z-index: 951;
+  display: flex; flex-direction: column; background: $black;
+}
+
+.ie-head {
+  @include flex-between; flex-shrink: 0;
+  padding: calc(#{$sp-md} + env(safe-area-inset-top, 0px)) $sp-lg $sp-sm;
+}
+.ie-x, .ie-ok {
+  width: 40px; height: 40px; border-radius: 50%; border: none;
+  background: rgba(255,255,255,0.12); @include flex-center; cursor: pointer;
+  ion-icon { font-size: 22px; color: $white; }
+  &:disabled { opacity: 0.4; }
+}
+.ie-ok { background: $yellow; ion-icon { color: $black; } }
+.ie-title { color: $white; font-size: $font-base; font-weight: 700; }
+
+.ie-stage {
+  flex: 1; position: relative; overflow: hidden;
+  @include flex-center; touch-action: none;
+}
+.ie-img { max-width: 100%; max-height: 100%; display: block; user-select: none; pointer-events: none; }
+.ie-pen {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  &.active { pointer-events: auto; touch-action: none; }
+}
+
+.ie-overlay {
+  position: absolute; transform: translate(-50%, -50%);
+  border: none; background: none; padding: 4px; cursor: grab; touch-action: none;
+  .ie-emoji { font-size: 34px; line-height: 1; display: block; }
+  .ie-text {
+    font-size: 18px; font-weight: 800; white-space: nowrap;
+    text-shadow: 0 0 4px rgba(255,255,255,0.9), 0 0 4px rgba(255,255,255,0.9);
+  }
+}
+
+.ie-crop-mask {
+  position: absolute; inset: 0; background: rgba(0,0,0,0.55); pointer-events: none;
+}
+.ie-crop-box {
+  position: absolute; border: 2px dashed $yellow; cursor: move; touch-action: none;
+}
+.ie-crop-handle {
+  position: absolute; right: -12px; bottom: -12px; width: 26px; height: 26px;
+  border-radius: 50%; background: $yellow; border: 2px solid $white;
+  touch-action: none;
+}
+
+.ie-text-prompt {
+  position: absolute; left: $sp-lg; right: $sp-lg; bottom: $sp-lg;
+  display: flex; gap: $sp-sm; background: $white; border-radius: $r-md;
+  padding: $sp-sm; box-shadow: $shadow-sm;
+  input {
+    flex: 1; border: none; outline: none; font-family: inherit;
+    font-size: $font-base; padding: 0 $sp-sm;
+  }
+  button {
+    border: none; background: $yellow; color: $black; font-weight: 800;
+    border-radius: $r-sm; padding: 0 $sp-md; font-family: inherit; cursor: pointer;
+  }
+}
+
+.ie-tool-options {
+  flex-shrink: 0; display: flex; align-items: center; gap: $sp-sm;
+  padding: $sp-sm $sp-lg; overflow-x: auto;
+}
+.ie-swatch {
+  width: 30px; height: 30px; border-radius: 50%; border: 2px solid transparent;
+  flex-shrink: 0; cursor: pointer;
+  &.on { border-color: $white; }
+}
+.ie-undo, .ie-add-text {
+  margin-left: auto; display: flex; align-items: center; gap: 5px;
+  border: none; background: rgba(255,255,255,0.12); color: $white;
+  border-radius: $r-sm; padding: 8px $sp-md; font-family: inherit;
+  font-size: $font-sm; font-weight: 700; cursor: pointer; flex-shrink: 0;
+  ion-icon { font-size: 16px; }
+}
+.ie-add-text { margin-left: 0; }
+.ie-sticker-btn {
+  width: 40px; height: 40px; border-radius: $r-sm; border: none;
+  background: rgba(255,255,255,0.12); font-size: 22px; flex-shrink: 0; cursor: pointer;
+}
+.ie-hint { color: rgba(255,255,255,0.7); font-size: $font-xs; text-align: center; margin: 0; padding: 0 $sp-lg; }
+
+.ie-toolbar {
+  flex-shrink: 0; display: flex;
+  padding: $sp-sm $sp-md calc(#{$sp-sm} + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid rgba(255,255,255,0.12);
+  button {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    border: none; background: none; color: rgba(255,255,255,0.6);
+    font-family: inherit; font-size: 10px; font-weight: 700; cursor: pointer;
+    ion-icon { font-size: 22px; }
+    &.on { color: $yellow; }
+  }
+}

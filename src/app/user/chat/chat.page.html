@@ -158,3 +158,5 @@
     </div>
   </div>
 </div>
+
+<app-image-editor [file]="editingFile" (done)="sendEditedImage($event)" (cancelled)="cancelEdit()"></app-image-editor>

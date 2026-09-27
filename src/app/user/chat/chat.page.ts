@@ -13,6 +13,7 @@ import {
 import { DataService } from '../../shared/data.service';
 import { Auth } from '../../auth';
 import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
+import { ImageEditorComponent } from '../../shared/image-editor/image-editor.component';
 import { humanError } from '../../shared/errors';
 import { ChatMessage, ChatThread, QuickReply } from '../../shared/models';
 
@@ -21,7 +22,7 @@ import { ChatMessage, ChatThread, QuickReply } from '../../shared/models';
   templateUrl: './chat.page.html',
   styleUrls: ['./chat.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonContent, IonIcon, OttLogoComponent],
+  imports: [CommonModule, FormsModule, IonContent, IonIcon, OttLogoComponent, ImageEditorComponent],
 })
 export class ChatPage implements OnInit, OnDestroy {
   @ViewChild('scrollArea') scrollArea!: IonContent;
@@ -371,9 +372,25 @@ export class ChatPage implements OnInit, OnDestroy {
     this.imgInput.nativeElement.click();
   }
 
-  async onImage(e: Event) {
+  /** "Put options (Crop, Sticker, Text, Pen) like whatsapp chat" — a photo
+   *  goes through the editor before it's ever uploaded, same as WhatsApp's
+   *  own send-photo screen. */
+  editingFile: File | null = null;
+
+  onImage(e: Event) {
     const file = (e.target as HTMLInputElement).files?.[0];
-    if (!file || !this.thread) return;
+    (e.target as HTMLInputElement).value = '';
+    if (!file) return;
+    this.editingFile = file;
+  }
+
+  cancelEdit() {
+    this.editingFile = null;
+  }
+
+  async sendEditedImage(file: File) {
+    this.editingFile = null;
+    if (!this.thread) return;
 
     this.sending = true;
     try {
@@ -384,7 +401,6 @@ export class ChatPage implements OnInit, OnDestroy {
       this.toast(humanError(err, 'Could not send the photo'));
     } finally {
       this.sending = false;
-      (e.target as HTMLInputElement).value = '';
     }
   }
 
