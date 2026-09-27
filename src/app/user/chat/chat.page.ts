@@ -8,7 +8,7 @@ import {
   arrowBackOutline, ellipsisVerticalOutline, sendOutline, imageOutline,
   starOutline, lockClosedOutline, chevronForwardOutline, flagOutline,
   warningOutline, chevronUpOutline, chevronDownOutline, documentTextOutline,
-  notificationsOutline,
+  notificationsOutline, micOutline, trashOutline,
 } from 'ionicons/icons';
 import { DataService } from '../../shared/data.service';
 import { Auth } from '../../auth';
@@ -90,7 +90,7 @@ export class ChatPage implements OnInit, OnDestroy {
       arrowBackOutline, ellipsisVerticalOutline, sendOutline, imageOutline,
       starOutline, lockClosedOutline, chevronForwardOutline, flagOutline,
       warningOutline, chevronUpOutline, chevronDownOutline, documentTextOutline,
-      notificationsOutline,
+      notificationsOutline, micOutline, trashOutline,
     });
   }
 
@@ -295,6 +295,8 @@ export class ChatPage implements OnInit, OnDestroy {
     this.unsubscribeThread?.();
     this.unsubscribePresence?.();
     clearTimeout(this.noteSaveTimer);
+    // Leaving mid-recording must not leave the mic hot in the background.
+    if (this.recording) this.cancelRecording();
     // Presence itself is handled once, app-wide, by the appStateChange
     // listener in native.service.ts — online while the app is open,
     // offline once it is backgrounded. This page used to also flip it
@@ -399,6 +401,91 @@ export class ChatPage implements OnInit, OnDestroy {
       setTimeout(() => this.scrollArea?.scrollToBottom(200), 60);
     } catch (err: any) {
       this.toast(humanError(err, 'Could not send the photo'));
+    } finally {
+      this.sending = false;
+    }
+  }
+
+  // ── Voice messages ──────────────────────────────────────────────────
+  // "Need voice record option (if any Uneducated person has issue, he can
+  // use that)." Same mediaOpen gate as photos (Q5 already covers voice).
+  recording = false;
+  recordSeconds = 0;
+  private mediaRecorder: MediaRecorder | null = null;
+  private recordedChunks: Blob[] = [];
+  private recordTimer?: ReturnType<typeof setInterval>;
+  private micStream: MediaStream | null = null;
+  private readonly MAX_RECORD_SECONDS = 120;
+
+  get recordTimeLabel(): string {
+    const m = Math.floor(this.recordSeconds / 60);
+    const s = this.recordSeconds % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  }
+
+  async startRecording() {
+    if (!this.thread || this.thread.locked) { this.toast('This conversation is closed'); return; }
+    if (!this.mediaOpen) {
+      this.toast(
+        this.iUnlocked
+          ? 'Waiting for the other person to unlock media'
+          : 'Tap the lock to allow voice messages. Both of you must unlock.',
+      );
+      return;
+    }
+
+    try {
+      this.micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch {
+      // Denied, or no mic hardware — either way there is nothing to record.
+      this.toast('Microphone permission is needed to record a voice message');
+      return;
+    }
+
+    this.recordedChunks = [];
+    this.mediaRecorder = new MediaRecorder(this.micStream);
+    this.mediaRecorder.ondataavailable = (e) => { if (e.data.size) this.recordedChunks.push(e.data); };
+    this.mediaRecorder.start();
+    this.recording = true;
+    this.recordSeconds = 0;
+    this.recordTimer = setInterval(() => {
+      this.recordSeconds++;
+      if (this.recordSeconds >= this.MAX_RECORD_SECONDS) this.finishRecording(true);
+    }, 1000);
+  }
+
+  stopAndSendRecording() { this.finishRecording(true); }
+  cancelRecording() { this.finishRecording(false); }
+
+  private finishRecording(send: boolean) {
+    if (!this.recording || !this.mediaRecorder) return;
+    this.recording = false;
+    clearInterval(this.recordTimer);
+
+    const recorder = this.mediaRecorder;
+    const stream = this.micStream;
+    this.mediaRecorder = null;
+    this.micStream = null;
+
+    recorder.onstop = () => {
+      stream?.getTracks().forEach(t => t.stop());
+      if (send && this.recordedChunks.length) {
+        this.sendVoice(new Blob(this.recordedChunks, { type: 'audio/webm' }));
+      }
+    };
+    recorder.stop();
+  }
+
+  private async sendVoice(blob: Blob) {
+    if (!this.thread) return;
+    this.sending = true;
+    try {
+      const file = new File([blob], 'voice.webm', { type: 'audio/webm' });
+      const saved = await this.data.sendChatAudio(this.thread.id, file);
+      this.messages.push(saved);
+      setTimeout(() => this.scrollArea?.scrollToBottom(200), 60);
+    } catch (err: any) {
+      this.toast(humanError(err, 'Could not send the voice message'));
     } finally {
       this.sending = false;
     }

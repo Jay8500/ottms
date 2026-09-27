@@ -513,6 +513,7 @@ export class DataService {
     return (data ?? []).map(r => ({
       id: r.id, threadId: r.thread_id,
       text: r.body ?? undefined, imageUrl: r.image_url ?? undefined,
+      audioUrl: r.audio_url ?? undefined,
       isMine: r.sender_id === me,
       time: new Date(r.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
     }));
@@ -765,21 +766,37 @@ export class DataService {
     return this.sendMessage(threadId, undefined, url);
   }
 
-  async sendMessage(threadId: string, text?: string, imageUrl?: string) {
+  /** "Need voice record option" — same shape as sendChatImage, its own
+   *  bucket (0036) so photo and voice storage policies stay independent. */
+  async sendChatAudio(threadId: string, file: File) {
+    const me = await this.sb.currentUserId();
+    if (!me) throw new Error('Not signed in');
+    if (file.size > 5 * 1024 * 1024) throw new Error('Voice note is too long');
+
+    const path = await this.sb.upload('chat-audio', `${threadId}/${Date.now()}.webm`, file);
+    const url = await this.sb.signedUrl('chat-audio', path, 60 * 60 * 24 * 7);
+    return this.sendMessage(threadId, undefined, undefined, url);
+  }
+
+  async sendMessage(threadId: string, text?: string, imageUrl?: string, audioUrl?: string) {
     const me = await this.sb.currentUserId();
     if (!me) throw new Error('Not signed in');
 
     const { data, error } = await this.db.from('chat_messages')
-      .insert({ thread_id: threadId, sender_id: me, body: text ?? null, image_url: imageUrl ?? null })
+      .insert({
+        thread_id: threadId, sender_id: me, body: text ?? null,
+        image_url: imageUrl ?? null, audio_url: audioUrl ?? null,
+      })
       .select().single();
     if (error) throw error;
 
+    const preview = text ?? (audioUrl ? '🎤 Voice message' : '📷 Photo');
     await this.db.from('chat_threads')
-      .update({ last_message: text ?? '📷 Photo', last_at: new Date().toISOString() })
+      .update({ last_message: preview, last_at: new Date().toISOString() })
       .eq('id', threadId);
 
     return {
-      id: data.id, threadId, text, imageUrl, isMine: true,
+      id: data.id, threadId, text, imageUrl, audioUrl, isMine: true,
       time: new Date(data.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
     } as ChatMessage;
   }

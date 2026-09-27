@@ -126,6 +126,7 @@
     display: block; max-width: 100%; border-radius: $r-sm;
     margin-bottom: 5px;
   }
+  .b-audio { display: block; max-width: 220px; height: 40px; margin-bottom: 5px; }
   .b-text { font-size: $font-base; color: $black; margin: 0; line-height: 1.45; word-break: break-word; }
   .b-time { display: block; font-size: 10px; color: $gray-400; text-align: right; margin-top: 3px; }
 }
@@ -153,6 +154,23 @@
 }
 
 .composer { display: flex; align-items: center; gap: $sp-sm; }
+
+.composer.recording {
+  background: $red-light; border-radius: $r-pill; padding: 0 $sp-sm 0 4px;
+  height: 44px;
+}
+.rec-cancel {
+  width: 36px; height: 36px; border-radius: 50%; border: none; flex-shrink: 0;
+  background: $white; @include flex-center; cursor: pointer;
+  ion-icon { font-size: 18px; color: $red; }
+}
+.rec-dot {
+  width: 9px; height: 9px; border-radius: 50%; background: $red; flex-shrink: 0;
+  animation: rec-pulse 1s infinite;
+}
+@keyframes rec-pulse { 50% { opacity: 0.3; } }
+.rec-time { font-size: $font-sm; font-weight: 800; color: $red; flex-shrink: 0; }
+.rec-hint { flex: 1; font-size: $font-sm; color: $red; }
 
 .media-hint {
   display: flex; align-items: center; gap: 6px;

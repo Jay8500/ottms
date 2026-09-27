@@ -48,4 +48,16 @@
       silently dropped even after the user accepts the prompt.
     -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!--
+      Voice messages in chat use the plain web getUserMedia/MediaRecorder
+      APIs, not a native plugin. Capacitor's own BridgeWebChromeClient
+      already answers the WebView's audio permission request by asking for
+      BOTH of these together — but Android silently reports an undeclared
+      permission as denied, with no prompt and no error explaining why, so
+      recording fails with NotAllowedError unless BOTH are declared here,
+      not just RECORD_AUDIO alone.
+    -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 </manifest>

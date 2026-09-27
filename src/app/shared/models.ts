@@ -236,6 +236,7 @@ export interface ChatMessage {
   threadId: string;
   text?: string;
   imageUrl?: string;
+  audioUrl?: string;
   isMine: boolean;
   time: string;
 }

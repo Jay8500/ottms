@@ -96,6 +96,7 @@
       <div class="m-wrap" *ngFor="let m of messages" [class.mine]="m.isMine">
         <div class="bubble" [class.mine]="m.isMine">
           <img class="b-img" *ngIf="m.imageUrl" [src]="m.imageUrl" alt="Shared photo" />
+          <audio class="b-audio" *ngIf="m.audioUrl" [src]="m.audioUrl" controls></audio>
           <p class="b-text" *ngIf="m.text">{{ m.text }}</p>
           <span class="b-time">{{ m.time }}</span>
         </div>
@@ -131,7 +132,21 @@
       <span *ngIf="!ringReady">Already notified — available again in {{ ringWaitLabel }}</span>
     </button>
 
-    <div class="composer">
+    <!-- "Need voice record option" — replaces the composer while recording,
+         same as WhatsApp's own recording bar. -->
+    <div class="composer recording" *ngIf="recording">
+      <button class="rec-cancel" (click)="cancelRecording()" aria-label="Cancel recording">
+        <ion-icon name="trash-outline"></ion-icon>
+      </button>
+      <span class="rec-dot"></span>
+      <span class="rec-time">{{ recordTimeLabel }}</span>
+      <span class="rec-hint">Recording…</span>
+      <button class="c-send" (click)="stopAndSendRecording()" aria-label="Send voice message">
+        <ion-icon name="send-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="composer" *ngIf="!recording">
       <!-- Nothing to toggle once photos are already open — either both
            sides have already unlocked, or this is a support/admin
            conversation where the lock never applied in the first place. -->
@@ -151,7 +166,12 @@
              [placeholder]="thread.locked ? 'This conversation is closed' : 'Message'"
              [disabled]="thread.locked" (keyup.enter)="send()" />
 
-      <button class="c-send" (click)="send()" [disabled]="!draft.trim() || sending || thread.locked"
+      <button class="c-img" *ngIf="!draft.trim()" (click)="startRecording()"
+              [disabled]="thread.locked || !mediaOpen" aria-label="Record a voice message">
+        <ion-icon name="mic-outline"></ion-icon>
+      </button>
+
+      <button class="c-send" *ngIf="draft.trim()" (click)="send()" [disabled]="sending || thread.locked"
               aria-label="Send">
         <ion-icon name="send-outline"></ion-icon>
       </button>
