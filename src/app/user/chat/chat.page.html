@@ -123,6 +123,14 @@
       <span *ngIf="iUnlocked">You unlocked. Waiting for the other person.</span>
     </p>
 
+    <!-- "Bell icon and Trail count... refils 12 hours" — nudge an offline
+         seller, buyer side only, one ring per 12 hours. -->
+    <button class="ring-row" *ngIf="canRing" [disabled]="!ringReady || ringing" (click)="ring()">
+      <ion-icon name="notifications-outline"></ion-icon>
+      <span *ngIf="ringReady">{{ thread.sellerName || 'Seller' }} is offline — tap to notify them</span>
+      <span *ngIf="!ringReady">Already notified — available again in {{ ringWaitLabel }}</span>
+    </button>
+
     <div class="composer">
       <!-- Nothing to toggle once photos are already open — either both
            sides have already unlocked, or this is a support/admin

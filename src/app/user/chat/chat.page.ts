@@ -8,6 +8,7 @@ import {
   arrowBackOutline, ellipsisVerticalOutline, sendOutline, imageOutline,
   starOutline, lockClosedOutline, chevronForwardOutline, flagOutline,
   warningOutline, chevronUpOutline, chevronDownOutline, documentTextOutline,
+  notificationsOutline,
 } from 'ionicons/icons';
 import { DataService } from '../../shared/data.service';
 import { Auth } from '../../auth';
@@ -88,6 +89,7 @@ export class ChatPage implements OnInit, OnDestroy {
       arrowBackOutline, ellipsisVerticalOutline, sendOutline, imageOutline,
       starOutline, lockClosedOutline, chevronForwardOutline, flagOutline,
       warningOutline, chevronUpOutline, chevronDownOutline, documentTextOutline,
+      notificationsOutline,
     });
   }
 
@@ -222,6 +224,50 @@ export class ChatPage implements OnInit, OnDestroy {
     return this.thread.iAmBuyer
       ? this.thread.buyerMediaUnlocked
       : this.thread.sellerMediaUnlocked;
+  }
+
+  /** "Put Bell icon and Trail count... refils 12 hours" — only the buyer
+   *  side can ring, and only when the seller is actually offline (that is
+   *  the whole point of it). */
+  get canRing(): boolean {
+    return this.myRoleInThread === 'user' && !this.isSupportThread && !this.thread?.isOnline;
+  }
+
+  private readonly TWELVE_HOURS_MS = 12 * 60 * 60 * 1000;
+
+  get ringReady(): boolean {
+    if (!this.thread?.lastRingAt) return true;
+    return Date.now() - new Date(this.thread.lastRingAt).getTime() >= this.TWELVE_HOURS_MS;
+  }
+
+  /** Rough "Available in Xh Ym" — no need for a live-ticking timer here. */
+  get ringWaitLabel(): string {
+    if (!this.thread?.lastRingAt) return '';
+    const remaining = this.TWELVE_HOURS_MS - (Date.now() - new Date(this.thread.lastRingAt).getTime());
+    if (remaining <= 0) return '';
+    const h = Math.floor(remaining / 3600000);
+    const m = Math.floor((remaining % 3600000) / 60000);
+    return h > 0 ? `${h}h ${m}m` : `${m}m`;
+  }
+
+  ringing = false;
+
+  async ring() {
+    if (!this.thread || this.ringing || !this.ringReady) return;
+    this.ringing = true;
+    try {
+      const res = await this.data.ringSeller(this.thread.id);
+      if (res.ok) {
+        this.thread.lastRingAt = new Date().toISOString();
+        this.toast('🔔 Rung — they will be notified.');
+      } else {
+        this.toast(`Already rung. Try again in ${this.ringWaitLabel}.`);
+      }
+    } catch (e: any) {
+      this.toast(humanError(e, 'Could not ring right now'));
+    } finally {
+      this.ringing = false;
+    }
   }
 
   async toggleMedia() {

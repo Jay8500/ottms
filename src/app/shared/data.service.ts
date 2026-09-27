@@ -496,6 +496,7 @@ export class DataService {
       unread: 0,
       isOnline: r.seller?.is_online ?? false,
       locked: r.locked,
+      lastRingAt: r.last_ring_at ?? undefined,
     }));
   }
 
@@ -737,6 +738,19 @@ export class DataService {
 
   setPresence(online: boolean) {
     return this.sb.rpc('set_presence', { p_online: online }).catch(() => { /* best effort */ });
+  }
+
+  /** "Put Bell icon... refils 12 hours" — the actual push send needs the
+   *  Firebase service key, which only the Edge Function can hold, so this
+   *  goes through ring-seller rather than a plain RPC. */
+  async ringSeller(threadId: string): Promise<{ ok: boolean; retryAfterMs?: number }> {
+    const { data, error } = await this.sb.client.functions
+      .invoke<{ ok?: boolean; retryAfterMs?: number; error?: string }>(
+        'ring-seller', { body: { threadId } },
+      );
+    if (error) throw error;
+    if (data?.error) throw new Error(data.error);
+    return { ok: !!data?.ok, retryAfterMs: data?.retryAfterMs };
   }
 
   /** Uploads a chat photo and returns a viewable signed URL. */

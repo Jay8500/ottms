@@ -227,6 +227,8 @@ export interface ChatThread {
   buyerMediaUnlocked: boolean;
   sellerMediaUnlocked: boolean;
   iAmBuyer: boolean;
+  /** The 🔔 bell — one ring per 12 hours, buyer-side only. */
+  lastRingAt?: string;
 }
 
 export interface ChatMessage {
