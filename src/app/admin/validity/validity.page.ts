@@ -9,6 +9,7 @@ import { AdminHeaderComponent } from '../shared/admin-header.component';
 import { EntityEditorComponent } from '../shared/entity-editor.component';
 import { DataService } from '../../shared/data.service';
 import { CmsEntity, ValidityPlan } from '../../shared/models';
+import { humanError } from '../../shared/errors';
 
 /** 6 — Validity. The 1/3/6/12-month plans, their price and the saving shown to buyers. */
 @Component({
@@ -65,10 +66,14 @@ export class AdminValidityPage implements OnInit {
     const v = e as ValidityPlan;
     if (v.months < 1)  { this.toast('Duration must be at least 1 month'); return; }
     if (v.amount <= 0) { this.toast('Enter a price above zero'); return; }
-    await this.data.saveValidityPlan(v);
-    await this.load();
-    this.editorOpen = false;
-    this.toast(this.isNew ? 'Plan created' : 'Plan updated');
+    try {
+      await this.data.saveValidityPlan(v);
+      await this.load();
+      this.editorOpen = false;
+      this.toast(this.isNew ? 'Plan created' : 'Plan updated');
+    } catch (err) {
+      this.toast(humanError(err, 'Could not save this plan'));
+    }
   }
 
   async onRemove(id: string) {
@@ -81,10 +86,14 @@ export class AdminValidityPage implements OnInit {
         {
           text: 'Delete', role: 'destructive',
           handler: async () => {
-            await this.data.deleteValidityPlan(id);
-            await this.load();
-            this.editorOpen = false;
-            this.toast('Plan deleted');
+            try {
+              await this.data.deleteValidityPlan(id);
+              await this.load();
+              this.editorOpen = false;
+              this.toast('Plan deleted');
+            } catch (err) {
+              this.toast(humanError(err, 'Could not delete this plan'));
+            }
           },
         },
       ],

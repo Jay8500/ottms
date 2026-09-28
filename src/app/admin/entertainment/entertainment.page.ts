@@ -14,6 +14,7 @@ import { EntityEditorComponent } from '../shared/entity-editor.component';
 import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
 import { DataService } from '../../shared/data.service';
 import { CmsEntity, OttApp, OttPlanTier, ValidityPlan } from '../../shared/models';
+import { humanError } from '../../shared/errors';
 
 /** 4 — Entertainment. The OTT platforms inside a category, and the seat limit
  *  admin sets for each plan tier. */
@@ -141,8 +142,12 @@ export class AdminEntertainmentPage implements OnInit {
     this.showAdvanced = false;
     // deep-copy tiers so an abandoned edit doesn't mutate the live list
     this.editing = { ...a, tiers: a.tiers.map(t => ({ ...t })) };
-    this.buildPricingRows(await this.data.getPlatformPricing(a.id));
     this.editorOpen = true;
+    try {
+      this.buildPricingRows(await this.data.getPlatformPricing(a.id));
+    } catch (e) {
+      this.toast(humanError(e, 'Could not load this platform\'s pricing'));
+    }
   }
 
   addTier() {
@@ -164,11 +169,15 @@ export class AdminEntertainmentPage implements OnInit {
     // Default the logo key to the id so the mark resolves even if left blank.
     if (!app.brand?.trim()) app.brand = app.id;
 
-    const row = await this.data.saveOttApp(app);
-    await this.data.savePlatformPricing(row.id, this.pricing);
-    await this.load();
-    this.editorOpen = false;
-    this.toast(this.isNew ? 'Platform added' : 'Platform updated');
+    try {
+      const row = await this.data.saveOttApp(app);
+      await this.data.savePlatformPricing(row.id, this.pricing);
+      await this.load();
+      this.editorOpen = false;
+      this.toast(this.isNew ? 'Platform added' : 'Platform updated');
+    } catch (err) {
+      this.toast(humanError(err, 'Could not save this platform'));
+    }
   }
 
   async onRemove(id: string) {
@@ -181,10 +190,14 @@ export class AdminEntertainmentPage implements OnInit {
         {
           text: 'Delete', role: 'destructive',
           handler: async () => {
-            await this.data.deleteOttApp(id);
-            await this.load();
-            this.editorOpen = false;
-            this.toast('Platform deleted');
+            try {
+              await this.data.deleteOttApp(id);
+              await this.load();
+              this.editorOpen = false;
+              this.toast('Platform deleted');
+            } catch (e) {
+              this.toast(humanError(e, 'Could not delete this platform'));
+            }
           },
         },
       ],

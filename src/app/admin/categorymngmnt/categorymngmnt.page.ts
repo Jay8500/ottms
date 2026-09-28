@@ -15,6 +15,7 @@ import { AdminHeaderComponent } from '../shared/admin-header.component';
 import { EntityEditorComponent } from '../shared/entity-editor.component';
 import { DataService } from '../../shared/data.service';
 import { Category, CmsEntity } from '../../shared/models';
+import { humanError } from '../../shared/errors';
 
 /** 3 — Categories. Create, edit, reorder and hide the app's top-level categories. */
 @Component({
@@ -87,10 +88,14 @@ export class CategorymngmntPage implements OnInit {
   }
 
   async onSave(e: CmsEntity) {
-    await this.data.saveCategory(e as Category);
-    await this.load();
-    this.editorOpen = false;
-    this.toast(this.isNew ? 'Category created' : 'Category updated');
+    try {
+      await this.data.saveCategory(e as Category);
+      await this.load();
+      this.editorOpen = false;
+      this.toast(this.isNew ? 'Category created' : 'Category updated');
+    } catch (err) {
+      this.toast(humanError(err, 'Could not save this category'));
+    }
   }
 
   async onRemove(id: string) {
@@ -105,10 +110,14 @@ export class CategorymngmntPage implements OnInit {
         {
           text: 'Delete', role: 'destructive',
           handler: async () => {
-            await this.data.deleteCategory(id);
-            await this.load();
-            this.editorOpen = false;
-            this.toast('Category deleted');
+            try {
+              await this.data.deleteCategory(id);
+              await this.load();
+              this.editorOpen = false;
+              this.toast('Category deleted');
+            } catch (err) {
+              this.toast(humanError(err, 'Could not delete this category'));
+            }
           },
         },
       ],

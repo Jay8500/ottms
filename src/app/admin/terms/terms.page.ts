@@ -6,6 +6,7 @@ import { addIcons } from 'ionicons';
 import { saveOutline, eyeOutline, createOutline, shieldCheckmarkOutline } from 'ionicons/icons';
 import { AdminHeaderComponent } from '../shared/admin-header.component';
 import { DataService } from '../../shared/data.service';
+import { humanError } from '../../shared/errors';
 
 /** 18 — Terms & Conditions. Plain-text policy the user sees from their menu. */
 @Component({
@@ -24,7 +25,13 @@ export class AdminTermsPage implements OnInit {
     addIcons({ saveOutline, eyeOutline, createOutline, shieldCheckmarkOutline });
   }
 
-  async ngOnInit() { this.text = await this.data.getTerms(); }
+  async ngOnInit() {
+    try {
+      this.text = await this.data.getTerms();
+    } catch (e) {
+      this.toast(humanError(e, 'Could not load Terms & Conditions'));
+    }
+  }
 
   get lines() {
     return this.text.split('\n').filter(l => l.trim());
@@ -32,9 +39,13 @@ export class AdminTermsPage implements OnInit {
 
   async save() {
     if (!this.text.trim()) { this.toast('Terms cannot be empty'); return; }
-    await this.data.saveTerms(this.text);
-    this.dirty = false;
-    this.toast('Terms & Conditions saved');
+    try {
+      await this.data.saveTerms(this.text);
+      this.dirty = false;
+      this.toast('Terms & Conditions saved');
+    } catch (e) {
+      this.toast(humanError(e, 'Could not save Terms & Conditions'));
+    }
   }
 
   private async toast(message: string) {

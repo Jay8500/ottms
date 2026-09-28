@@ -12,6 +12,7 @@ import { AdminHeaderComponent } from '../shared/admin-header.component';
 import { EntityEditorComponent } from '../shared/entity-editor.component';
 import { DataService } from '../../shared/data.service';
 import { CmsEntity, Offer, OttApp } from '../../shared/models';
+import { humanError } from '../../shared/errors';
 
 /** New Offers — promotional posts on the user's home screen. Image,
  *  heading, description, and three prices (what it normally costs, what we
@@ -78,10 +79,14 @@ export class AdminOffersPage implements OnInit {
       this.toast('Offer price is higher than the actual price — check the numbers');
       return;
     }
-    await this.data.saveOffer(o);
-    await this.load();
-    this.editorOpen = false;
-    this.toast(this.isNew ? 'Offer added' : 'Offer updated');
+    try {
+      await this.data.saveOffer(o);
+      await this.load();
+      this.editorOpen = false;
+      this.toast(this.isNew ? 'Offer added' : 'Offer updated');
+    } catch (err) {
+      this.toast(humanError(err, 'Could not save this offer'));
+    }
   }
 
   async onRemove(id: string) {
@@ -94,10 +99,14 @@ export class AdminOffersPage implements OnInit {
         {
           text: 'Remove', role: 'destructive',
           handler: async () => {
-            await this.data.deleteOffer(id);
-            await this.load();
-            this.editorOpen = false;
-            this.toast('Offer removed');
+            try {
+              await this.data.deleteOffer(id);
+              await this.load();
+              this.editorOpen = false;
+              this.toast('Offer removed');
+            } catch (err) {
+              this.toast(humanError(err, 'Could not remove this offer'));
+            }
           },
         },
       ],

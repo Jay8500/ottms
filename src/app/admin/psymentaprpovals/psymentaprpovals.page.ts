@@ -97,9 +97,13 @@ export class PsymentaprpovalsPage implements OnInit {
         {
           text: 'Approve',
           handler: async () => {
-            await this.data.setTxStatus(x.id, 'cleared');
-            await this.reload();
-            this.toast('Approved — user notified');
+            try {
+              await this.data.setTxStatus(x.id, 'cleared');
+              await this.reload();
+              this.toast('Approved — user notified');
+            } catch (e) {
+              this.toast(humanError(e, 'Could not approve'));
+            }
           },
         },
       ],
@@ -119,9 +123,13 @@ export class PsymentaprpovalsPage implements OnInit {
         {
           text: 'Reject',
           handler: async (reason: string) => {
-            await this.data.setTxStatus(x.id, 'rejected', reason);
-            await this.reload();
-            this.toast('Rejected — ' + reason);
+            try {
+              await this.data.setTxStatus(x.id, 'rejected', reason);
+              await this.reload();
+              this.toast('Rejected — ' + reason);
+            } catch (e) {
+              this.toast(humanError(e, 'Could not reject'));
+            }
           },
         },
       ],

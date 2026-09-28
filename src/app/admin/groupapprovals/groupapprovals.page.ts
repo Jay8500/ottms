@@ -14,6 +14,7 @@ import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
 import { DataService } from '../../shared/data.service';
 import { ExportService } from '../../shared/export.service';
 import { GroupScreen, OttApp } from '../../shared/models';
+import { humanError } from '../../shared/errors';
 
 /** 8 — Group's. Browse by OTT platform, or review approved / pending groups. */
 @Component({
@@ -55,8 +56,12 @@ export class GroupapprovalsPage implements OnInit {
   }
 
   async ngOnInit() {
-    this.apps = await this.data.getOttApps();
-    await this.reload();
+    try {
+      this.apps = await this.data.getOttApps();
+      await this.reload();
+    } catch (e) {
+      this.toast(humanError(e, 'Could not load groups'));
+    }
   }
 
   private async reload() {
@@ -103,9 +108,13 @@ export class GroupapprovalsPage implements OnInit {
         {
           text: 'Approve',
           handler: async () => {
-            await this.data.setGroupStatus(g.id, 'approved');
-            await this.reload();
-            this.toast('Group approved');
+            try {
+              await this.data.setGroupStatus(g.id, 'approved');
+              await this.reload();
+              this.toast('Group approved');
+            } catch (e) {
+              this.toast(humanError(e, 'Could not approve this group'));
+            }
           },
         },
       ],
@@ -122,9 +131,13 @@ export class GroupapprovalsPage implements OnInit {
         {
           text: 'Reject', role: 'destructive',
           handler: async () => {
-            await this.data.setGroupStatus(g.id, 'rejected');
-            await this.reload();
-            this.toast('Group rejected');
+            try {
+              await this.data.setGroupStatus(g.id, 'rejected');
+              await this.reload();
+              this.toast('Group rejected');
+            } catch (e) {
+              this.toast(humanError(e, 'Could not reject this group'));
+            }
           },
         },
       ],

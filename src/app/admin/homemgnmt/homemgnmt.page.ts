@@ -12,6 +12,7 @@ import { AdminHeaderComponent } from '../shared/admin-header.component';
 import { EntityEditorComponent } from '../shared/entity-editor.component';
 import { DataService } from '../../shared/data.service';
 import { CmsEntity, HomeButton } from '../../shared/models';
+import { humanError } from '../../shared/errors';
 
 /** 2 — Home. The action buttons on the user's home screen: name, colour,
  *  icon, and which side the icon sits on. */
@@ -79,10 +80,14 @@ export class HomemgnmtPage implements OnInit {
   }
 
   async onSave(e: CmsEntity) {
-    await this.data.saveHomeButton(e as HomeButton);
-    await this.load();
-    this.editorOpen = false;
-    this.toast(this.isNew ? 'Button added' : 'Button updated');
+    try {
+      await this.data.saveHomeButton(e as HomeButton);
+      await this.load();
+      this.editorOpen = false;
+      this.toast(this.isNew ? 'Button added' : 'Button updated');
+    } catch (err) {
+      this.toast(humanError(err, 'Could not save this button'));
+    }
   }
 
   async onRemove(id: string) {
@@ -95,10 +100,14 @@ export class HomemgnmtPage implements OnInit {
         {
           text: 'Remove', role: 'destructive',
           handler: async () => {
-            await this.data.deleteHomeButton(id);
-            await this.load();
-            this.editorOpen = false;
-            this.toast('Button removed');
+            try {
+              await this.data.deleteHomeButton(id);
+              await this.load();
+              this.editorOpen = false;
+              this.toast('Button removed');
+            } catch (err) {
+              this.toast(humanError(err, 'Could not remove this button'));
+            }
           },
         },
       ],

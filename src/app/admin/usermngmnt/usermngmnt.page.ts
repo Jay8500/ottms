@@ -16,6 +16,7 @@ import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
 import { DataService } from '../../shared/data.service';
 import { ExportService } from '../../shared/export.service';
 import { AppUser, GroupScreen } from '../../shared/models';
+import { humanError } from '../../shared/errors';
 
 interface UserRow extends AppUser {
   expanded: boolean;
@@ -122,7 +123,7 @@ export class UsermngmntPage implements OnInit {
               this.apply();
               this.toast(`${u.name} removed`);
             } catch (e: any) {
-              this.toast(e?.message ?? 'Could not remove this account');
+              this.toast(humanError(e, 'Could not remove this account'));
             }
           },
         },

@@ -11,6 +11,7 @@ import {
 import { AdminHeaderComponent } from '../shared/admin-header.component';
 import { DataService } from '../../shared/data.service';
 import { FormField } from '../../shared/models';
+import { humanError } from '../../shared/errors';
 
 /** 1 — Create Account/Group. Controls which fields appear on the sign-up form,
  *  their order, whether they are required, and which need OTP verification. */
@@ -37,7 +38,13 @@ export class AdminFormbuilderPage implements OnInit {
     });
   }
 
-  async ngOnInit() { this.fields = await this.data.getFormFields(); }
+  async ngOnInit() {
+    try {
+      this.fields = await this.data.getFormFields();
+    } catch (e) {
+      this.toast(humanError(e, 'Could not load the sign-up form'));
+    }
+  }
 
   /** Arrow reordering rather than drag — reliable inside a scrolling WebView. */
   move(f: FormField, dir: -1 | 1) {
@@ -207,9 +214,13 @@ export class AdminFormbuilderPage implements OnInit {
   }
 
   async save() {
-    for (const f of this.fields) await this.data.saveFormField(f);
-    this.dirty = false;
-    this.toast('Sign-up form updated');
+    try {
+      for (const f of this.fields) await this.data.saveFormField(f);
+      this.dirty = false;
+      this.toast('Sign-up form updated');
+    } catch (e) {
+      this.toast(humanError(e, 'Could not save changes'));
+    }
   }
 
   private async toast(message: string) {

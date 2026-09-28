@@ -11,6 +11,7 @@ import { AdminHeaderComponent } from '../shared/admin-header.component';
 import { EntityEditorComponent } from '../shared/entity-editor.component';
 import { DataService } from '../../shared/data.service';
 import { CmsEntity, CommerceOption } from '../../shared/models';
+import { humanError } from '../../shared/errors';
 
 /** 5 — Commerce. The Purchase / Share cards a user sees after picking a
  *  platform, and the shortcut through to the validity plans. */
@@ -66,10 +67,14 @@ export class AdminCommercePage implements OnInit {
   }
 
   async onSave(e: CmsEntity) {
-    await this.data.saveCommerceOption(e as CommerceOption);
-    await this.load();
-    this.editorOpen = false;
-    this.toast(this.isNew ? 'Option added' : 'Option updated');
+    try {
+      await this.data.saveCommerceOption(e as CommerceOption);
+      await this.load();
+      this.editorOpen = false;
+      this.toast(this.isNew ? 'Option added' : 'Option updated');
+    } catch (err) {
+      this.toast(humanError(err, 'Could not save this option'));
+    }
   }
 
   async onRemove(id: string) {
@@ -87,10 +92,14 @@ export class AdminCommercePage implements OnInit {
         {
           text: 'Remove', role: 'destructive',
           handler: async () => {
-            await this.data.deleteCommerceOption(id);
-            await this.load();
-            this.editorOpen = false;
-            this.toast('Option removed');
+            try {
+              await this.data.deleteCommerceOption(id);
+              await this.load();
+              this.editorOpen = false;
+              this.toast('Option removed');
+            } catch (err) {
+              this.toast(humanError(err, 'Could not remove this option'));
+            }
           },
         },
       ],

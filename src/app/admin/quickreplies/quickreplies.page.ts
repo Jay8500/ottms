@@ -10,6 +10,7 @@ import {
 import { AdminHeaderComponent } from '../shared/admin-header.component';
 import { DataService } from '../../shared/data.service';
 import { QuickReply } from '../../shared/models';
+import { humanError } from '../../shared/errors';
 
 /** Chat quick-reply buttons. Client sign-off: "put Quick reply customly i
  *  admin can create what User, seller or admin can use and put no of
@@ -41,7 +42,13 @@ export class AdminQuickrepliesPage implements OnInit {
     });
   }
 
-  async ngOnInit() { this.items = await this.data.getQuickReplies(); }
+  async ngOnInit() {
+    try {
+      this.items = await this.data.getQuickReplies();
+    } catch (e) {
+      this.toast(humanError(e, 'Could not load quick replies'));
+    }
+  }
 
   move(q: QuickReply, dir: -1 | 1) {
     const i = this.items.indexOf(q);
@@ -93,9 +100,13 @@ export class AdminQuickrepliesPage implements OnInit {
         {
           text: 'Remove', role: 'destructive',
           handler: async () => {
-            await this.data.deleteQuickReply(q.id);
-            this.items = this.items.filter(x => x.id !== q.id);
-            this.toast('Quick reply removed');
+            try {
+              await this.data.deleteQuickReply(q.id);
+              this.items = this.items.filter(x => x.id !== q.id);
+              this.toast('Quick reply removed');
+            } catch (e) {
+              this.toast(humanError(e, 'Could not remove this quick reply'));
+            }
           },
         },
       ],
@@ -127,9 +138,13 @@ export class AdminQuickrepliesPage implements OnInit {
   }
 
   async save() {
-    for (const q of this.items) await this.data.saveQuickReply(q);
-    this.dirty = false;
-    this.toast('Quick replies updated');
+    try {
+      for (const q of this.items) await this.data.saveQuickReply(q);
+      this.dirty = false;
+      this.toast('Quick replies updated');
+    } catch (e) {
+      this.toast(humanError(e, 'Could not save changes'));
+    }
   }
 
   private async toast(message: string) {

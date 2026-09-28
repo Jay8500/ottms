@@ -13,6 +13,7 @@ import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
 import { DataService } from '../../shared/data.service';
 import { ExportService } from '../../shared/export.service';
 import { BadgeAward, UserRating } from '../../shared/models';
+import { humanError } from '../../shared/errors';
 
 /** 15 — Ratings. Star reviews and awarded badges ("batches"), each with a
  *  summary strip and a star threshold filter. */
@@ -55,9 +56,13 @@ export class AdminRatingsPage implements OnInit {
   }
 
   async ngOnInit() {
-    this.allRatings = await this.data.getRatings();
-    this.allAwards = await this.data.getBadgeAwards();
-    this.apply();
+    try {
+      this.allRatings = await this.data.getRatings();
+      this.allAwards = await this.data.getBadgeAwards();
+      this.apply();
+    } catch (e) {
+      this.toast(humanError(e, 'Could not load ratings and badges'));
+    }
   }
 
   apply() {
@@ -106,11 +111,16 @@ export class AdminRatingsPage implements OnInit {
           handler: async (d) => {
             const n = Number(d.stars);
             if (!(n >= 1 && n <= 5)) { this.toast('Stars must be between 1 and 5'); return false; }
-            r.stars = n;
-            r.text = d.text?.trim() ?? r.text;
-            await this.data.saveRating(r);
-            this.apply();
-            return true;
+            try {
+              r.stars = n;
+              r.text = d.text?.trim() ?? r.text;
+              await this.data.saveRating(r);
+              this.apply();
+              return true;
+            } catch (e) {
+              this.toast(humanError(e, 'Could not save this rating'));
+              return false;
+            }
           },
         },
       ],
@@ -127,10 +137,14 @@ export class AdminRatingsPage implements OnInit {
         {
           text: 'Delete', role: 'destructive',
           handler: async () => {
-            await this.data.deleteRating(r.id);
-            this.allRatings = await this.data.getRatings();
-            this.apply();
-            this.toast('Review deleted');
+            try {
+              await this.data.deleteRating(r.id);
+              this.allRatings = await this.data.getRatings();
+              this.apply();
+              this.toast('Review deleted');
+            } catch (e) {
+              this.toast(humanError(e, 'Could not delete this review'));
+            }
           },
         },
       ],
@@ -151,11 +165,16 @@ export class AdminRatingsPage implements OnInit {
           text: 'Save',
           handler: async (d) => {
             if (!d.label?.trim()) return false;
-            a.label = d.label.trim();
-            a.emoji = d.emoji?.trim() || a.emoji;
-            await this.data.saveBadgeAward(a);
-            this.apply();
-            return true;
+            try {
+              a.label = d.label.trim();
+              a.emoji = d.emoji?.trim() || a.emoji;
+              await this.data.saveBadgeAward(a);
+              this.apply();
+              return true;
+            } catch (e) {
+              this.toast(humanError(e, 'Could not save this badge'));
+              return false;
+            }
           },
         },
       ],
@@ -172,10 +191,14 @@ export class AdminRatingsPage implements OnInit {
         {
           text: 'Remove', role: 'destructive',
           handler: async () => {
-            await this.data.deleteBadgeAward(a.id);
-            this.allAwards = await this.data.getBadgeAwards();
-            this.apply();
-            this.toast('Badge removed');
+            try {
+              await this.data.deleteBadgeAward(a.id);
+              this.allAwards = await this.data.getBadgeAwards();
+              this.apply();
+              this.toast('Badge removed');
+            } catch (e) {
+              this.toast(humanError(e, 'Could not remove this badge'));
+            }
           },
         },
       ],

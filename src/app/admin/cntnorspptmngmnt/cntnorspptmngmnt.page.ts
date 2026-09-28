@@ -163,9 +163,13 @@ export class CntnorspptmngmntPage implements OnInit {
   }
 
   async save() {
-    for (const f of this.faqs) await this.data.saveFaq(f);
-    this.dirty = false;
-    this.toast('Support content saved');
+    try {
+      for (const f of this.faqs) await this.data.saveFaq(f);
+      this.dirty = false;
+      this.toast('Support content saved');
+    } catch (e) {
+      this.toast(humanError(e, 'Could not save changes'));
+    }
   }
 
   // ── Channel toggles ──────────────────────────────────────────────────

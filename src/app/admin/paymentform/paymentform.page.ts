@@ -10,6 +10,7 @@ import {
 import { AdminHeaderComponent } from '../shared/admin-header.component';
 import { DataService } from '../../shared/data.service';
 import { PaymentConfig } from '../../shared/models';
+import { humanError } from '../../shared/errors';
 
 /** 13 — Payment Form. The UPI details and QR code shown to users on the
  *  Make Payment screen when they add funds. */
@@ -33,7 +34,13 @@ export class AdminPaymentformPage implements OnInit {
     });
   }
 
-  async ngOnInit() { this.cfg = await this.data.getPaymentConfig(); }
+  async ngOnInit() {
+    try {
+      this.cfg = await this.data.getPaymentConfig();
+    } catch (e) {
+      this.toast(humanError(e, 'Could not load payment details'));
+    }
+  }
 
   onQr(e: Event) {
     const file = (e.target as HTMLInputElement).files?.[0];
@@ -51,9 +58,13 @@ export class AdminPaymentformPage implements OnInit {
     if (!this.cfg.upiId.includes('@')) { this.toast('That does not look like a UPI ID (name@bank)'); return; }
     if (!this.cfg.name.trim()) { this.toast('Enter the account holder name'); return; }
 
-    await this.data.savePaymentConfig(this.cfg);
-    this.dirty = false;
-    this.toast('Payment details saved — users see these immediately');
+    try {
+      await this.data.savePaymentConfig(this.cfg);
+      this.dirty = false;
+      this.toast('Payment details saved — users see these immediately');
+    } catch (e) {
+      this.toast(humanError(e, 'Could not save payment details'));
+    }
   }
 
   private async toast(message: string) {
