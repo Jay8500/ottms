@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '../auth';
-import { IonContent, IonIcon, IonSpinner, AlertController } from '@ionic/angular/standalone';
+import { IonContent, IonIcon, IonSpinner } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Capacitor } from '@capacitor/core';
@@ -27,7 +27,6 @@ export class LoginPage {
   constructor(
     private auth: Auth,
     private router: Router,
-    private alertCtrl: AlertController,
   ) {
     addIcons({ callOutline, lockClosedOutline, eyeOutline, eyeOffOutline });
   }
@@ -60,15 +59,8 @@ export class LoginPage {
     }
   }
 
-  async forgotPassword() {
-    const alert = await this.alertCtrl.create({
-      header: 'Forgot Password',
-      message:
-        'Password reset needs an SMS provider, which is not connected yet. ' +
-        'Please contact support to have your password reset.',
-      buttons: ['Close'],
-    });
-    await alert.present();
+  forgotPassword() {
+    this.router.navigate(['/forgot-password']);
   }
 
   goRegister() { this.router.navigate(['/register']); }

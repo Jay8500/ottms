@@ -13,6 +13,10 @@ export const routes: Routes = [
     loadComponent: () => import('./user/createaccnt/createaccnt.page').then((m) => m.CreateaccntPage),
   },
   {
+    path: 'forgot-password',
+    loadComponent: () => import('./forgot-password/forgot-password.page').then((m) => m.ForgotPasswordPage),
+  },
+  {
     path: 'admin',
     loadChildren: () => import('./admin/admintab/admintab.routes').then((m) => m.routes),
     canActivate: [AuthGuard, RoleGuard],

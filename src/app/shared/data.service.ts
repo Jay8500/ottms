@@ -745,13 +745,28 @@ export class DataService {
    *  Firebase service key, which only the Edge Function can hold, so this
    *  goes through ring-seller rather than a plain RPC. */
   async ringSeller(threadId: string): Promise<{ ok: boolean; retryAfterMs?: number }> {
-    const { data, error } = await this.sb.client.functions
-      .invoke<{ ok?: boolean; retryAfterMs?: number; error?: string }>(
-        'ring-seller', { body: { threadId } },
-      );
-    if (error) throw error;
-    if (data?.error) throw new Error(data.error);
+    const data = await this.invokeFn<{ ok?: boolean; retryAfterMs?: number }>(
+      'ring-seller', { threadId },
+    );
     return { ok: !!data?.ok, retryAfterMs: data?.retryAfterMs };
+  }
+
+  /**
+   * Forgot Password, step 1 — no session exists yet at this point, so this
+   * (and confirmPasswordReset below) always calls its Edge Function
+   * unauthenticated; both are deployed with --no-verify-jwt for exactly
+   * that reason. Actually sending the email needs the Brevo key, and
+   * actually changing the password needs the Auth Admin API — neither is
+   * available to a plain client call, which is why this can't be a
+   * regular RPC.
+   */
+  async requestPasswordReset(mobile: string): Promise<void> {
+    await this.invokeFn('request-password-reset', { mobile });
+  }
+
+  /** Forgot Password, step 2 — the code from requestPasswordReset, plus the new password. */
+  async confirmPasswordReset(mobile: string, otp: string, newPassword: string): Promise<void> {
+    await this.invokeFn('confirm-password-reset', { mobile, otp, newPassword });
   }
 
   /** Uploads a chat photo and returns a viewable signed URL. */
@@ -1398,16 +1413,15 @@ export class DataService {
    * creates the order; the amount we send is only a request, never trusted.
    */
   async createPaymentOrder(amount: number) {
-    const { data, error } = await this.sb.client.functions.invoke<{
+    const data = await this.invokeFn<{
       orderId: string;
       paymentSessionId: string;
       walletAmount: number;
       gatewayFee: number;
       chargeAmount: number;
       mode: 'sandbox' | 'production';
-    }>('cashfree-create-order', { body: { amount } });
+    }>('cashfree-create-order', { amount });
 
-    if (error) throw error;
     if (!data?.paymentSessionId) throw new Error('Could not start the payment');
     return data;
   }
@@ -1557,6 +1571,31 @@ export class DataService {
   private async del(table: string, id: string) {
     const { error } = await this.db.from(table).delete().eq('id', id);
     if (error) throw error;
+  }
+
+  /**
+   * supabase-js's functions.invoke() does NOT put an Edge Function's error
+   * body into `data` when the function returns a non-2xx status — `data`
+   * is null and `error` is a FunctionsHttpError whose own .message is a
+   * generic "non-2xx status code" string. The actual `{error: "..."}` body
+   * our functions send back is only reachable via `error.context.json()`.
+   * Found while wiring up Forgot Password: every one of our specific,
+   * carefully-worded server error messages ("Incorrect code", "Minimum
+   * top-up is ₹10", ...) was being thrown away and replaced with that
+   * generic text at every call site that used the obvious `if (error)
+   * throw error` pattern — including the pre-existing Add Fund flow.
+   */
+  private async invokeFn<T>(name: string, body: Record<string, unknown>): Promise<T> {
+    const { data, error } = await this.sb.client.functions.invoke<T>(name, { body });
+    if (error) {
+      let message: string | undefined;
+      const ctx = (error as any).context;
+      if (ctx?.json) {
+        try { message = (await ctx.json())?.error; } catch { /* body wasn't JSON */ }
+      }
+      throw new Error(message ?? error.message);
+    }
+    return data as T;
   }
 
   private day(iso: string) {
