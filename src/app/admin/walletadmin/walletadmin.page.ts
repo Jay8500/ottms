@@ -51,12 +51,16 @@ export class WalletadminPage implements OnInit {
   }
 
   async ngOnInit() {
-    const summaries = await this.data.getWalletSummaries();
-    this.rows = summaries.map(s => ({
-      ...s, editing: false,
-      draftTotal: s.total, draftLocked: s.locked, draftUnlocked: s.unlocked,
-    }));
-    this.apply();
+    try {
+      const summaries = await this.data.getWalletSummaries();
+      this.rows = summaries.map(s => ({
+        ...s, editing: false,
+        draftTotal: s.total, draftLocked: s.locked, draftUnlocked: s.unlocked,
+      }));
+      this.apply();
+    } catch (e) {
+      this.toast(humanError(e, 'Could not load wallets'));
+    }
   }
 
   apply() {

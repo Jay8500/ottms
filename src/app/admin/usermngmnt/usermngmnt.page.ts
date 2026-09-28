@@ -63,12 +63,16 @@ export class UsermngmntPage implements OnInit {
   }
 
   async ngOnInit() {
-    const users = await this.data.getUsers();
-    // "Groups Joined" used to be groups.filter(g => g.sellerId !== u.id) —
-    // every group this person did not list, unrelated to what they
-    // actually bought. Loaded properly per user, on demand, in toggle().
-    this.rows = users.map(u => ({ ...u, expanded: false, joined: [] }));
-    this.apply();
+    try {
+      const users = await this.data.getUsers();
+      // "Groups Joined" used to be groups.filter(g => g.sellerId !== u.id) —
+      // every group this person did not list, unrelated to what they
+      // actually bought. Loaded properly per user, on demand, in toggle().
+      this.rows = users.map(u => ({ ...u, expanded: false, joined: [] }));
+      this.apply();
+    } catch (e) {
+      this.toast(humanError(e, 'Could not load users'));
+    }
   }
 
   apply() {

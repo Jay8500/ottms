@@ -61,7 +61,13 @@ export class HomemgnmtPage implements OnInit {
     if (this.route.snapshot.queryParamMap.get('new')) this.create();
   }
 
-  private async load() { this.items = await this.data.getHomeButtons(); }
+  private async load() {
+    try {
+      this.items = await this.data.getHomeButtons();
+    } catch (e) {
+      this.toast(humanError(e, 'Could not load home buttons'));
+    }
+  }
 
   create() {
     this.isNew = true;

@@ -50,12 +50,16 @@ export class AdminOffersPage implements OnInit {
   }
 
   private async load() {
-    const [items, apps] = await Promise.all([
-      this.data.getOffers(),
-      this.data.getOttApps(),
-    ]);
-    this.items = items;
-    this.apps = apps.filter(a => a.active);
+    try {
+      const [items, apps] = await Promise.all([
+        this.data.getOffers(),
+        this.data.getOttApps(),
+      ]);
+      this.items = items;
+      this.apps = apps.filter(a => a.active);
+    } catch (e) {
+      this.toast(humanError(e, 'Could not load offers'));
+    }
   }
 
   create() {

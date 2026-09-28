@@ -90,11 +90,14 @@ export class AdminEntertainmentPage implements OnInit {
     // copies the real category_id already on the row — that is why this
     // went unnoticed until someone tried to add a brand new platform.
     const fromQuery = this.route.snapshot.queryParamMap.get('cat');
-    this.categoryId = fromQuery ?? await this.resolveDefaultCategoryId();
-
-    await this.load();
-    this.validityPlans = await this.data.getValidityPlans();
-    if (this.route.snapshot.queryParamMap.get('new')) this.create();
+    try {
+      this.categoryId = fromQuery ?? await this.resolveDefaultCategoryId();
+      await this.load();
+      this.validityPlans = await this.data.getValidityPlans();
+      if (this.route.snapshot.queryParamMap.get('new')) this.create();
+    } catch (e) {
+      this.toast(humanError(e, 'Could not load platforms'));
+    }
   }
 
   private buildPricingRows(existing: Record<string, { amount: number; saveUpto: number }>) {

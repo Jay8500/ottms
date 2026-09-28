@@ -10,6 +10,7 @@ import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
 import { DataService } from '../../shared/data.service';
 import { ExportService } from '../../shared/export.service';
 import { WalletTx } from '../../shared/models';
+import { humanError } from '../../shared/errors';
 
 /** 10 — Transactions. Every money movement across all users. */
 @Component({
@@ -44,8 +45,12 @@ export class TransactionsPage implements OnInit {
   }
 
   async ngOnInit() {
-    this.all = await this.data.getTransactions();
-    this.apply();
+    try {
+      this.all = await this.data.getTransactions();
+      this.apply();
+    } catch (e) {
+      this.toast(humanError(e, 'Could not load transactions'));
+    }
   }
 
   apply() {

@@ -64,7 +64,13 @@ export class CategorymngmntPage implements OnInit {
     if (this.route.snapshot.queryParamMap.get('new')) this.create();
   }
 
-  private async load() { this.items = await this.data.getCategories(); }
+  private async load() {
+    try {
+      this.items = await this.data.getCategories();
+    } catch (e) {
+      this.toast(humanError(e, 'Could not load categories'));
+    }
+  }
 
   create() {
     this.isNew = true;

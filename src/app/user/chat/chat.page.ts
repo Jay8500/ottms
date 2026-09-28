@@ -170,8 +170,10 @@ export class ChatPage implements OnInit, OnDestroy {
     // unlock) was invisible until the page reloaded.
     this.unsubscribeThread?.();
     this.unsubscribeThread = this.data.onThreadUpdate(threadId, async () => {
-      const fresh = await this.data.getThread(threadId);
-      if (fresh) this.thread = fresh;
+      try {
+        const fresh = await this.data.getThread(threadId);
+        if (fresh) this.thread = fresh;
+      } catch { /* best effort — the chat already open must not break over this */ }
     });
 
     // Online dot lives on profiles, a different table, so it needs its own

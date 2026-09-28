@@ -155,7 +155,14 @@ export class DashboardPage implements OnInit {
   }
 
   async logout() {
-    await this.auth.logout();
+    // A failed signOut() (e.g. a network drop at that exact moment) must
+    // not leave the admin stuck looking signed-in with nothing to do —
+    // the local session is cleared and they land on login either way.
+    try {
+      await this.auth.logout();
+    } catch (e) {
+      console.error('Logout failed', e);
+    }
     this.router.navigate(['/login'], { replaceUrl: true });
   }
 }

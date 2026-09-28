@@ -48,7 +48,13 @@ export class AdminCommercePage implements OnInit {
 
   async ngOnInit() { await this.load(); }
 
-  private async load() { this.items = await this.data.getCommerceOptions(); }
+  private async load() {
+    try {
+      this.items = await this.data.getCommerceOptions();
+    } catch (e) {
+      this.toast(humanError(e, 'Could not load commerce options'));
+    }
+  }
 
   create() {
     this.isNew = true;

@@ -43,7 +43,13 @@ export class AdminValidityPage implements OnInit {
     if (this.route.snapshot.queryParamMap.get('new')) this.create();
   }
 
-  private async load() { this.items = await this.data.getValidityPlans(); }
+  private async load() {
+    try {
+      this.items = await this.data.getValidityPlans();
+    } catch (e) {
+      this.toast(humanError(e, 'Could not load validity plans'));
+    }
+  }
 
   create() {
     this.isNew = true;

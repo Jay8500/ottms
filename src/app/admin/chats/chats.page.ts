@@ -10,6 +10,7 @@ import { AdminSearchbarComponent, FilterChip } from '../shared/admin-searchbar.c
 import { OttLogoComponent } from '../../shared/ott-logo/ott-logo.component';
 import { DataService } from '../../shared/data.service';
 import { ChatThread } from '../../shared/models';
+import { humanError } from '../../shared/errors';
 
 interface MessageHit {
   id: string; threadId: string; text: string; time: string;
@@ -61,18 +62,26 @@ export class AdminChatsPage implements OnInit {
   }
 
   async ngOnInit() {
-    this.all = await this.data.getThreads();
-    this.apply();
+    try {
+      this.all = await this.data.getThreads();
+      this.apply();
 
-    // Reached from a user's card in User's Data via "Chat" — the query
-    // param carried the user's id but this page never read it, so tapping
-    // Chat just landed here on the unfiltered list with no indication of
-    // who the admin meant to reach. Reported as "Chat button not
-    // available". Prefer the support thread if one exists — the most
-    // likely reason admin wants to talk to this person directly — else
-    // any thread this user is part of, as either buyer or seller.
-    const userId = this.route.snapshot.queryParamMap.get('user');
-    if (userId) await this.openForUser(userId);
+      // Reached from a user's card in User's Data via "Chat" — the query
+      // param carried the user's id but this page never read it, so tapping
+      // Chat just landed here on the unfiltered list with no indication of
+      // who the admin meant to reach. Reported as "Chat button not
+      // available". Prefer the support thread if one exists — the most
+      // likely reason admin wants to talk to this person directly — else
+      // any thread this user is part of, as either buyer or seller.
+      const userId = this.route.snapshot.queryParamMap.get('user');
+      if (userId) await this.openForUser(userId);
+    } catch (e) {
+      const t = await this.toastCtrl.create({
+        message: humanError(e, 'Could not load chats'),
+        duration: 2600, position: 'bottom',
+      });
+      t.present();
+    }
   }
 
   private async openForUser(userId: string) {
