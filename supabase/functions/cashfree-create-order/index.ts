@@ -24,9 +24,15 @@ function baseUrl(mode: string) {
     : 'https://sandbox.cashfree.com/pg';
 }
 
+// Found and fixed alongside request-password-reset (same bug, different
+// function): supabase-js always sends an `apikey` header, which a
+// WebView's CORS preflight blocks unless it's explicitly allowed here —
+// this was silently breaking Add Fund on a real Android device the same
+// way, with no way to tell from a curl test (curl doesn't enforce CORS).
 const cors = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
 Deno.serve(async (req) => {

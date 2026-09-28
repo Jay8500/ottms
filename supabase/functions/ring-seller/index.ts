@@ -21,9 +21,13 @@ import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 const TWELVE_HOURS_MS = 12 * 60 * 60 * 1000;
 
+// See request-password-reset for why: supabase-js always sends an `apikey`
+// header, and a WebView's CORS preflight blocks the whole request if it
+// isn't explicitly allowed here.
 const cors = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
 Deno.serve(async (req) => {

@@ -22,9 +22,17 @@ import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 const OTP_VALID_MINUTES = 10;
 
+// "Failed to send a request to the Edge Function" on a real device (never
+// showed up in a curl test — curl doesn't enforce CORS at all): every
+// supabase-js call auto-attaches an `apikey` header (lib/fetch.ts's
+// fetchWithAuth), and the Android WebView's CORS preflight silently blocks
+// the whole request when that header isn't explicitly allowed here — the
+// browser never even lets the request through to this function, so no
+// amount of server-side error handling would have caught it.
 const cors = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
 async function sha256(text: string): Promise<string> {
