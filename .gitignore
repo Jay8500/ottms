@@ -68,3 +68,10 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Android release signing — NEVER commit. Already tracked from before this
+# was added (see ottms-keystore-committed memory) — this only stops it
+# getting worse, it does not undo what's already in git history.
+*.jks
+*.keystore
+android/key.properties
