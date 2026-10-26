@@ -1,12 +1,18 @@
 apply plugin: 'com.android.application'
 
-// ─── Dynamic Version Code/Name based on date+time ──────────────────────────
+// ─── Version ────────────────────────────────────────────────────────────
+// versionCode: Play Store needs this to always go up, build to build — the
+// date+hour keeps that true automatically with zero upkeep.
+// versionName: what shows on the phone/Play Store listing. Plain semantic
+// version — bump it by hand at each meaningful release (bug-fix-only ->
+// patch, new feature -> minor, major overhaul/launch -> major), same number
+// as package.json's "version" so both tell the same story.
 def getVersionCode = {
     return (new Date().format('yyMMddHH')).toInteger()
 }
 
 def getVersionName = {
-    return "1.0." + new Date().format('yyMMdd')
+    return "1.0.0"
 }
 // ────────────────────────────────────────────────────────────────────────
 
