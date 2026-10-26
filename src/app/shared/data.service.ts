@@ -328,8 +328,16 @@ export class DataService {
     };
   }
 
+  /** `select('*')` asks Postgres for every column's privilege, not just a
+   *  row count — and 0032 locked `profiles` down to a named column list
+   *  (wallet_locked/wallet_unlocked excluded), so every `count('profiles')`
+   *  call started failing outright with "permission denied for table
+   *  profiles" the moment that shipped. Silent before today's error
+   *  handling landed (showed 0 on the dashboard), now visible as a toast —
+   *  this is the actual bug behind it, not something new. `id` is granted
+   *  on every table this is called with, so it's a safe, universal fix. */
   private async count(table: string, refine?: (q: any) => any): Promise<number> {
-    let q = this.db.from(table).select('*', { count: 'exact', head: true });
+    let q = this.db.from(table).select('id', { count: 'exact', head: true });
     if (refine) q = refine(q);
     const { count, error } = await q;
     if (error) throw error;
