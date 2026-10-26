@@ -393,8 +393,8 @@ export class ChatPage implements OnInit, OnDestroy {
   }
 
   async sendEditedImage(file: File) {
+    if (!this.thread || this.sending) return;
     this.editingFile = null;
-    if (!this.thread) return;
 
     this.sending = true;
     try {
@@ -425,7 +425,14 @@ export class ChatPage implements OnInit, OnDestroy {
     return `${m}:${s.toString().padStart(2, '0')}`;
   }
 
+  // Guards the await below — `recording` only flips true once getUserMedia
+  // resolves, so without this a double-tap while the permission prompt is
+  // pending starts a second stream/recorder/timer that overwrites the
+  // first one's references, leaking its mic stream and timer forever.
+  private requestingMic = false;
+
   async startRecording() {
+    if (this.recording || this.requestingMic) return;
     if (!this.thread || this.thread.locked) { this.toast('This conversation is closed'); return; }
     if (!this.mediaOpen) {
       this.toast(
@@ -436,12 +443,15 @@ export class ChatPage implements OnInit, OnDestroy {
       return;
     }
 
+    this.requestingMic = true;
     try {
       this.micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch {
       // Denied, or no mic hardware — either way there is nothing to record.
       this.toast('Microphone permission is needed to record a voice message');
       return;
+    } finally {
+      this.requestingMic = false;
     }
 
     this.recordedChunks = [];
@@ -479,7 +489,7 @@ export class ChatPage implements OnInit, OnDestroy {
   }
 
   private async sendVoice(blob: Blob) {
-    if (!this.thread) return;
+    if (!this.thread || this.sending) return;
     this.sending = true;
     try {
       const file = new File([blob], 'voice.webm', { type: 'audio/webm' });

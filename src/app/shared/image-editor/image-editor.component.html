@@ -6,39 +6,41 @@
       <ion-icon name="close-outline"></ion-icon>
     </button>
     <span class="ie-title">Edit photo</span>
-    <button class="ie-ok" [disabled]="!ready" (click)="confirm()" aria-label="Use this photo">
+    <button class="ie-ok" [disabled]="!ready || busy" (click)="confirm()" aria-label="Use this photo">
       <ion-icon name="checkmark-outline"></ion-icon>
     </button>
   </div>
 
   <div class="ie-stage" #stage
-       (pointermove)="onStageMove($event)" (pointerup)="onStageUp()" (pointerleave)="onStageUp()">
-    <img #baseImg class="ie-img" [src]="imgUrl" (load)="onImgLoad()" alt="Photo being edited" />
+       (pointermove)="onStageMove($event)" (pointerup)="onStageUp()" (pointerleave)="onStageUp()" (pointercancel)="onStageUp()">
+    <div class="ie-frame" #frame>
+      <img #baseImg class="ie-img" [src]="imgUrl" (load)="onImgLoad()" alt="Photo being edited" />
 
-    <canvas #penCanvas class="ie-pen"
-            [class.active]="tool === 'pen'"
-            (pointerdown)="onPenDown($event)"></canvas>
+      <canvas #penCanvas class="ie-pen"
+              [class.active]="tool === 'pen'"
+              (pointerdown)="onPenDown($event)"></canvas>
 
-    <button *ngFor="let o of overlays" class="ie-overlay" [class.text]="o.kind === 'text'"
-            [style.left.%]="o.xPct" [style.top.%]="o.yPct"
-            (pointerdown)="onOverlayDown($event, o)"
-            (dblclick)="removeOverlay(o.id)"
-            [attr.aria-label]="o.kind === 'text' ? o.text : o.emoji">
-      <span *ngIf="o.kind === 'sticker'" class="ie-emoji">{{ o.emoji }}</span>
-      <span *ngIf="o.kind === 'text'" class="ie-text" [style.color]="o.color">{{ o.text }}</span>
-    </button>
+      <button *ngFor="let o of overlays" class="ie-overlay" [class.text]="o.kind === 'text'"
+              [style.left.%]="o.xPct" [style.top.%]="o.yPct"
+              (pointerdown)="onOverlayDown($event, o)"
+              (dblclick)="removeOverlay(o.id)"
+              [attr.aria-label]="o.kind === 'text' ? o.text : o.emoji">
+        <span *ngIf="o.kind === 'sticker'" class="ie-emoji">{{ o.emoji }}</span>
+        <span *ngIf="o.kind === 'text'" class="ie-text" [style.color]="o.color">{{ o.text }}</span>
+      </button>
 
-    <ng-container *ngIf="tool === 'crop'">
-      <div class="ie-crop-mask"
-           [style.clip-path]="'polygon(0% 0%, 0% 100%, ' + crop.x + '% 100%, ' + crop.x + '% ' + crop.y + '%, '
-             + (crop.x + crop.w) + '% ' + crop.y + '%, ' + (crop.x + crop.w) + '% ' + (crop.y + crop.h) + '%, '
-             + crop.x + '% ' + (crop.y + crop.h) + '%, ' + crop.x + '% 100%, 100% 100%, 100% 0%)'"></div>
-      <div class="ie-crop-box"
-           [style.left.%]="crop.x" [style.top.%]="crop.y" [style.width.%]="crop.w" [style.height.%]="crop.h"
-           (pointerdown)="onCropBodyDown($event)">
-        <span class="ie-crop-handle" (pointerdown)="onCropHandleDown($event)"></span>
-      </div>
-    </ng-container>
+      <ng-container *ngIf="tool === 'crop'">
+        <div class="ie-crop-mask"
+             [style.clip-path]="'polygon(0% 0%, 0% 100%, ' + crop.x + '% 100%, ' + crop.x + '% ' + crop.y + '%, '
+               + (crop.x + crop.w) + '% ' + crop.y + '%, ' + (crop.x + crop.w) + '% ' + (crop.y + crop.h) + '%, '
+               + crop.x + '% ' + (crop.y + crop.h) + '%, ' + crop.x + '% 100%, 100% 100%, 100% 0%)'"></div>
+        <div class="ie-crop-box"
+             [style.left.%]="crop.x" [style.top.%]="crop.y" [style.width.%]="crop.w" [style.height.%]="crop.h"
+             (pointerdown)="onCropBodyDown($event)">
+          <span class="ie-crop-handle" (pointerdown)="onCropHandleDown($event)"></span>
+        </div>
+      </ng-container>
+    </div>
 
     <div class="ie-text-prompt" *ngIf="addingText">
       <input [(ngModel)]="draftText" placeholder="Type a note…" autofocus />

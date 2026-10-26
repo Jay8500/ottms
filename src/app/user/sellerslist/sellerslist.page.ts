@@ -89,7 +89,7 @@ export class SellerslistPage implements OnInit {
     try {
       const [app, plans, groups] = await Promise.all([
         this.data.getOttApp(this.ottId),
-        this.data.getValidityPlans(),
+        this.data.getValidityPlans(this.ottId),
         this.data.getGroups(),
       ]);
 

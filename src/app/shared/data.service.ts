@@ -363,6 +363,7 @@ export class DataService {
       status: r.status,
       proofUrl: r.proof_url ?? undefined,
       comment: r.comment ?? undefined,
+      rejectReason: r.reject_reason ?? undefined,
       price: Number(r.price),
       sellerId: r.seller_id,
       sellerName: r.profiles?.name ?? '',
@@ -1141,7 +1142,7 @@ export class DataService {
   async saveCategory(c: Category) {
     return this.upsert('categories', {
       id: this.idOrNull(c.id), title: c.title, sub_name: c.subName,
-      color: c.color, icon: c.icon, image_url: c.imageUrl,
+      color: c.color, icon: c.icon, image_url: c.imageUrl ?? null,
       position: c.position, active: c.active,
     });
   }
@@ -1151,31 +1152,77 @@ export class DataService {
     const row = await this.upsert('ott_apps', {
       id: this.idOrNull(a.id), category_id: a.categoryId, title: a.title,
       sub_name: a.subName, brand: a.brand, color: a.color, icon: a.icon,
-      image_url: a.imageUrl, starting_price: a.startingPrice,
+      image_url: a.imageUrl ?? null, starting_price: a.startingPrice,
       instructions: a.instructions ?? null,
       max_active_groups: a.maxActiveGroups ?? 1,
       position: a.position, active: a.active,
     });
 
-    // Replace the tier set — simplest correct thing while tiers are edited
-    // as a whole list rather than individually.
-    await this.db.from('ott_plan_tiers').delete().eq('ott_app_id', row.id);
-    if (a.tiers.length) {
-      const { error } = await this.db.from('ott_plan_tiers').insert(
-        a.tiers.map((t, i) => ({
-          ott_app_id: row.id, label: t.label, max_screens: t.maxScreens, position: i + 1,
-        })),
-      );
-      if (error) throw error;
+    // Was "delete every tier, re-insert the whole list" — simple, but it
+    // threw away each tier's real id and handed it a fresh one on EVERY
+    // save. `groups.ott_plan_tier_id` has no ON DELETE clause (a group's
+    // plan must never silently go null), so the moment any seller had a
+    // group on one of this platform's tiers, that delete started failing
+    // with a foreign-key error — aborting the WHOLE save, even for an
+    // edit as unrelated as fixing the platform's title. Now: keep each
+    // existing tier's id (update in place), only insert genuinely new
+    // ones, and only delete ones the admin actually removed — skipping a
+    // removed tier some group still points to rather than failing the
+    // whole save over it.
+    const { data: existingRows, error: exErr } = await this.db
+      .from('ott_plan_tiers').select('id').eq('ott_app_id', row.id);
+    if (exErr) throw exErr;
+    const existingIds = new Set((existingRows ?? []).map((r: any) => r.id as string));
+
+    for (const id of existingIds) {
+      if (a.tiers.some(t => t.id === id)) continue;
+      const { error } = await this.db.from('ott_plan_tiers').delete().eq('id', id);
+      if (error && error.code !== '23503') throw error;
+    }
+
+    for (const [i, t] of a.tiers.entries()) {
+      if (existingIds.has(t.id)) {
+        const { error } = await this.db.from('ott_plan_tiers')
+          .update({ label: t.label, max_screens: t.maxScreens, position: i + 1 })
+          .eq('id', t.id);
+        if (error) throw error;
+      } else {
+        const { error } = await this.db.from('ott_plan_tiers')
+          .insert({ ott_app_id: row.id, label: t.label, max_screens: t.maxScreens, position: i + 1 });
+        if (error) throw error;
+      }
     }
     return row;
   }
-  async deleteOttApp(id: string) { return this.del('ott_apps', id); }
+  /**
+   * "Platform deleted but the image/platform is still seen" — the confirm
+   * dialog promises the platform disappears while leaving existing groups
+   * alone, but `groups.ott_app_id` has no ON DELETE clause (deliberately —
+   * a group's platform must never silently become null everywhere it's
+   * joined, e.g. chat/ratings showing "Unknown platform"). So a hard
+   * delete throws a foreign-key error and does nothing, the instant any
+   * seller has ever listed on this platform — which the UI was silently
+   * swallowing into a generic failure toast while the platform (and its
+   * image) stayed exactly as it was. Now: hard-delete when nothing
+   * references it; otherwise hide it (active = false, already respected
+   * by every user-facing list) so it actually disappears from the app
+   * without breaking a single existing group's history.
+   */
+  async deleteOttApp(id: string): Promise<{ hidden: boolean }> {
+    const { error } = await this.db.from('ott_apps').delete().eq('id', id);
+    if (!error) return { hidden: false };
+    if (error.code !== '23503') throw error;
+
+    const { error: hideErr } = await this.db
+      .from('ott_apps').update({ active: false }).eq('id', id);
+    if (hideErr) throw hideErr;
+    return { hidden: true };
+  }
 
   async saveValidityPlan(v: ValidityPlan) {
     const row = await this.upsert('validity_plans', {
       id: this.idOrNull(v.id), title: v.title, sub_name: v.subName, months: v.months,
-      color: v.color, icon: v.icon, image_url: v.imageUrl,
+      color: v.color, icon: v.icon, image_url: v.imageUrl ?? null,
       position: v.position, active: v.active,
     });
     const { error } = await this.db.from('plan_prices').upsert({
@@ -1189,7 +1236,7 @@ export class DataService {
   async saveHomeButton(b: HomeButton) {
     return this.upsert('home_buttons', {
       id: this.idOrNull(b.id), title: b.title, color: b.color, icon: b.icon,
-      icon_position: b.iconPosition, route: b.route, image_url: b.imageUrl,
+      icon_position: b.iconPosition, route: b.route, image_url: b.imageUrl ?? null,
       position: b.position, active: b.active,
     });
   }
@@ -1198,7 +1245,7 @@ export class DataService {
   async saveCommerceOption(c: CommerceOption) {
     return this.upsert('commerce_options', {
       id: this.idOrNull(c.id), title: c.title, sub_name: c.subName, action: c.action,
-      color: c.color, icon: c.icon, image_url: c.imageUrl,
+      color: c.color, icon: c.icon, image_url: c.imageUrl ?? null,
       position: c.position, active: c.active,
     });
   }
@@ -1346,6 +1393,13 @@ export class DataService {
   async setGroupStatus(id: string, status: GroupScreen['status'], reason?: string) {
     const { error } = await this.db.from('groups')
       .update({ status, reject_reason: reason ?? null }).eq('id', id);
+    if (error) throw error;
+  }
+
+  /** Seller withdrawing their own listing — only while no buyer has
+   *  joined yet; see cancel_own_group() for why. */
+  async cancelOwnGroup(id: string) {
+    const { error } = await this.db.rpc('cancel_own_group', { p_group: id });
     if (error) throw error;
   }
 

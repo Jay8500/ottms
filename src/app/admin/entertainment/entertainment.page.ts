@@ -187,17 +187,19 @@ export class AdminEntertainmentPage implements OnInit {
     const app = this.all.find(a => a.id === id);
     const alert = await this.alertCtrl.create({
       header: 'Delete platform?',
-      message: `${app?.title} disappears from the app. Existing groups on this platform are not removed.`,
+      message: `${app?.title} disappears from the app. If sellers already have groups on it, it's hidden instead of deleted, so their records stay intact.`,
       buttons: [
         { text: 'Cancel', role: 'cancel' },
         {
           text: 'Delete', role: 'destructive',
           handler: async () => {
             try {
-              await this.data.deleteOttApp(id);
+              const result = await this.data.deleteOttApp(id);
               await this.load();
               this.editorOpen = false;
-              this.toast('Platform deleted');
+              this.toast(result.hidden
+                ? 'Sellers already have groups on this — hidden instead of deleted'
+                : 'Platform deleted');
             } catch (e) {
               this.toast(humanError(e, 'Could not delete this platform'));
             }

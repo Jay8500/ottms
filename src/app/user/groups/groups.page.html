@@ -57,6 +57,9 @@
           Seller: {{ g.sellerName }} ({{ g.sellerUniqueNum }})
         </span>
       </div>
+      <p class="g-reject-reason" *ngIf="g.status === 'rejected' && g.rejectReason">
+        Reason: {{ g.rejectReason }}
+      </p>
 
       <div class="g-actions">
         <button class="ga img" (click)="viewProof(g)">
@@ -68,6 +71,9 @@
         <button class="ga exit" *ngIf="tab === 'joined' && daysLeft(g) > 0"
                 (click)="requestExit(g)">
           <ion-icon name="exit-outline"></ion-icon> Leave
+        </button>
+        <button class="ga exit" *ngIf="canCancel(g)" (click)="cancelGroup(g)">
+          <ion-icon name="exit-outline"></ion-icon> Cancel
         </button>
       </div>
     </div>

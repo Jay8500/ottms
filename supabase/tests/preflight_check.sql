@@ -22,7 +22,7 @@ expected_rpc(fn) as (values
   ('approve_withdraw'), ('reject_withdraw'),
   ('approve_bank_change'), ('reject_bank_change'),
   ('adjust_balance'), ('set_media_unlock'), ('set_presence'),
-  ('redeem_referral'), ('my_referral_code'),
+  ('redeem_referral'), ('my_referral_code'), ('cancel_own_group'),
   ('setting_num'), ('setting_text')
 ),
 

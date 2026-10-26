@@ -72,6 +72,7 @@ export class UserReferPage implements ViewWillEnter {
       this.invited = stats.invited;
       this.earned = stats.earned;
     } catch (e) {
+      this.toast(humanError(e, 'Could not load referral details'));
       console.error(e);
     } finally {
       this.loading = false;

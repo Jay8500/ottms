@@ -82,7 +82,9 @@ export class UserGroupsPage implements ViewWillEnter {
     (ev.target as HTMLIonRefresherElement).complete();
   }
 
-  get pending() { return this.mine.filter(g => g.status === 'pending' || g.status === 'rejected'); }
+  get pending() {
+    return this.mine.filter(g => g.status === 'pending' || g.status === 'rejected' || g.status === 'cancelled');
+  }
   get sold()    { return this.mine.filter(g => g.status === 'approved' || g.status === 'full'); }
 
   /** Still has open seats. */
@@ -115,10 +117,11 @@ export class UserGroupsPage implements ViewWillEnter {
       return `${d} days left`;
     }
     switch (g.status) {
-      case 'pending':  return 'Waiting for approval';
-      case 'rejected': return 'Rejected';
-      case 'full':     return 'All seats filled';
-      default:         return 'Live';
+      case 'pending':   return 'Waiting for approval';
+      case 'rejected':  return 'Rejected';
+      case 'cancelled': return 'Cancelled';
+      case 'full':      return 'All seats filled';
+      default:          return 'Live';
     }
   }
 
@@ -128,9 +131,39 @@ export class UserGroupsPage implements ViewWillEnter {
       if (g.memberStatus === 'exited' || g.memberStatus === 'expired' || d < 0) return 'grey';
       return d <= 2 ? 'red' : 'green';
     }
-    if (g.status === 'pending')  return 'amber';
-    if (g.status === 'rejected') return 'red';
+    if (g.status === 'pending')   return 'amber';
+    if (g.status === 'rejected')  return 'red';
+    if (g.status === 'cancelled') return 'grey';
     return 'green';
+  }
+
+  /** Withdraw my own listing — only while no buyer has joined (enforced
+   *  server-side; see cancel_own_group()). */
+  canCancel(g: GroupScreen) {
+    return this.tab !== 'joined' && (g.status === 'pending' || g.status === 'approved' || g.status === 'full');
+  }
+
+  async cancelGroup(g: GroupScreen) {
+    const alert = await this.alertCtrl.create({
+      header: 'Cancel this listing?',
+      message: `${g.ottName} ${g.tierLabel} disappears from sale. This cannot be undone.`,
+      buttons: [
+        { text: 'No', role: 'cancel' },
+        {
+          text: 'Cancel listing', role: 'destructive',
+          handler: async () => {
+            try {
+              await this.data.cancelOwnGroup(g.id);
+              await this.load();
+              this.toast('Listing cancelled');
+            } catch (e) {
+              this.toast(humanError(e, 'Could not cancel this listing'));
+            }
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 
   chat(g: GroupScreen) {

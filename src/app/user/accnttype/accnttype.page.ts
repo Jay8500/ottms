@@ -117,6 +117,10 @@ export class AccnttypePage implements OnInit {
 
   choose(o: CommerceOption) {
     if (o.action === 'share') {
+      if (!this.auth.isSeller) {
+        this.toast('Turn on Seller mode in Profile first, then come back to share a screen.');
+        return;
+      }
       this.showGroupForm = true;
       // seed the tier so the form is valid with one tap when there is only one
       if (this.app?.tiers.length === 1) this.groupForm.tierId = this.app.tiers[0].id;

@@ -122,19 +122,28 @@ export class GroupapprovalsPage implements OnInit {
     await alert.present();
   }
 
+  /** Canned rejection reasons, same pattern as Payment/Bank/Exit reject. */
+  readonly rejectReasons = [
+    'Proof screenshot unclear', 'Platform or plan mismatch',
+    'Duplicate listing', 'Screens not actually available', 'Price mismatch',
+  ];
+
   async remove(g: GroupScreen) {
     const alert = await this.alertCtrl.create({
       header: 'Reject this group?',
-      message: `${g.ottName} by ${g.sellerName}. The seller is notified and the listing never goes live.`,
+      subHeader: `${g.ottName} by ${g.sellerName} — pick a reason, the seller sees this.`,
+      inputs: this.rejectReasons.map((r, i) => ({
+        name: 'reason', type: 'radio' as const, label: r, value: r, checked: i === 0,
+      })),
       buttons: [
         { text: 'Cancel', role: 'cancel' },
         {
           text: 'Reject', role: 'destructive',
-          handler: async () => {
+          handler: async (reason: string) => {
             try {
-              await this.data.setGroupStatus(g.id, 'rejected');
+              await this.data.setGroupStatus(g.id, 'rejected', reason);
               await this.reload();
-              this.toast('Group rejected');
+              this.toast('Rejected — ' + reason);
             } catch (e) {
               this.toast(humanError(e, 'Could not reject this group'));
             }
@@ -158,7 +167,9 @@ export class GroupapprovalsPage implements OnInit {
   }
 
   chat(g: GroupScreen) {
-    this.router.navigate(['/admin/chats'], { queryParams: { seller: g.sellerId } });
+    // chats.page.ts reads this param as `user`, not `seller` — matching
+    // the same fix already applied to the Chat button in User's Data.
+    this.router.navigate(['/admin/chats'], { queryParams: { user: g.sellerId } });
   }
 
   exportCsv() {

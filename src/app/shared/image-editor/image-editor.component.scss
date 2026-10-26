@@ -26,7 +26,12 @@
   flex: 1; position: relative; overflow: hidden;
   @include flex-center; touch-action: none;
 }
-.ie-img { max-width: 100%; max-height: 100%; display: block; user-select: none; pointer-events: none; }
+// Sized in JS (syncFrame) to exactly the photo's rendered box — the pen
+// canvas and overlay layer below are 100% of THIS, not the stage, so a
+// stroke/sticker/crop always lands under the finger that placed it, even
+// when the photo's aspect ratio differs from the stage's (letterboxed).
+.ie-frame { position: relative; flex-shrink: 0; }
+.ie-img { width: 100%; height: 100%; display: block; user-select: none; pointer-events: none; }
 .ie-pen {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%;
   pointer-events: none;

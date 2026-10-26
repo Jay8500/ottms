@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonContent, IonIcon, ActionSheetController, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
+import { IonContent, IonIcon, ActionSheetController, ToastController, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   menuOutline, optionsOutline, searchOutline, addCircleOutline,
@@ -16,6 +16,7 @@ import {
 import { AdminHeaderComponent } from '../shared/admin-header.component';
 import { DataService } from '../../shared/data.service';
 import { Auth } from '../../auth';
+import { humanError } from '../../shared/errors';
 
 interface Feature {
   n: number;
@@ -74,6 +75,7 @@ export class DashboardPage implements OnInit {
     private data: DataService,
     private auth: Auth,
     private sheetCtrl: ActionSheetController,
+    private toastCtrl: ToastController,
   ) {
     addIcons({
       menuOutline, optionsOutline, searchOutline, addCircleOutline,
@@ -102,9 +104,15 @@ export class DashboardPage implements OnInit {
       this.badge("Payment's", this.stats.pendingPayments);
     } catch (e) {
       console.error('Dashboard stats failed', e);
+      this.toast(humanError(e, 'Could not load dashboard numbers'));
     } finally {
       this.statsLoading = false;
     }
+  }
+
+  private async toast(message: string) {
+    const t = await this.toastCtrl.create({ message, duration: 2400, position: 'bottom' });
+    t.present();
   }
 
   async refresh(ev: CustomEvent) {

@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -41,6 +41,7 @@ interface OverlayItem {
 })
 export class ImageEditorComponent implements OnChanges {
   @ViewChild('stage') stageRef!: ElementRef<HTMLDivElement>;
+  @ViewChild('frame') frameRef!: ElementRef<HTMLDivElement>;
   @ViewChild('baseImg') baseImgRef!: ElementRef<HTMLImageElement>;
   @ViewChild('penCanvas') penCanvasRef!: ElementRef<HTMLCanvasElement>;
 
@@ -98,6 +99,33 @@ export class ImageEditorComponent implements OnChanges {
     canvas.width = img.naturalWidth;
     canvas.height = img.naturalHeight;
     this.ready = true;
+    this.syncFrame();
+  }
+
+  /** Re-fit the frame (and so the pen canvas + overlay layer, which are
+   *  sized to 100% of it) to the stage whenever the viewport changes —
+   *  a phone rotation mid-edit otherwise leaves them matching the old
+   *  stage size. */
+  @HostListener('window:resize')
+  onResize() { if (this.ready) this.syncFrame(); }
+
+  /** Sizes `.ie-frame` to exactly the box the photo renders in — "contain"
+   *  style, same math as the stage centring it would do visually anyway.
+   *  Needed because the pen canvas and overlay layer are CSS-sized to
+   *  100% of this frame: if the frame were the full stage instead (which
+   *  is wider/taller than a letterboxed photo almost every time), every
+   *  pen stroke, sticker and crop box would land offset from where it was
+   *  actually touched, and the exported image would not match what was
+   *  drawn on screen. */
+  private syncFrame() {
+    const stage = this.stageRef.nativeElement.getBoundingClientRect();
+    const img = this.baseImgRef.nativeElement;
+    const ratio = img.naturalWidth / img.naturalHeight;
+    let w = stage.width, h = w / ratio;
+    if (h > stage.height) { h = stage.height; w = h * ratio; }
+    const frame = this.frameRef.nativeElement;
+    frame.style.width = Math.round(w) + 'px';
+    frame.style.height = Math.round(h) + 'px';
   }
 
   pickTool(t: Tool) {
@@ -105,9 +133,16 @@ export class ImageEditorComponent implements OnChanges {
   }
 
   // ── Pen ──────────────────────────────────────────────────────────────
+  /** `.ie-frame` is sized by `syncFrame()` to exactly the photo's rendered
+   *  box, so this rect IS the photo's bounds — unlike the stage, which is
+   *  bigger whenever the photo's aspect ratio differs from the screen's. */
+  private imgRect(): DOMRect {
+    return this.frameRef.nativeElement.getBoundingClientRect();
+  }
+
   private canvasPoint(e: PointerEvent): { x: number; y: number } {
     const canvas = this.penCanvasRef.nativeElement;
-    const rect = canvas.getBoundingClientRect();
+    const rect = this.imgRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
     return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
@@ -190,20 +225,20 @@ export class ImageEditorComponent implements OnChanges {
     if (this.tool !== 'sticker' && this.tool !== 'text') return;
     e.stopPropagation();
     this.dragId = item.id;
-    const stage = this.stageRef.nativeElement.getBoundingClientRect();
+    const img = this.imgRect();
     this.dragOffset = {
-      x: e.clientX - stage.left - (item.xPct / 100) * stage.width,
-      y: e.clientY - stage.top - (item.yPct / 100) * stage.height,
+      x: e.clientX - img.left - (item.xPct / 100) * img.width,
+      y: e.clientY - img.top - (item.yPct / 100) * img.height,
     };
   }
 
   onStageMove(e: PointerEvent) {
     if (this.dragId) {
-      const stage = this.stageRef.nativeElement.getBoundingClientRect();
+      const img = this.imgRect();
       const item = this.overlays.find(o => o.id === this.dragId);
       if (item) {
-        item.xPct = Math.min(100, Math.max(0, ((e.clientX - stage.left - this.dragOffset.x) / stage.width) * 100));
-        item.yPct = Math.min(100, Math.max(0, ((e.clientY - stage.top - this.dragOffset.y) / stage.height) * 100));
+        item.xPct = Math.min(100, Math.max(0, ((e.clientX - img.left - this.dragOffset.x) / img.width) * 100));
+        item.yPct = Math.min(100, Math.max(0, ((e.clientY - img.top - this.dragOffset.y) / img.height) * 100));
       }
       return;
     }
@@ -233,9 +268,9 @@ export class ImageEditorComponent implements OnChanges {
   }
 
   private onCropMove(e: PointerEvent) {
-    const stage = this.stageRef.nativeElement.getBoundingClientRect();
-    const dxPct = ((e.clientX - this.cropStart.x) / stage.width) * 100;
-    const dyPct = ((e.clientY - this.cropStart.y) / stage.height) * 100;
+    const img = this.imgRect();
+    const dxPct = ((e.clientX - this.cropStart.x) / img.width) * 100;
+    const dyPct = ((e.clientY - this.cropStart.y) / img.height) * 100;
     const start = this.cropStart.box;
 
     if (this.cropDrag === 'move') {
@@ -248,7 +283,22 @@ export class ImageEditorComponent implements OnChanges {
   }
 
   // ── Export ───────────────────────────────────────────────────────────
+  /** Guards the async gap in confirm() (the canvas toBlob below) — without
+   *  it, a fast double-tap on "done" runs confirm() twice and emits `done`
+   *  twice for the same photo. */
+  busy = false;
+
   async confirm() {
+    if (this.busy) return;
+    this.busy = true;
+    try {
+      await this.doConfirm();
+    } finally {
+      this.busy = false;
+    }
+  }
+
+  private async doConfirm() {
     const img = this.baseImgRef.nativeElement;
     const penCanvas = this.penCanvasRef.nativeElement;
 

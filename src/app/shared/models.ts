@@ -14,7 +14,7 @@ export type TxKind =
   | 'refund' | 'penalty' | 'service_fee';
 export type TxStatus = 'pending' | 'cleared' | 'rejected';
 
-export type GroupStatus = 'pending' | 'approved' | 'rejected' | 'full' | 'expired';
+export type GroupStatus = 'pending' | 'approved' | 'rejected' | 'full' | 'expired' | 'cancelled';
 export type MemberStatus = 'active' | 'expiring' | 'expired' | 'exited';
 export type ExitReason = 'personal' | 'faulty';
 
@@ -182,6 +182,7 @@ export interface GroupScreen {
   status: GroupStatus;
   proofUrl?: string;
   comment?: string;
+  rejectReason?: string;
   price: number;
   // seller side
   sellerId: string;
